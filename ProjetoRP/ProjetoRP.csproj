@@ -132,10 +132,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Player\Messages.resx" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Modules\Player\Client\Player.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y "$(ProjectDir)$(OutDir)ProjetoRP.dll" "$(SolutionDir)server\resources\projetorp"
 xcopy /y "$(ProjectDir)$(OutDir)ProjetoRP.dll.config"  "$(SolutionDir)server\resources\projetorp"
-xcopy /y "$(ProjectDir)$(OutDir)ProjetoRP.pdb"  "$(SolutionDir)server\resources\projetorp"</PostBuildEvent>
+xcopy /y "$(ProjectDir)$(OutDir)ProjetoRP.pdb"  "$(SolutionDir)server\resources\projetorp"
+PowerShell -ExecutionPolicy Unrestricted -File "$(SolutionDir)CreateServerResource.ps1" -SolutionDir "$(SolutionDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
