@@ -40,6 +40,7 @@ Pushes to the `master` branch are protected by pull requests. Those will be acce
     </entityFramework>
   </configuration>
   ```
+
 5. Go to the Package Manager Console and run `Update-Database`. It should create all the schema.
 
 6. Run `server/GTANetworkServer.exe` and see the results for yourself!
