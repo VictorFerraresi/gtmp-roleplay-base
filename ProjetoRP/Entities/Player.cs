@@ -8,18 +8,25 @@ using System.Threading.Tasks;
 
 namespace ProjetoRP.Entities
 {
-    [Table("players")]
     public class Player
     {
         [Key]
-        [Column("id")]
         public int Id { get; set; }
 
+        [Required]
+        [MinLength(3), MaxLength(32)]
+        [Index(IsUnique = true)]
         public string Name { get; set; }
 
+        [Required]
+        [MaxLength(60)]
         public string Password { get; set; }
 
+        [Required]
         [MaxLength(255)]
+        [Index(IsUnique = true)]
         public string Email { get; set; }
+
+        virtual public ICollection<Character> Characters { get; set; }
     }
 }

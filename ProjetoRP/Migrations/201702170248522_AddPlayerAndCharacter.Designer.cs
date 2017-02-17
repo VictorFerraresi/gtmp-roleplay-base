@@ -7,13 +7,13 @@ namespace ProjetoRP.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddPlayer : IMigrationMetadata
+    public sealed partial class AddPlayerAndCharacter : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddPlayer));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddPlayerAndCharacter));
         
         string IMigrationMetadata.Id
         {
-            get { return "201702121304012_AddPlayer"; }
+            get { return "201702170248522_AddPlayerAndCharacter"; }
         }
         
         string IMigrationMetadata.Source
