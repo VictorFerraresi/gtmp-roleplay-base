@@ -1,6 +1,10 @@
 # ProjetoRP
 Projeto RP para desbancar o Trevizani, o famoso.
 
+## Attention
+
+Pushes to the `master` branch are protected by pull requests. Those will be accepted once a new feature is fully developed and tested. In order to keep your development progress updated within the remote repository, create a branch with any name format you may wish and push to it.
+
 ## Installing and running
 
 1. Have Visual Studio 2017 installed
@@ -36,4 +40,7 @@ Projeto RP para desbancar o Trevizani, o famoso.
     </entityFramework>
   </configuration>
   ```
-5. Run `server/GTANetworkServer.exe` and see the results for yourself!
+5. Go to the Package Manager Console and run `Update_Database`. It should create all the schema.
+
+6. Run `server/GTANetworkServer.exe` and see the results for yourself!
+
