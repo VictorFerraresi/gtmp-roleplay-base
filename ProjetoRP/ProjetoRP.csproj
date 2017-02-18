@@ -107,6 +107,9 @@
     <Compile Include="DatabaseContext.cs" />
     <Compile Include="Entities\Character.cs" />
     <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Property\Door.cs" />
+    <Compile Include="Entities\Property\House.cs" />
+    <Compile Include="Entities\Property\Property.cs" />
     <Compile Include="Entities\Session.cs" />
     <Compile Include="Entities\Vehicle.cs" />
     <Compile Include="Entry.cs" />
@@ -134,6 +137,10 @@
     <Compile Include="Migrations\201702180103055_AddVehicle.Designer.cs">
       <DependentUpon>201702180103055_AddVehicle.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702182015507_AddProperty.cs" />
+    <Compile Include="Migrations\201702182015507_AddProperty.Designer.cs">
+      <DependentUpon>201702182015507_AddProperty.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
     <Compile Include="Modules\Admin\Colors.Designer.cs">
@@ -146,6 +153,8 @@
     <Compile Include="Modules\Player\Messages.Designer.cs" />
     <Compile Include="Modules\Player\Player.cs" />
     <Compile Include="Modules\Player\Types.cs" />
+    <Compile Include="Modules\Property\Messages.Designer.cs" />
+    <Compile Include="Modules\Property\Property.cs" />
     <Compile Include="Modules\Ui\Ui.cs" />
     <Compile Include="Modules\Vehicle\Messages.Designer.cs" />
     <Compile Include="Modules\Vehicle\Vehicle.cs" />
@@ -181,12 +190,16 @@
     <EmbeddedResource Include="Migrations\201702180103055_AddVehicle.resx">
       <DependentUpon>201702180103055_AddVehicle.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702182015507_AddProperty.resx">
+      <DependentUpon>201702182015507_AddProperty.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Colors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Messages.resx" />
     <EmbeddedResource Include="Modules\Player\Messages.resx" />
+    <EmbeddedResource Include="Modules\Property\Messages.resx" />
     <EmbeddedResource Include="Modules\Vehicle\Messages.resx" />
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +208,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Modules\Admin\Client\Admin.js" />
+    <Content Include="Modules\Property\Client\Property.js" />
     <Content Include="Modules\Vehicle\Client\Vehicle.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
