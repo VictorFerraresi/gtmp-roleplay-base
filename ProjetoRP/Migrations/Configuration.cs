@@ -26,6 +26,14 @@ namespace ProjetoRP.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+
+            context.Players.AddOrUpdate(
+                p => p.Name,
+                new Entities.Player { Name = "lgm", Email = "lgm@projetorp.work", Password = "$2a$04$1A9nNtvnE/0p7WK2GQ1rluEe7iW7hisYpY1C1I9S8HBYFx1f6CETO" },
+                new Entities.Player { Name = "victor", Email = "victor@projetorp.work", Password = "$2a$04$1A9nNtvnE/0p7WK2GQ1rluEe7iW7hisYpY1C1I9S8HBYFx1f6CETO" }
+            );
+
+            context.SaveChanges();
         }
     }
 }
