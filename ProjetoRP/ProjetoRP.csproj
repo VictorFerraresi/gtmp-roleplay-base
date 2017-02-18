@@ -101,6 +101,7 @@
     <Compile Include="Modules\Player\Messages.Designer.cs" />
     <Compile Include="Modules\Player\Player.cs" />
     <Compile Include="Modules\Player\Types.cs" />
+    <Compile Include="Modules\Ui\Ui.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -133,7 +134,7 @@
     <EmbeddedResource Include="Modules\Player\Messages.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Modules\Player\Client\Player.js" />
+    <None Include="Modules\Player\Client\Player.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -141,5 +142,9 @@
 xcopy /y "$(ProjectDir)$(OutDir)ProjetoRP.dll.config"  "$(SolutionDir)server\resources\projetorp"
 xcopy /y "$(ProjectDir)$(OutDir)ProjetoRP.pdb"  "$(SolutionDir)server\resources\projetorp"
 PowerShell -ExecutionPolicy Unrestricted -File "$(SolutionDir)CreateServerResource.ps1" -SolutionDir "$(SolutionDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

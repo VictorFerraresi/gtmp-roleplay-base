@@ -1,0 +1,22 @@
+<meta>
+    <info name="ui" author="miki3" type="script" async="true" />        
+    <script src="cef.js" type="client" lang="javascript" />    
+    <script src="ui.cs" type="server" lang="csharp" />    
+	
+	<file src="page.html" />
+	<file src="img/seigaiha.png" />
+	<file src="img/bg.jpg" />
+	<file src="img/bg3.jpg" />
+	<file src="img/avatar.png" />
+	<file src="fonts/housescript.ttf" />
+	<file src="fonts/glyphicons-halflings-regular.ttf" />
+	<file src="css/bootstrap.min.css" />
+	<file src="css/main.css" />
+	<file src="js/vue.js" />
+	<file src="js/inventory.js" />
+
+	<export class="Ui" event="onUiEventTrigger" />
+	<export class="Ui" function="evalUi" />
+	<export class="Ui" function="fixCursor" />
+	<export class="Ui" function="freeCursor" />
+</meta>
