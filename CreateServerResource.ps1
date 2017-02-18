@@ -7,7 +7,7 @@ $xml = @"
 <meta>
     <info name="ProjetoRP Gamemode" author="Manajjdisc" type="script" />
     <script src="ProjetoRP.dll" type="server" lang="compiled" />
-	<export class="Modules.Ui.Ui" event="onUiEventTrigger" />
+	<export class="Ui" event="onUiEventTrigger" />
 </meta>
 "@
 

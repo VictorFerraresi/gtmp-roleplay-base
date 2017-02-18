@@ -49,6 +49,11 @@ namespace ProjetoRP.Modules.Player
             }
         }
 
+        private void OnPlayerDisconnected(Client player, string reason)
+        {
+            Player_Save(player);
+        }
+
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
         {
             switch (eventName)
@@ -75,6 +80,53 @@ namespace ProjetoRP.Modules.Player
                     {
                         Player_KickForInvalidTrigger(player);
                     }
+                    break;
+                case "CS_UI_PRELOAD_READY":
+                    API.call("Ui", "fixCursor", player, true);
+                    API.call("Ui", "evalUi", player, "login_app.display=true;");
+                    break;
+                case "CS_LOGIN_SUBMIT":
+                    var data = API.fromJson((string)args[0]);
+
+                    Player_Login(player, (string)data.user, (string)data.pass);
+                    break;
+                case "CS_CHARSEL_SWITCH":
+                    if (player.getData("PLAYER_STATUS") != PlayerStatus.CharacterSelection)
+                    {
+                        Player_KickForInvalidTrigger(player);
+                        return;
+                    }
+
+                    var switch_data = API.fromJson((string)args[0]);
+                    List<Character> lcd = player.getData("PLAYER_CHARSEL_DATA");
+
+                    Character selected = lcd.Single(x => x.Id == (int)switch_data.character_id);
+
+                    PedHash pedHash;
+                    Enum.TryParse(selected.Skin, out pedHash);
+
+                    player.setSkin(pedHash);
+
+                    break;
+                case "CS_CHARSEL_SUBMIT":
+                    if (player.getData("PLAYER_STATUS") != PlayerStatus.CharacterSelection)
+                    {
+                        Player_KickForInvalidTrigger(player);
+                        return;
+                    }
+
+                    var submit_data = API.fromJson((string)args[0]);
+                    int cid = (int)submit_data.character_id;
+
+                    if (cid == 0)
+                    {
+                        // suspicious
+                        API.consoleOutput("Player " + player.socialClubName + " tried to spawn cid 0");
+                        return;
+                    }
+                    API.call("Ui", "evalUi", player, "charsel_app.display=false;");
+
+                    Player_Spawn(player, cid);
                     break;
             }
         }
