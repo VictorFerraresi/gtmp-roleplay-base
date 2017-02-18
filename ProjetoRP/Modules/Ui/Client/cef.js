@@ -6,7 +6,7 @@ API.onResourceStart.connect(function() {
 	mainBrowser = API.createCefBrowser(resolution.Width, resolution.Height, true);
 	API.waitUntilCefBrowserInit(mainBrowser);
 	API.setCefBrowserPosition(mainBrowser, 0, 0);
-	API.loadPageCefBrowser(mainBrowser, "page.html");
+	API.loadPageCefBrowser(mainBrowser, "Ui/page.html");
 
 	API.triggerServerEvent("CS_UI_PRELOAD_READY");
 });

@@ -9,7 +9,6 @@ public class Ui : Script
     {
         API.onResourceStop += stopResourceHandler;
         API.onResourceStart += startResourceHandler;
-        API.onClientEventTrigger += OnClientEventTrigger;
     }
 
     private void startResourceHandler()
@@ -20,11 +19,6 @@ public class Ui : Script
     private void stopResourceHandler()
     {
 
-    }
-
-    public void OnClientEventTrigger(Client player, string eventName, object[] args)
-    { 
-        onUiEventTrigger(player, eventName, args);
     }
 
     /* EXPORTS */

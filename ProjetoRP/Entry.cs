@@ -18,22 +18,8 @@ namespace ProjetoRP
         public void OnResourceStart()
         {
             API.consoleOutput("=== PROJETO RP ===");
-
-            using (var context = new DatabaseContext())
-            {
-                var players = context.Players.ToList();
-                foreach (var p in players)
-                {
-                    Console.WriteLine(p.Id + " " + p.Name + " " + p.Email);
-                    var characters = p.Characters;
-
-                    foreach (var c in characters)
-                    {
-                        API.consoleOutput("AAAAAAAAAAAAAAAa");
-                        Console.WriteLine(c.Name);
-                    }
-                }
-            }
+            API.consoleOutput("Luís Gustavo Miki");
+            API.consoleOutput("Victor Ferraresi");
         }
     }
 }

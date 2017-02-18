@@ -1,7 +1,7 @@
 <meta>
   <info name="ProjetoRP Gamemode" author="Manajjdisc" type="script" />
   <script src="ProjetoRP.dll" type="server" lang="compiled" />
-  <export class="Modules.Ui.Ui" event="onUiEventTrigger" />
+  <export class="Ui" event="onUiEventTrigger" />
   <script src="\Player\Player.js" type="client" lang="javascript" />
   <file src="\Ui\css\bootstrap-slider.min.css" />
   <file src="\Ui\css\bootstrap-theme.css" />
