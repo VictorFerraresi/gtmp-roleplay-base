@@ -1,0 +1,250 @@
+  html, body, .container-table {
+    height: 100%;
+    -webkit-user-select: none;
+    overflow:hidden;
+}
+.container-table {
+    display: table;
+
+}
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+
+}
+
+.game-box {
+	box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.75);
+	border: 0;
+
+    border-radius:7px;
+}
+
+@media (min-width: 768px) {
+    .container-small {
+        width: 300px;
+    }
+    .container-large {
+        width: 970px;
+    } 
+} 
+@media (min-width: 992px) {
+    .container-small {
+        width: 400px;
+    }
+    .container-large {
+        width: 1170px;
+    } 
+} 
+@media (min-width: 1200px) {
+    .container-small {
+        width: 500px;
+    }
+    .container-large {
+        width: 1500px;
+    } 
+}
+
+.fillSpace
+{
+   display:inline-block;
+   margin:0;
+}
+
+.container-left {
+    margin-left:5%;
+}
+
+.container-small, .container-large {
+    max-width: 100%;
+}
+
+.game-box > .masthead {
+    margin: 0 auto;
+    background-image: url("../img/bg.jpg");
+    min-height: 200px;
+    background-size: cover;
+    border-radius:7px 7px 0 0;
+}
+
+.game-box > .masthead2 {
+    margin: 0 auto;
+    background-image: url("../img/bg3.jpg");
+    min-height: 200px;
+    background-size: cover;
+    position:relative;
+    border-radius:7px 7px 0 0;
+}
+
+.gbfooter {
+    border-radius: 0 0 7px 7px;
+    margin: 0 auto;
+}
+
+.panel-body {
+	/*padding-top: 20px;*/
+}
+
+@font-face {
+    font-family: HouseScript;
+    src: url(../fonts/housescript.ttf);
+}
+
+.act-as-body
+{
+    position:fixed;
+    padding:0;
+    margin:0;
+
+    top:0;
+    left:0;
+
+    width: 100%;
+    height: 100%;
+    background:rgba(255,255,255,0.0);
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}
+
+.btn-processing {
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -ms-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  -webkit-background-size: 40px 40px;
+  -moz-background-size: 40px 40px;
+  -o-background-size: 40px 40px;
+  background-size: 40px 40px;
+}
+.btn-processing {
+  -webkit-animation: progress-bar-stripes 2s linear infinite;
+  -moz-animation: progress-bar-stripes 2s linear infinite;
+  animation: progress-bar-stripes 2s linear infinite;
+}
+
+.license-text1 {
+    font-family: Helvetica;
+    font-weight: bolder;
+    color: black;
+    text-transform: uppercase;
+}
+
+.circle { 
+   width: 140px;
+   height: 140px;
+   background: url("../img/avatar.png"); 
+   -moz-border-radius: 70px; 
+   -webkit-border-radius: 70px; 
+   border-radius: 70px;
+   background-size: 100% 100%;
+    background-repeat: no-repeat;
+    position:absolute;
+    left: 170px;
+    bottom:-70px;
+}
+
+/* inventory shit */
+
+.inventory > .item {
+    float:left;
+    width: 15%;
+    padding-bottom: 15%; /* = width for a 1:1 aspect ratio */
+    margin:.8%;
+    background-color: #EEE;
+
+    border-radius: 2px;
+    position: relative;
+}
+
+.inventory > .item:hover {
+    background-color: #95a5a6;
+}
+
+.item > .content {
+    position:absolute;
+    height:100%; /* = 100% - 2*10% padding */
+    width:100%; /* = 100% - 2*5% padding */
+    background-size: cover;
+
+
+}
+
+.content > .badge {
+    position:absolute;
+    right: -5px;
+    bottom: -5px;
+}
+
+/* inventory inventory shit */
+
+.attatchments > .item {
+    float:left;
+    width: 13%;
+    padding-bottom: 13%; /* = width for a 1:1 aspect ratio */
+    margin:.8%;
+    background-color: #FFF;
+
+    border-radius: 2px;
+    position: relative;
+}
+
+.attatchments > .item:hover {
+    background-color: #AAA;
+}
+
+.img {
+    width: 40pt;
+    height: 40pt;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../img/items/weapon-combatpistol2.png);
+    background-size: 90% 90%;
+    background-position: center;
+    background-color: #EEE;
+    border-radius: 2px;
+    position: relative;
+}
+
+.img > .badge {
+    position:absolute;
+    right: -5px;
+    bottom: -5px;
+}
+
+input[type=range]{
+    -webkit-appearance: none;
+    margin-top:25px;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background-color: #3b9b86;
+    margin-top: -4px;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}

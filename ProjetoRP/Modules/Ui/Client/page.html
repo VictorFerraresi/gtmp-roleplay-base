@@ -1,0 +1,666 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/main.css">
+  
+
+  
+</head>
+
+<body style="background-color:rgba(0, 0, 0, 0);">
+  magicscript v1
+  <div id="login-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-small">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="row masthead"></div>
+              <div class="row"  style="margin-left: 5px; margin-right: 5px">
+                <div class="panel-body">
+                  <h1 style="font-family: HouseScript">Bem-vindo ao San Andreas Citizen</h1>
+                  <div class="alert alert-danger" role="alert" v-if="error.length > 0">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Erro:</span>
+                    {{ error }}
+                  </div>
+                  <form v-on:submit.prevent="onSubmit">
+                    <div class="form-group">
+                      <label for="usr">Usuário:</label>
+                      <input type="text" class="form-control" id="usr" v-model="out.user" v-bind:disabled="blocked" autofocus required>
+                    </div>
+                    <div class="form-group">
+                      <label for="pwd">Senha:</label>
+                      <input type="password" class="form-control" id="pwd" v-model="out.pass" v-bind:disabled="blocked" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Entrar</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </transition>
+  </div>
+
+  <div id="charsel-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-small container-left">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="row masthead2">
+                <div class="circle center-block"></div>
+
+              </div>
+              <div class="row"  style="margin-left: 0px; margin-right: 0px">
+                <div class="panel-body" style="margin-top:50px;">
+                  <h1 class="text-center" style="font-family: HouseScript">{{ getChar().name }}</h1>
+                  <div class="progress center-block" style="width:50%;margin-bottom: 0px;">
+                    <div class="progress-bar progress-bar-success" role="progressbar" v-bind:style="{width: ((getChar().xp * 100) / getChar().maxxp) + '%' }">
+                    </div>
+                  </div>
+                  <p class="text-center text-muted  text-small" style="font-size:.8em;">{{ getChar().xp }} / {{ getChar().maxxp }} (Level {{ getChar().level }})</p>
+
+
+                  <p class="text-center"    style="color:#af8f23;"><span class="glyphicon glyphicon glyphicon glyphicon-road" style="font-size:1em;"></span> {{ getChar().location }}</p>
+                  <p class="text-center">
+
+                    <span class="text-center" style="color:#ce314e;"><span class=" glyphicon glyphicon-heart-empty" style="font-size:1em;"></span> {{ getChar().health }}</span>    –    
+
+                    <span class="text-center" style="color:#5ba8bf;"><span class="glyphicon glyphicon-star-empty" style="font-size:1em;"></span> {{ getChar().armour }}</span>
+
+                  </p>
+
+                  <p class="text-center" style="color:#3b9b86;"><span class=" glyphicon glyphicon-usd" style="font-size:1em;"></span> {{ getChar().cash }},00</p>
+
+                  <p class="text-center" style="color:#a3a3a3;">
+                    <span class="glyphicon glyphicon-piggy-bank" style="font-size:1em"></span> {{ getChar().bank }},00
+
+
+                    <button type="button" class="btn btn-info btn-block" style="margin-top: 20px;" v-if="isSpawnDisabled() == false" :class="{ 'btn-processing': blocked, disabled: blocked }" v-bind:disabled="blocked" v-on:click="spawn();">Spawn</button>
+                  </p>
+                  
+                </div>
+                <div class="panel-footer gbfooter">
+                  <nav aria-label="..." >
+                    <ul class="pager" >
+                      <li class="previous" v-bind:class="[{ disabled: current_character == 0 || blocked }]" v-on:click="previous()"><a href="#" :class="{ 'btn-processing': blocked }" v-bind:disabled="current_character == 0 || blocked"><span aria-hidden="true">&larr;</span> Anterior</a></li>
+                      <li v-bind:class="[{ disabled: isCreateDisabled() || blocked }]" v-on:click="create()" v-bind:disabled="isCreateDisabled() || blocked"><a href="#" :class="{ 'btn-processing': blocked }">Novo personagem...</a></li>
+                      <li class="next" v-bind:class="[{ disabled:  isNextDisabled() || blocked }]" v-on:click="next()" v-bind:disabled="isNextDisabled() || blocked"><a href="#" :class="{ 'btn-processing': blocked }">Próximo <span aria-hidden="true">&rarr;</span></a></li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </transition>
+  </div>
+
+  <!-- <div id="inv-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-small">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="panel-heading">
+                <h1 style="font-family: HouseScript">Inventário</h1>
+              </div>
+              <div class="panel-body ">
+                <div class="row"  style="margin-left: 5px; margin-right: 5px">
+                  <div class="panel panel-default clearfix">
+                    <div class="panel-body">
+
+                      <div class="row">
+                        <div class="col-md-8">
+                          <h4>{{ itemSlotName(current_slot) }}</h4>
+                          <p>{{ itemSlotModel(current_slot)["description"]}}</p>
+                        </div>
+                        <div class="col-md-4">
+                         <div style="width: 100px; height: 100px;background-size: cover;" v-bind:style="{ backgroundImage: itemSlotImage(current_slot) }">
+                         </div>
+                       </div>
+                     </div>
+                     <div class="row" v-if="isValidSelect() && slotStacking(current_slot) > 1">
+                      <div class="col-md-8">
+                        <div class="row">
+                          <div class="col-md-10">
+                            <input type="range" id="myRange" v-model:value="current_split" v-bind:max="slotStacking(current_slot)" min="1" step="1">
+                          </div>
+                          <div class="col-md-2">
+                            <div id="split" class="img" draggable="true" ondragstart="drag(event)">
+                              <span class="badge">{{ this.current_split }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+
+                      </div>
+                    </div>  
+                  </div>
+                  <div class="panel-footer">
+                    <div class="row attatchments" style="margin-left:auto;">
+                      <div class="item" v-for="n in attatchmentsHack()"><div v-bind:id="'att-' + n" class="content"  ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)">{{n}}</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="row inventory" style="margin-left: 5px; margin-right: 5px">
+                <div class="item" v-for="n in slotsHack()"><div v-bind:id="'slot-' + n" class="content" v-bind:draggable="slotDraggable(n)" v-bind:style="{ backgroundImage: itemSlotImage(n) }" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" v-on:click="clickSlot(n)"><span class="badge">{{ slotStacking(n) }}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </transition>
+</div> -->
+
+  <!-- <div id="charsel-app" class="act-as-body">
+    <transition name="fade">
+    <template v-if="display === true">
+      <div class="container container-table container-small">
+        <div class="row vertical-center-row">
+          <div class="panel panel-default game-box">
+          <div class="panel-heading">
+            <h1 style="font-family: HouseScript">Selecione seu personagem.</h1>
+          </div>
+              <div class="panel-body">
+              <div  style="position:relative;">
+                <img src="img/license.png" width="500px">
+                <span class="license-text1" style="position:absolute; top:137px; left: 200px;">teste</span>
+                </div>
+            </div>
+        </div>
+      </div>
+    </template>
+    </transition>
+  </div> -->
+  <script src="js/vue.js"></script>
+  <!-- <script src="js/inventory.js"></script> -->
+  <script type="text/javascript">
+    function range(start, end) {
+      var foo = [];
+      for (var i = start; i <= end; i++) {
+        foo.push(i);
+      }
+      return foo;
+    }
+
+    login_app = new Vue({
+      el: '#login-app',
+      data: {
+        display: true,
+        blocked: false,
+        error: '',
+        out: {
+          user: '',
+          pass: ''
+        }        
+      },
+      methods: {
+        onSubmit: function() {
+            //resource.eval('debugOutput("test");');
+            //resourceCall("debugOutput", "hello from the other side");
+            this.blocked = true;
+            resourceCall('triggerEvent', 'CS_LOGIN_SUBMIT', JSON.stringify(this.out));
+          }
+        }
+      });
+
+    charsel_app = new Vue({
+      el: '#charsel-app',
+      data: {
+        display: false,
+        blocked: false,
+        current_character: 0,
+        in: {
+          can_create: true,
+          characters: [
+          ]
+        },
+        out: {
+          character_id: 0,
+        },
+        invalid_character: {
+          id: 0,
+          name: '',
+          level: 0,
+          xp: 0,
+          maxxp: 0,
+          location: "San Andreas",
+          health: '0',
+          armour: 'N/A',
+          cash: 0,
+          bank: 0
+        }
+      },
+      methods: {
+        getChar: function() {
+          if(this.in.characters.length > 0) {
+            return this.in.characters[this.current_character];
+          } else {
+            return this.invalid_character;
+          }
+        },
+        isNextDisabled: function() {
+          return (this.current_character + 1) >= this.in.characters.length;
+        },
+        isCreateDisabled: function() {
+          return !this.in.can_create;
+        },
+        isSpawnDisabled: function() {
+          return this.getChar().id == 0;
+        },
+        next: function() {
+          if(!this.isNextDisabled()) {
+            this.current_character += 1;
+            this.out.character_id = this.in.characters[this.current_character].id; 
+            resourceCall('triggerEvent', 'CS_CHARSEL_SWITCH', JSON.stringify(this.out));
+          }
+        },
+        previous: function() {
+          if(this.current_character != 0) {
+            this.current_character -= 1;
+            this.out.character_id = this.in.characters[this.current_character].id;
+            resourceCall('triggerEvent', 'CS_CHARSEL_SWITCH', JSON.stringify(this.out));
+          }
+        },
+        create: function() {
+          if(this.in.can_create) {
+            //
+          }
+        },
+        spawn: function() {
+          if(!this.isSpawnDisabled()) {
+            this.blocked = true;
+            this.out.character_id = this.in.characters[this.current_character].id; 
+            resourceCall('triggerEvent', 'CS_CHARSEL_SUBMIT', JSON.stringify(this.out));
+          }
+        }
+      }
+    });
+
+//     inv_app = new Vue({
+//       el: '#inv-app',
+//       data: {
+//         display: false,
+//         blocked: false,
+//         error: '',
+//         current_slot: 0,
+//         current_split: 1,
+//         in: {
+//           slots: 30,
+//           inventory: {
+//             0: {
+//               item: 'pistol',
+//               stack: [
+//               {id: 1, data: { ammo: 12 }},
+//               {id: 2, data: { ammo: 10 }},
+//               ]
+//             },
+//             15: {
+//               item: 'combatpistol',
+//               stack: [
+//               {id: 1, data: { ammo: 12 }},
+//               {id: 2, data: { ammo: 10 }},
+//               {id: 2, data: { ammo: 10 }},
+//               {id: 2, data: { ammo: 10 }},
+//               {id: 2, data: { ammo: 10 }},
+//               ]
+//             },
+//             16: {
+//               item: 'combatpistol',
+//               stack: [
+//               {id: 1, data: { ammo: 12 }},
+//               {id: 2, data: { ammo: 10 }},
+//               ]
+//             }
+//           },
+//           models: {}
+//         },
+//         out: {
+//         }        
+//       },
+//       methods: {
+//         onSubmit: function() {
+//             //resource.eval('debugOutput("test");');
+//             //resourceCall("debugOutput", "hello from the other side");
+//             this.blocked = true;
+//             resourceCall('triggerEvent', 'CS_LOGIN_SUBMIT', JSON.stringify(this.out));
+//           },
+//           slotsHack: function() {
+//             return range(0, this.in.slots -1);
+//           },
+//           attatchmentsHack: function() {
+//             return range(0, 4);
+//           },
+
+//           isValidSelect: function() {
+//             var slot = this.current_slot;
+//             if(this.in.inventory["" + slot] != undefined) 
+//             {
+//               var item = this.in.inventory["" + slot];
+//               if(this.in.models[item.item] != undefined)
+//               {
+//                 if(item.stack.length > 0) {
+//                   return true;  
+//                 }
+//               }
+//             }
+//             return false;
+//           },
+
+//           isEmptySlot: function(slot) {
+//             if(this.in.inventory["" + slot] != undefined) 
+//             {
+//               var item = this.in.inventory["" + slot];
+//               if(this.in.models[item.item] != undefined)
+//               {
+//                 return false;
+//               }
+//             }
+//             return true;
+//           },
+
+//           itemSlotModel: function(slot) {
+//             if(this.in.inventory["" + slot] != undefined) 
+//             {
+//               var item = this.in.inventory["" + slot];
+//               if(this.in.models[item.item] != undefined)
+//               {
+//                 var model = this.in.models[item.item];
+//                 return model;
+//               }
+//             }
+//             return {};
+//           },
+
+//           itemSlotImage: function(slot) {
+//             if(this.in.inventory["" + slot] != undefined) 
+//             {
+//               var item = this.in.inventory["" + slot];
+//               if(this.in.models[item.item] != undefined)
+//               {
+//                 var model = this.in.models[item.item];
+//                 if(model["inventory-image"] != undefined) {
+//                   return "url(img/items/" + model["inventory-image"] + ")";
+//                 } else {
+//                   return "url(img/items/blank.png)";
+//                 }
+//               }
+//             }
+//           },
+
+//           itemSlotName: function(slot) {
+//             if(this.in.inventory["" + slot] != undefined) 
+//             {
+//               var item = this.in.inventory["" + slot];
+//               if(this.in.models[item.item] != undefined)
+//               {
+//                 var model = this.in.models[item.item];
+//                 return model.display;
+//               }
+//             }
+//           },
+
+//           slotStacking: function(slot) {
+//             if(this.in.inventory["" + slot] != undefined) 
+//             {
+//               var item = this.in.inventory["" + slot];
+//               if(item.stack.length > 0) {
+//                 return item.stack.length + "";
+//               } else {
+//                 return "";
+//               }
+//             }
+//           },
+
+//           currentSlotStacking: function() {
+//             return slotStacking(current_slot);
+//           },
+
+//           clickSlot: function(slot) {
+//             this.current_slot = slot;
+//             this.current_split = Math.ceil(this.slotStacking(this.current_slot) / 2.0);
+//           },
+
+//           slotDraggable: function(slot) 
+//           {
+//             if(this.in.inventory["" + slot] != undefined) 
+//             {
+//               var item = this.in.inventory["" + slot];
+//               if(this.in.models[item.item] != undefined)
+//               {
+//                 return "true";
+//               }
+//             }
+//           },
+
+//           slotToSlot: function(source, target) {
+//             var m_source = this.itemSlotModel(source);
+//             var m_target = this.itemSlotModel(target);
+
+//             var reassign = [];
+
+//             if(source == target) {
+//               return;
+//             }
+
+//             if(m_source != m_target) {
+//               var d_source = this.in.inventory["" + source];
+//               var d_target = this.in.inventory["" + target];
+
+//               //alert(target.item);
+              
+//               reassign = reassign.concat(d_source.stack.map(function(item) {
+//                 return {
+//                   id: item.id,
+//                   slot: target
+//                 }
+//               }));
+
+//               if(!this.isEmptySlot(target)) {
+//                 reassign = reassign.concat(d_target.stack.map(function(item) {
+//                   return {
+//                     id: item.id,
+//                     slot: source
+//                   }
+//                 }));             
+//               }
+              
+//               this.in.inventory["" + target] = d_source;
+//               this.in.inventory["" + source] = d_target;              
+//             } else {
+//               var max_stack = m_source.stacks;
+
+//               var d_source = this.in.inventory["" + source];
+//               var d_target = this.in.inventory["" + target];
+
+
+//               if(d_target.stack.length >= max_stack) {
+//                 reassign = reassign.concat(d_source.stack.map(function(item) {
+//                   return {
+//                     id: item.id,
+//                     slot: target
+//                   }
+//                 }));
+
+//                 reassign = reassign.concat(d_target.stack.map(function(item) {
+//                   return {
+//                     id: item.id,
+//                     slot: source
+//                   }
+//                 }));           
+
+//                 this.in.inventory["" + target] = d_source;
+//                 this.in.inventory["" + source] = d_target;
+//               } else {
+
+//                 var d_stackable_target = max_stack - d_target.stack.length;
+//                 var will_stack = Math.min(d_stackable_target, d_source.stack.length); 
+
+//                 if(will_stack > 0) { // sort of redundant
+//                   var changed = d_source.stack.slice(0, will_stack);
+
+//                   reassign = reassign.concat(changed.map(function(item) {
+//                     return {
+//                       id: item.id,
+//                       slot: target
+//                     }
+//                   }));
+
+//                   d_target.stack = d_target.stack.concat(changed);
+//                   d_source.stack = d_source.stack.slice(will_stack);
+
+//                   if(d_source.stack.length == 0) {
+//                     delete this.in.inventory["" + source];
+//                   }
+//                 }
+//               }
+//             }
+//             this.current_slot =  target;
+//             this.current_split = Math.ceil(this.slotStacking(this.current_slot) / 2.0);
+//             this.$forceUpdate();
+
+//             reassign = { reassign: reassign };
+//             resourceCall('triggerEvent', 'CS_INV_REASSIGN', JSON.stringify(reassign));
+//             //console.log(JSON.stringify(reassign));
+//           },
+
+//           split: function(target) {
+//             var reassign = [];
+
+//             if(this.isValidSelect() && this.current_split > 0) { // redundancy
+//               if(this.current_slot != target) { // cant drop on same item (or can you?)
+//                 var m_source = this.itemSlotModel(this.current_slot);
+//                 var m_target = this.itemSlotModel(target);
+
+//                 var d_source = this.in.inventory["" + this.current_slot];
+//                 var d_target = this.in.inventory["" + target];
+
+//                 if(m_source == m_target) { // if they are the same model
+//                   var d_stackable_target = m_source.stacks - d_target.stack.length;
+//                   var will_stack = Math.min(d_stackable_target, this.current_split); 
+
+//                   if(will_stack > 0) { // not redundant this time
+//                     var changed = d_source.stack.slice(0, will_stack);
+
+//                     reassign = reassign.concat(changed.map(function(item) {
+//                       return {
+//                         id: item.id,
+//                         slot: target
+//                       }
+//                     }));
+
+//                     d_target.stack = d_target.stack.concat(changed);
+//                     d_source.stack = d_source.stack.slice(will_stack);
+
+//                     if(d_source.stack.length == 0) {
+//                       delete this.in.inventory["" + source];
+//                     }
+//                   }
+//                 } else if(this.isEmptySlot(target)) { // or if target is blank slot
+//                   var m_source = this.itemSlotModel(this.current_slot);
+//                   var d_source = this.in.inventory["" + this.current_slot];
+
+//                   var changed = d_source.stack.slice(0, this.current_split);
+
+//                   reassign = reassign.concat(changed.map(function(item) {
+//                     return {
+//                       id: item.id,
+//                       slot: target
+//                     }
+//                   }));
+
+//                   var data = {};
+//                   data["item"] = m_source["name"];
+//                   data["stack"] = changed;
+
+//                   d_source.stack = d_source.stack.slice(this.current_split);
+//                   this.in.inventory["" + target] = data;
+
+//                   if(d_source.stack.length == 0) {
+//                     delete this.in.inventory["" + this.current_slot];
+//                   }
+//                 }                
+//               }
+//             }
+//             this.current_split = Math.ceil(this.slotStacking(this.current_slot) / 2.0);
+//             this.$forceUpdate();
+
+//             reassign = { reassign: reassign };
+//             resourceCall('triggerEvent', 'CS_INV_REASSIGN', JSON.stringify(reassign));
+//             //console.log(JSON.stringify(reassign));
+//           }
+//         }
+//       });
+
+
+// var models = {
+//   "pistol": {
+//     "name": "pistol",
+//     "display": "Taurus PT92AF",
+//     "description": "Arma secundária de calibre 9x19mm Parabellum. Prática e de fácil manutenção.",
+//     "type": "sidearm",
+//     "hash": 453432689,
+//     "allows": [
+//     "pistol-magazine"
+//     ],
+//     "stacks": 1,
+//     "inventory-image": "weapon-pistol.png"
+//   },
+//   "combatpistol": {
+//     "name": "combatpistol",
+//     "display": "H&K P2000",
+//     "description": "Pistola de calibre 9x19mm Parabellum. Possui precisão e dano maior para forças especiais.",
+//     "type": "sidearm",
+//     "hash": 1593441988,
+//     "allows": [
+//     "pistol-magazine"
+//     ],
+//     "stacks": 5,
+//     "inventory-image": "weapon-combatpistol2.png"
+//   },
+//   "pistol-magazine": {
+//     "name": "pistol-magazine",
+//     "display": "Carregador Pequeno",
+//     "type": "magazine",
+//     "capacity": 12,
+//     "stacks": 10
+//   },
+//   "id": {
+//     "name": "id",
+//     "display": "Carteira de Identidade",
+//     "type": "id",
+//     "stacks": 1
+//   },
+//   "cellphone": {
+//     "name": "cellphone",
+//     "display": "Telefone Celular",
+//     "type": "cellphone",
+//     "allows": [
+//     "prepaid-card"
+//     ],
+//     "stacks": 1
+//   },
+//   "medkit1": {
+//     "name": "medkit1",
+//     "display": "Kit de Primeiros Socorros",
+//     "type": "medkit",
+//     "stacks": 5,
+//     "usable": true
+//   }
+// };
+
+// inv_app.in.models = models;
+</script>
+</body>
+</html>
