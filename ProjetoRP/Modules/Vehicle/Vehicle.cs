@@ -144,7 +144,7 @@ namespace ProjetoRP.Modules.Vehicle
 
             using (var context = new DatabaseContext())
             {
-                vehs = (from v in context.Vehicles where v.Character == character select v).AsNoTracking().ToList();
+                vehs = (from v in context.Vehicles where v.Character.Id == character.Id select v).Include(v => v.Character).AsNoTracking().ToList();
                 // AsNoTracking "detaches" the entity from the Context, allowing it to be kept in memory and used as please up until reattached again @Player_Save                                
             }            
             return vehs;
@@ -160,7 +160,7 @@ namespace ProjetoRP.Modules.Vehicle
         [Command("v")]
         public void VCommand(Client player)
         {            
-            List<Entities.Vehicle> vehs = SQL_FetchVehiclesFromCharacter(player.getData("CHARACTER_DATA"));
+            List<Entities.Vehicle> vehs = SQL_FetchVehiclesFromCharacter(player.getData("CHARACTER_DATA"));            
             API.triggerClientEvent(player, "SC_SHOW_VEHICLEMENU", API.toJson(vehs));
         }
 

@@ -244,7 +244,8 @@ namespace ProjetoRP.Modules.Player
 
                 if (char_data.Count() > 0)
                 {
-                    Enum.TryParse(char_data.First().Skin, out PedHash pedHash);
+                    PedHash pedHash;
+                    Enum.TryParse(char_data.First().Skin, out pedHash);
 
                     player.setSkin(pedHash);
                 }
