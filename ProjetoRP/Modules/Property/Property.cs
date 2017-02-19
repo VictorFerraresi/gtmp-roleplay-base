@@ -14,8 +14,7 @@ namespace ProjetoRP.Modules.Property
 {
     public class Property : Script
     {
-        public List<Entities.Property.Property> ServerProperties;        
-
+        public Business.PropertyBLL PropBll = new Business.PropertyBLL();
         public Property()
         {
             API.onResourceStart += OnResourceStart;
@@ -25,7 +24,6 @@ namespace ProjetoRP.Modules.Property
         public void OnResourceStart()
         {
             API.consoleOutput(Messages.console_startup);            
-            ServerProperties = new Business.PropertyBLL().SQL_FetchProperties();
             DrawPropertiesPickups();
         }
 

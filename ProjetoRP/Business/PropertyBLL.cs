@@ -9,8 +9,10 @@ using GTANetworkShared;
 
 namespace ProjetoRP.Business
 {
-    class PropertyBLL
+    public class PropertyBLL
     {
+        public List<Entities.Property.Property> ServerProperties;
+
         public void Property_Create(Entities.Property.Property prop)
         {                        
             using (var context = new DatabaseContext())
