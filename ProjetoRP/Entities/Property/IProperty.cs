@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProjetoRP.Entities.Property
 {
-    interface IProperty<Property>
+    public interface IProperty<Property>
     {
         void DrawPickup(Property p);
     }

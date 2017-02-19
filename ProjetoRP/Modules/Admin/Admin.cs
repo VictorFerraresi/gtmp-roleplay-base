@@ -95,9 +95,7 @@ namespace ProjetoRP.Modules.Admin
                 }
 
                 Business.PropertyBLL bll = new Business.PropertyBLL();
-                bll.Property_Create(prop);
-
-                bll.SQL_FetchPropertyData();
+                bll.Property_Create(prop);                
             }
             //}
         }

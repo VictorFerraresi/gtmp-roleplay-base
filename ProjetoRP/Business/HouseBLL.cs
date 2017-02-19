@@ -8,7 +8,7 @@ using GTANetworkShared;
 
 namespace ProjetoRP.Business
 {
-    class HouseBLL : Entities.Property.IProperty<Entities.Property.Property>
+    public class HouseBLL : Entities.Property.IProperty<Entities.Property.Property>
     {
         public void DrawPickup(Entities.Property.Property house)
         {
