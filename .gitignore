@@ -261,5 +261,5 @@ __pycache__/
 *.pyc
 
 # Remove binaries from cluttering our work
-server/resources/ProjetoRP.dll
-server/resources/ProjetoRP.dll.config
+server/resources/projetorp/ProjetoRP.dll
+server/resources/projetorp/ProjetoRP.dll.config

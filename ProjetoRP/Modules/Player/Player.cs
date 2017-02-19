@@ -82,8 +82,11 @@ namespace ProjetoRP.Modules.Player
                     }
                     break;
                 case "CS_UI_PRELOAD_READY":
-                    API.call("Ui", "fixCursor", player, true);
-                    API.call("Ui", "evalUi", player, "login_app.display=true;");
+                    if (player.getData("PLAYER_IS_CEF_ENABLED"))
+                    {
+                        API.call("Ui", "fixCursor", player, true);
+                        API.call("Ui", "evalUi", player, "login_app.display=true;");
+                    }
                     break;
                 case "CS_LOGIN_SUBMIT":
                     var data = API.fromJson((string)args[0]);
