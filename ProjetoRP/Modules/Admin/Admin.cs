@@ -94,8 +94,7 @@ namespace ProjetoRP.Modules.Admin
                         break;
                 }
 
-                Business.PropertyBLL bll = new Business.PropertyBLL();
-                bll.Property_Create(prop);                
+                Business.PropertyBLL.Property_Create(prop);
             }
             //}
         }

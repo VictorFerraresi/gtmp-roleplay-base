@@ -9,43 +9,19 @@ using GTANetworkShared;
 
 namespace ProjetoRP.Business
 {
-    public class PropertyBLL
+    public static class PropertyBLL
     {
-        public List<Entities.Property.Property> ServerProperties;
-        public Entities.Property.IProperty<Entities.Property.Property> HouseBll = new Business.HouseBLL();
-        public Entities.Property.IProperty<Entities.Property.Property> BusinessBll = new Business.BusinessBLL();
+        public static List<Entities.Property.Property> ServerProperties = new List<Entities.Property.Property>();
+        public static Entities.Property.IProperty<Entities.Property.Property> HouseBll = new Business.HouseBLL();
+        public static Entities.Property.IProperty<Entities.Property.Property> BusinessBll = new Business.BusinessBLL();        
 
-        public void Property_Create(Entities.Property.Property prop)
-        {                        
-            using (var context = new DatabaseContext())
-            {
-                context.Properties.Add(prop);                
-                context.SaveChanges();
-
-                ServerProperties.Add(prop);
-
-                Entities.Property.IProperty<Entities.Property.Property> bll = null;
-
-                if (prop is Entities.Property.House)
-                {
-                    bll = HouseBll;
-                }
-                else if (prop is Entities.Property.Business)
-                {
-                    bll = BusinessBll;
-                }
-
-                bll.DrawPickup(prop);
-            }
-        }
-
-        public void LoadProperties()
+        public static void LoadProperties()
         {
             ServerProperties = SQL_FetchProperties();
         }
 
-        public void DrawPropertiesPickups()
-        {
+        public static void DrawPropertiesPickups()
+        {            
             foreach (Entities.Property.Property prop in ServerProperties)
             {
                 Entities.Property.IProperty<Entities.Property.Property> bll = null;
@@ -60,11 +36,11 @@ namespace ProjetoRP.Business
                 }
 
                 bll.DrawPickup(prop);
-            }
+            }            
         }        
 
         // SQL Functions
-        public Entities.Property.Property SQL_FetchPropertyData(int property_id)
+        public static Entities.Property.Property SQL_FetchPropertyData(int property_id)
         {
             Entities.Property.Property prop = null;
 
@@ -77,7 +53,7 @@ namespace ProjetoRP.Business
             return prop;
         }
 
-        public List<Entities.Property.Property> SQL_FetchProperties()
+        public static List<Entities.Property.Property> SQL_FetchProperties()
         {
             List<Entities.Property.Property> properties = new List<Entities.Property.Property>();
 
@@ -89,8 +65,32 @@ namespace ProjetoRP.Business
                 properties = properties.Concat(businesses.Cast<Entities.Property.Property>().ToList()).ToList();
 
                 // AsNoTracking "detaches" the entity from the Context, allowing it to be kept in memory and used as please up until reattached again @Player_Save                                
-            }
+            }            
             return properties;
+        }
+
+        public static void Property_Create(Entities.Property.Property prop)
+        {
+            using (var context = new DatabaseContext())
+            {
+                context.Properties.Add(prop);
+                context.SaveChanges();                
+            }
+
+            ServerProperties.Add(prop);
+
+            Entities.Property.IProperty<Entities.Property.Property> bll = null;
+
+            if (prop is Entities.Property.House)
+            {
+                bll = HouseBll;
+            }
+            else if (prop is Entities.Property.Business)
+            {
+                bll = BusinessBll;
+            }
+
+            bll.DrawPickup(prop);
         }
     }
 }

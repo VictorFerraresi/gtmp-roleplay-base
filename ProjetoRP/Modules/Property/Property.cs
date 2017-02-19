@@ -13,9 +13,7 @@ using System.Threading.Tasks;
 namespace ProjetoRP.Modules.Property
 {
     public class Property : Script
-    {
-        public Business.PropertyBLL PropBll = new Business.PropertyBLL();
-
+    {    
         public Property()
         {
             API.onResourceStart += OnResourceStart;
@@ -25,8 +23,8 @@ namespace ProjetoRP.Modules.Property
         public void OnResourceStart()
         {
             API.consoleOutput(Messages.console_startup);
-            PropBll.LoadProperties();            
-            PropBll.DrawPropertiesPickups();
+            Business.PropertyBLL.LoadProperties();
+            Business.PropertyBLL.DrawPropertiesPickups();
         }
 
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
