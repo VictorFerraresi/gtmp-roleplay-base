@@ -10,11 +10,11 @@ namespace ProjetoRP.Entities.Property
 {
     public enum PropertyType
     {
-        PROPERTY_TYPE_NULL,
-        PROPERTY_TYPE_HOUSE,
-        PROPERTY_TYPE_BUSINESS,
-        PROPERTY_TYPE_OFFICE,
-        PROPERTY_TYPE_ENTRANCE
+        PROPERTY_TYPE_NULL = 0,
+        PROPERTY_TYPE_HOUSE = 1,
+        PROPERTY_TYPE_BUSINESS = 2,
+        PROPERTY_TYPE_OFFICE = 3,
+        PROPERTY_TYPE_ENTRANCE = 4
     }
 
     public abstract class Property
@@ -23,7 +23,7 @@ namespace ProjetoRP.Entities.Property
         //public virtual Property Prop { get; set; }
 
         [Key]
-        public int Id { get; set; }        
+        public int Id { get; set; }
 
         [Required]
         public PropertyType Type { get; set; }
@@ -37,6 +37,6 @@ namespace ProjetoRP.Entities.Property
         [Required]
         public int Dimension { get; set; }
 
-        public string Address { get; set; }
+        public string Address { get; set; }        
     }
 }

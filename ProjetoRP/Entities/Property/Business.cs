@@ -9,8 +9,8 @@ using GTANetworkServer;
 
 namespace ProjetoRP.Entities.Property
 {
-    [Table("Houses")]
-    public class House : Property
+    [Table("Businesses")]
+    public class Business : Property
     {
         [Key]
         public int Id { get; set; }

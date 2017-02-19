@@ -99,6 +99,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\BusinessBLL.cs" />
+    <Compile Include="Business\HouseBLL.cs" />
+    <Compile Include="Business\PropertyBLL.cs" />
     <Compile Include="Configurations\Character.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -107,8 +110,10 @@
     <Compile Include="DatabaseContext.cs" />
     <Compile Include="Entities\Character.cs" />
     <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Property\Business.cs" />
     <Compile Include="Entities\Property\Door.cs" />
     <Compile Include="Entities\Property\House.cs" />
+    <Compile Include="Entities\Property\IProperty.cs" />
     <Compile Include="Entities\Property\Property.cs" />
     <Compile Include="Entities\Session.cs" />
     <Compile Include="Entities\Vehicle.cs" />
@@ -137,9 +142,9 @@
     <Compile Include="Migrations\201702180103055_AddVehicle.Designer.cs">
       <DependentUpon>201702180103055_AddVehicle.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201702182015507_AddProperty.cs" />
-    <Compile Include="Migrations\201702182015507_AddProperty.Designer.cs">
-      <DependentUpon>201702182015507_AddProperty.cs</DependentUpon>
+    <Compile Include="Migrations\201702182240018_AddProperty.cs" />
+    <Compile Include="Migrations\201702182240018_AddProperty.Designer.cs">
+      <DependentUpon>201702182240018_AddProperty.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
@@ -190,8 +195,8 @@
     <EmbeddedResource Include="Migrations\201702180103055_AddVehicle.resx">
       <DependentUpon>201702180103055_AddVehicle.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702182015507_AddProperty.resx">
-      <DependentUpon>201702182015507_AddProperty.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702182240018_AddProperty.resx">
+      <DependentUpon>201702182240018_AddProperty.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>

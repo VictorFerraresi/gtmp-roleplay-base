@@ -22,6 +22,19 @@ namespace ProjetoRP.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "dbo.Businesses",
+                c => new
+                    {
+                        Id = c.Int(nullable: false),
+                        Owner_Id = c.Int(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Properties", t => t.Id)
+                .ForeignKey("dbo.Characters", t => t.Owner_Id)
+                .Index(t => t.Id)
+                .Index(t => t.Owner_Id);
+            
+            CreateTable(
                 "dbo.Houses",
                 c => new
                     {
@@ -40,9 +53,14 @@ namespace ProjetoRP.Migrations
         {
             DropForeignKey("dbo.Houses", "Owner_Id", "dbo.Characters");
             DropForeignKey("dbo.Houses", "Id", "dbo.Properties");
+            DropForeignKey("dbo.Businesses", "Owner_Id", "dbo.Characters");
+            DropForeignKey("dbo.Businesses", "Id", "dbo.Properties");
             DropIndex("dbo.Houses", new[] { "Owner_Id" });
             DropIndex("dbo.Houses", new[] { "Id" });
+            DropIndex("dbo.Businesses", new[] { "Owner_Id" });
+            DropIndex("dbo.Businesses", new[] { "Id" });
             DropTable("dbo.Houses");
+            DropTable("dbo.Businesses");
             DropTable("dbo.Properties");
         }
     }

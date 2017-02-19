@@ -52,5 +52,52 @@ namespace ProjetoRP.Modules.Admin
                 _discordBot.SendAdminChatMessageToDiscord(character.Name, text);                
             //}
         }
+
+        [Command("criarpropriedade", GreedyArg = true)]
+        public void CreatePropertyCommand(Client sender, int type, string address)
+        {
+            //if (sender.IsAdmin()){
+            if(!Enum.IsDefined(typeof(Entities.Property.PropertyType), type))
+            {
+                API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
+            }
+            else
+            {
+                Entities.Property.Property prop = null;
+
+                switch (type)
+                {
+                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE:
+                        prop = new Entities.Property.House();
+                        prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE;
+                        prop.Address = address;
+                        prop.X = sender.position.X;
+                        prop.Y = sender.position.Y;
+                        prop.Z = sender.position.Z;
+                        break;
+
+                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
+                        prop = new Entities.Property.Business();
+                        prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS;
+                        prop.Address = address;
+                        prop.X = sender.position.X;
+                        prop.Y = sender.position.Y;
+                        prop.Z = sender.position.Z;
+                        break;
+
+                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
+                        ///TODO
+                        break;
+
+                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_OFFICE:
+                        //TODO
+                        break;
+                }
+
+                Business.PropertyBLL bll = new Business.PropertyBLL();
+                bll.Property_Create(prop);
+            }
+            //}
+        }
     }
 }

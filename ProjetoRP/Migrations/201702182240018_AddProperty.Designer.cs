@@ -13,7 +13,7 @@ namespace ProjetoRP.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201702182015507_AddProperty"; }
+            get { return "201702182240018_AddProperty"; }
         }
         
         string IMigrationMetadata.Source

@@ -14,7 +14,7 @@ namespace ProjetoRP.Modules.Property
 {
     public class Property : Script
     {
-        public List<Entities.Property.Property> ServerProperties;
+        public List<Entities.Property.Property> ServerProperties;        
 
         public Property()
         {
@@ -24,43 +24,41 @@ namespace ProjetoRP.Modules.Property
 
         public void OnResourceStart()
         {
-            API.consoleOutput(Messages.console_startup);
-            ServerProperties = SQL_FetchProperties();
+            API.consoleOutput(Messages.console_startup);            
+            ServerProperties = new Business.PropertyBLL().SQL_FetchProperties();
+            DrawPropertiesPickups();
         }
 
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
         {
             
-        }                        
-
-
-        // SQL Functions
-        private Entities.Property.Property SQL_FetchPropertyData(int property_id)
-        {
-            Entities.Property.Property prop = null;
-
-            using (var context = new DatabaseContext())
-            {
-                prop = (from p in context.Properties where p.Id == property_id select p).AsNoTracking().Single();
-                // AsNoTracking "detaches" the entity from the Context, allowing it to be kept in memory and used as please up until reattached again @Player_Save                                
-            }
-
-            return prop;
         }
 
-        private List<Entities.Property.Property> SQL_FetchProperties()
+        public void DrawPropertiesPickups()
         {
-            List<Entities.Property.Property> properties = new List<Entities.Property.Property>();
-
-            using (var context = new DatabaseContext())
+            foreach (Entities.Property.Property prop in ServerProperties)
             {
-                properties = (from p in context.Properties select p).AsNoTracking().ToList();
-                // AsNoTracking "detaches" the entity from the Context, allowing it to be kept in memory and used as please up until reattached again @Player_Save                                
+                Entities.Property.IProperty<Entities.Property.Property> bll = null;
+
+                if (prop is Entities.Property.House)
+                {
+                    bll = new Business.HouseBLL();
+                }
+                else if (prop is Entities.Property.Business)
+                {
+                    bll = new Business.BusinessBLL();
+                }
+
+                bll.DrawPickup(prop);
             }
-            return properties;
         }
 
+        //Commands
 
-        //Commands        
+        [Command("position")]
+        public void getPosition(Client player)
+        {
+            API.consoleOutput("{0},{1},{2}", player.position.X, player.position.Y, player.position.Z);            
+        }
     }
 }

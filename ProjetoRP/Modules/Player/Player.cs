@@ -49,11 +49,6 @@ namespace ProjetoRP.Modules.Player
             }
         }
 
-        private void OnPlayerDisconnected(Client player, string reason)
-        {
-            Player_Save(player);
-        }
-
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
         {
             switch (eventName)
@@ -80,53 +75,6 @@ namespace ProjetoRP.Modules.Player
                     {
                         Player_KickForInvalidTrigger(player);
                     }
-                    break;
-                case "CS_UI_PRELOAD_READY":
-                    API.call("Ui", "fixCursor", player, true);
-                    API.call("Ui", "evalUi", player, "login_app.display=true;");
-                    break;
-                case "CS_LOGIN_SUBMIT":
-                    var data = API.fromJson((string)args[0]);
-
-                    Player_Login(player, (string)data.user, (string)data.pass);
-                    break;
-                case "CS_CHARSEL_SWITCH":
-                    if (player.getData("PLAYER_STATUS") != PlayerStatus.CharacterSelection)
-                    {
-                        Player_KickForInvalidTrigger(player);
-                        return;
-                    }
-
-                    var switch_data = API.fromJson((string)args[0]);
-                    List<Character> lcd = player.getData("PLAYER_CHARSEL_DATA");
-
-                    Character selected = lcd.Single(x => x.Id == (int)switch_data.character_id);
-
-                    PedHash pedHash;
-                    Enum.TryParse(selected.Skin, out pedHash);
-
-                    player.setSkin(pedHash);
-
-                    break;
-                case "CS_CHARSEL_SUBMIT":
-                    if (player.getData("PLAYER_STATUS") != PlayerStatus.CharacterSelection)
-                    {
-                        Player_KickForInvalidTrigger(player);
-                        return;
-                    }
-
-                    var submit_data = API.fromJson((string)args[0]);
-                    int cid = (int)submit_data.character_id;
-
-                    if (cid == 0)
-                    {
-                        // suspicious
-                        API.consoleOutput("Player " + player.socialClubName + " tried to spawn cid 0");
-                        return;
-                    }
-                    API.call("Ui", "evalUi", player, "charsel_app.display=false;");
-
-                    Player_Spawn(player, cid);
                     break;
             }
         }
@@ -310,7 +258,7 @@ namespace ProjetoRP.Modules.Player
 
             using (var context = new DatabaseContext())
             {
-                var player_data = (from p in context.Players where p.Id == id select p).AsNoTracking().Single(); 
+                var player_data = (from p in context.Players where p.Id == id select p).AsNoTracking().Single();
                 // AsNoTracking "detaches" the entity from the Context, allowing it to be kept in memory and used as please up until reattached again @Player_Save
                 player.setData("PlayerData", player_data);
                 // context.Entry(player_data).State = EntityState.Detached;
@@ -345,9 +293,9 @@ namespace ProjetoRP.Modules.Player
 
         public void Player_Save(Client player)
         {
-            if (player.getData("PLAYER_STATUS") == PlayerStatus.AccountOptions || 
+            if (player.getData("PLAYER_STATUS") == PlayerStatus.AccountOptions ||
                 player.getData("PLAYER_STATUS") == PlayerStatus.CharacterSelection ||
-                player.getData("PLAYER_STATUS") == PlayerStatus.Spawned) 
+                player.getData("PLAYER_STATUS") == PlayerStatus.Spawned)
             {
                 Entities.Player p = player.getData("PlayerData");
 
@@ -358,7 +306,6 @@ namespace ProjetoRP.Modules.Player
                     context.SaveChanges();
                 }
             }
-                
         }
 
         [Command("login", GreedyArg = true)]
