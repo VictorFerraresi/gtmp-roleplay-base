@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity.Core.Objects;
+using ProjetoRP.Entities.ItemPlacement;
 
 namespace ProjetoRP
 {
@@ -19,5 +20,7 @@ namespace ProjetoRP
         public DbSet<Character> Characters { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Placement> ItemsPlacement { get; set; }
     }
 }
