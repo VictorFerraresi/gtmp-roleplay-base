@@ -189,12 +189,10 @@
     <EmbeddedResource Include="Modules\Player\Messages.resx" />
     <EmbeddedResource Include="Modules\Vehicle\Messages.resx" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Modules\Player\Client\Player.js" />
-  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Modules\Admin\Client\Admin.js" />
+    <Content Include="Modules\Admin\Client\Admin.client.js" />
+    <Content Include="Modules\Player\Client\Player.client.js" />
     <Content Include="Modules\Vehicle\Client\Vehicle.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
