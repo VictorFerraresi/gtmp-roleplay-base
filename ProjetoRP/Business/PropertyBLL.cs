@@ -61,7 +61,7 @@ namespace ProjetoRP.Business
 
                 bll.DrawPickup(prop);
             }
-        }
+        }        
 
         // SQL Functions
         public Entities.Property.Property SQL_FetchPropertyData(int property_id)
