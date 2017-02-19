@@ -20,6 +20,25 @@ namespace ProjetoRP.Business
                 context.Properties.Add(prop);                
                 context.SaveChanges();
             }
+        }        
+
+        public void DrawPropertiesPickups()
+        {
+            foreach (Entities.Property.Property prop in ServerProperties)
+            {
+                Entities.Property.IProperty<Entities.Property.Property> bll = null;
+
+                if (prop is Entities.Property.House)
+                {
+                    bll = new Business.HouseBLL();
+                }
+                else if (prop is Entities.Property.Business)
+                {
+                    bll = new Business.BusinessBLL();
+                }
+
+                bll.DrawPickup(prop);
+            }
         }
 
         // SQL Functions
@@ -50,6 +69,6 @@ namespace ProjetoRP.Business
                 // AsNoTracking "detaches" the entity from the Context, allowing it to be kept in memory and used as please up until reattached again @Player_Save                                
             }
             return properties;
-        }        
+        }
     }
 }
