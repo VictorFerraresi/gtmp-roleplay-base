@@ -10,7 +10,8 @@ namespace ProjetoRP.Modules.Admin
 {
     class Admin : Script
     {
-        private DiscordBot _discordBot = new DiscordBot();        
+        private DiscordBot _discordBot = new DiscordBot();
+        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
 
         public Admin()
         {
@@ -94,7 +95,7 @@ namespace ProjetoRP.Modules.Admin
                         break;
                 }
 
-                Business.PropertyBLL.Property_Create(prop);
+                PropBLL.Property_Create(prop);
             }
             //}
         }

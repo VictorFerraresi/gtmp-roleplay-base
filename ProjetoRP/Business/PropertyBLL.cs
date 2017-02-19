@@ -9,20 +9,19 @@ using GTANetworkShared;
 
 namespace ProjetoRP.Business
 {
-    public static class PropertyBLL
-    {
-        public static List<Entities.Property.Property> ServerProperties = new List<Entities.Property.Property>();
-        public static Entities.Property.IProperty<Entities.Property.Property> HouseBll = new Business.HouseBLL();
-        public static Entities.Property.IProperty<Entities.Property.Property> BusinessBll = new Business.BusinessBLL();        
+    public class PropertyBLL
+    {        
+        public Entities.Property.IProperty<Entities.Property.Property> HouseBll = new Business.HouseBLL();
+        public Entities.Property.IProperty<Entities.Property.Property> BusinessBll = new Business.BusinessBLL();        
 
-        public static void LoadProperties()
+        public void LoadProperties()
         {
-            ServerProperties = SQL_FetchProperties();
+            Business.GlobalVariables.Instance.ServerProperties = SQL_FetchProperties();
         }
 
-        public static void DrawPropertiesPickups()
+        public void DrawPropertiesPickups()
         {            
-            foreach (Entities.Property.Property prop in ServerProperties)
+            foreach (Entities.Property.Property prop in Business.GlobalVariables.Instance.ServerProperties)
             {
                 Entities.Property.IProperty<Entities.Property.Property> bll = null;
 
@@ -40,7 +39,7 @@ namespace ProjetoRP.Business
         }        
 
         // SQL Functions
-        public static Entities.Property.Property SQL_FetchPropertyData(int property_id)
+        public Entities.Property.Property SQL_FetchPropertyData(int property_id)
         {
             Entities.Property.Property prop = null;
 
@@ -53,7 +52,7 @@ namespace ProjetoRP.Business
             return prop;
         }
 
-        public static List<Entities.Property.Property> SQL_FetchProperties()
+        public List<Entities.Property.Property> SQL_FetchProperties()
         {
             List<Entities.Property.Property> properties = new List<Entities.Property.Property>();
 
@@ -69,7 +68,7 @@ namespace ProjetoRP.Business
             return properties;
         }
 
-        public static void Property_Create(Entities.Property.Property prop)
+        public void Property_Create(Entities.Property.Property prop)
         {
             using (var context = new DatabaseContext())
             {
@@ -77,7 +76,7 @@ namespace ProjetoRP.Business
                 context.SaveChanges();                
             }
 
-            ServerProperties.Add(prop);
+            Business.GlobalVariables.Instance.ServerProperties.Add(prop);
 
             Entities.Property.IProperty<Entities.Property.Property> bll = null;
 
