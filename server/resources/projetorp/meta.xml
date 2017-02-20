@@ -4,6 +4,7 @@
   <export class="Ui" event="onUiEventTrigger" />
   <script src="\Admin\Admin.client.js" type="client" lang="javascript" />
   <script src="\Player\Player.client.js" type="client" lang="javascript" />
+  <file src="\Property\Property.js" />
   <file src="\Ui\css\bootstrap-slider.min.css" />
   <file src="\Ui\css\bootstrap-theme.css" />
   <file src="\Ui\css\bootstrap-theme.css.map" />

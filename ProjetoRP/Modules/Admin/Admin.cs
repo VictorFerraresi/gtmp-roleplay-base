@@ -10,7 +10,8 @@ namespace ProjetoRP.Modules.Admin
 {
     class Admin : Script
     {
-        private DiscordBot _discordBot = new DiscordBot();        
+        private DiscordBot _discordBot = new DiscordBot();
+        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();     
 
         public Admin()
         {
@@ -50,6 +51,77 @@ namespace ProjetoRP.Modules.Admin
             //if sender.IsAdmin(){
                 SendAdminChatMessage(character.Name, text);                
                 _discordBot.SendAdminChatMessageToDiscord(character.Name, text);                
+            //}
+        }
+
+        [Command("criarpropriedade", GreedyArg = true)]
+        public void CreatePropertyCommand(Client sender, int type, string address)
+        {
+            //if (sender.IsAdmin()){
+            if (!Enum.IsDefined(typeof(Entities.Property.PropertyType), type))
+            {
+                API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
+            }
+            else
+            {
+                Entities.Property.Property prop = null;
+
+                switch (type)
+                {
+                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE:
+                        prop = new Entities.Property.House();
+                        prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE;
+                        prop.Address = address;
+                        prop.X = sender.position.X;
+                        prop.Y = sender.position.Y;
+                        prop.Z = sender.position.Z;
+                        break;
+
+                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
+                        prop = new Entities.Property.Business();
+                        prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS;
+                        prop.Address = address;
+                        prop.X = sender.position.X;
+                        prop.Y = sender.position.Y;
+                        prop.Z = sender.position.Z;
+                        break;
+
+                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
+                        ///TODO
+                        break;
+
+                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_OFFICE:
+                        //TODO
+                        break;
+                }
+
+                PropBLL.Property_Create(prop);
+            }
+            //}
+        }
+
+        [Command("deletarpropriedade", GreedyArg = true)]
+        public void DeletePropertyCommand(Client sender, int id)
+        {
+            //if (sender.IsAdmin()){
+            if (id < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Não existem propriedades com ID menor que 1!");
+            }
+            else
+            {
+                Entities.Property.Property prop = PropBLL.FindPropertyById(id);
+                
+                if(prop == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Esta propriedade não existe!");
+                }
+                else
+                {
+                    PropBLL.Property_Delete(prop);
+                    API.sendChatMessageToPlayer(sender, "Você deletou esta propriedade com sucesso!");
+                }                             
+            }
             //}
         }
     }
