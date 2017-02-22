@@ -19,6 +19,18 @@ namespace ProjetoRP.Business
             Business.GlobalVariables.Instance.ServerProperties = SQL_FetchProperties();
         }
 
+        public void SaveProperties()
+        {
+            using (var context = new DatabaseContext())
+            {
+                foreach (var prop in Business.GlobalVariables.Instance.ServerProperties)
+                {
+                    context.Properties.Add(prop);
+                    context.SaveChanges();
+                }
+            }
+        }
+
         public void DrawPropertiesPickups()
         {            
             foreach (Entities.Property.Property prop in Business.GlobalVariables.Instance.ServerProperties)
@@ -68,7 +80,7 @@ namespace ProjetoRP.Business
             return properties;
         }
 
-        public void Property_Create(Entities.Property.Property prop)
+        public void Property_Create(Entities.Property.Property prop, int dimension)
         {
             using (var context = new DatabaseContext())
             {
@@ -90,6 +102,8 @@ namespace ProjetoRP.Business
             }
 
             bll.DrawPickup(prop);
+            Business.DoorBLL DoorBLL = new Business.DoorBLL();
+            DoorBLL.Door_Create(prop, 0, true, new Vector3(prop.X, prop.Y, prop.Z), dimension, new Vector3(-18.77586, -581.755, 90.11491), prop.Id);
         }
 
         public void Property_Delete(Entities.Property.Property prop)
@@ -100,6 +114,9 @@ namespace ProjetoRP.Business
                 context.Properties.Remove(prop);
                 context.SaveChanges();
             }
+
+            Business.DoorBLL DoorBLL = new Business.DoorBLL();
+            DoorBLL.Door_DeleteFromProperty(prop);
 
             Business.GlobalVariables.Instance.ServerProperties.Remove(prop);
 
@@ -113,9 +130,14 @@ namespace ProjetoRP.Business
                 API.shared.deleteEntity(prop.Pickup);
                 prop.Pickup = null;                
             }
+            if(prop.TextLabel != null)
+            {
+                API.shared.deleteEntity(prop.TextLabel);
+                prop.TextLabel = null;
+            }
         }
 
-        public Entities.Property.Property FindPropertyById(int id)
+        public Entities.Property.Property FindPropertyById(int id) //Should we be using C#'s predicate List find?
         {
             Entities.Property.Property found = null;
 

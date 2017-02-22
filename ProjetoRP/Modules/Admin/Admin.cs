@@ -11,7 +11,8 @@ namespace ProjetoRP.Modules.Admin
     class Admin : Script
     {
         private DiscordBot _discordBot = new DiscordBot();
-        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();     
+        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
+        private Business.DoorBLL DoorBLL = new Business.DoorBLL();
 
         public Admin()
         {
@@ -94,8 +95,8 @@ namespace ProjetoRP.Modules.Admin
                         //TODO
                         break;
                 }
-
-                PropBLL.Property_Create(prop);
+                PropBLL.Property_Create(prop, sender.dimension);
+                API.sendChatMessageToPlayer(sender, "Você criou uma propriedade com sucesso!");
             }
             //}
         }
@@ -121,6 +122,36 @@ namespace ProjetoRP.Modules.Admin
                     PropBLL.Property_Delete(prop);
                     API.sendChatMessageToPlayer(sender, "Você deletou esta propriedade com sucesso!");
                 }                             
+            }
+            //}
+        }
+
+        [Command("criarporta", GreedyArg = true)]
+        public void CreateDoorCommand(Client sender, int propid, long model)
+        {
+            //if (sender.IsAdmin()){
+            if(propid < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Não existem propriedades com ID menor que 1!");
+            }
+            //else if(model is invalid && != 0)
+            //{
+                //API.sendChatMessageToPlayer(sender, "Este modelo de porta é inválido!");
+            //}
+            else
+            {
+                Entities.Property.Property prop = PropBLL.FindPropertyById(propid);
+
+                if (prop == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Esta propriedade não existe!");
+                }
+                else
+                {
+                    
+                    DoorBLL.Door_Create(prop, model, true, new Vector3(sender.position.X, sender.position.Y, sender.position.Z), sender.dimension, new Vector3(-773.8976, 342.1525, 196.6863), prop.Id);
+                    API.sendChatMessageToPlayer(sender, "Você criou uma porta com sucesso!");
+                }
             }
             //}
         }

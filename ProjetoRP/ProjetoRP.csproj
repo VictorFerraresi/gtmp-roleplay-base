@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\BusinessBLL.cs" />
+    <Compile Include="Business\DoorBLL.cs" />
     <Compile Include="Business\GlobalVariables.cs" />
     <Compile Include="Business\HouseBLL.cs" />
     <Compile Include="Business\PropertyBLL.cs" />
@@ -146,6 +147,10 @@
     <Compile Include="Migrations\201702192022287_AddProperty.cs" />
     <Compile Include="Migrations\201702192022287_AddProperty.Designer.cs">
       <DependentUpon>201702192022287_AddProperty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702211815319_AddDoor.cs" />
+    <Compile Include="Migrations\201702211815319_AddDoor.Designer.cs">
+      <DependentUpon>201702211815319_AddDoor.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
@@ -198,6 +203,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702192022287_AddProperty.resx">
       <DependentUpon>201702192022287_AddProperty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702211815319_AddDoor.resx">
+      <DependentUpon>201702211815319_AddDoor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>

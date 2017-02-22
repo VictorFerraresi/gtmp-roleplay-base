@@ -43,5 +43,7 @@ namespace ProjetoRP.Entities.Property
 
         [NotMapped]
         public Marker Pickup { get; set; }
+        [NotMapped]    
+        public TextLabel TextLabel { get; set; }
     }
 }
