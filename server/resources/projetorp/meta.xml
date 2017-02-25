@@ -2,9 +2,15 @@
   <info name="ProjetoRP Gamemode" author="Manajjdisc" type="script" />
   <script src="ProjetoRP.dll" type="server" lang="compiled" />
   <export class="Ui" event="onUiEventTrigger" />
+<<<<<<< HEAD
   <script src="\Admin\Admin.js" type="client" lang="javascript" />
   <script src="\Player\Player.js" type="client" lang="javascript" />
   <script src="\Property\Property.js" type="client" lang="javascript" />
+=======
+  <script src="\Admin\Admin.client.js" type="client" lang="javascript" />
+  <script src="\Player\Player.client.js" type="client" lang="javascript" />
+  <script src="\Property\Property.client.js" type="client" lang="javascript" />
+>>>>>>> master
   <file src="\Ui\css\bootstrap-slider.min.css" />
   <file src="\Ui\css\bootstrap-theme.css" />
   <file src="\Ui\css\bootstrap-theme.css.map" />
@@ -32,16 +38,16 @@
   <file src="\Ui\img\items\weapon-combatpistol.png" />
   <file src="\Ui\img\items\weapon-combatpistol2.png" />
   <file src="\Ui\img\items\weapon-pistol.png" />
-  <script src="\Ui\js\bootstrap-slider.min.js" type="client" lang="javascript" />
-  <script src="\Ui\js\bootstrap.js" type="client" lang="javascript" />
-  <script src="\Ui\js\bootstrap.min.js" type="client" lang="javascript" />
-  <script src="\Ui\js\inventory.js" type="client" lang="javascript" />
-  <script src="\Ui\js\npm.js" type="client" lang="javascript" />
-  <script src="\Ui\js\vue.js" type="client" lang="javascript" />
-  <script src="\Ui\js\vue.min.js" type="client" lang="javascript" />
-  <script src="\Ui\cef.js" type="client" lang="javascript" />
+  <file src="\Ui\js\bootstrap-slider.min.js" />
+  <file src="\Ui\js\bootstrap.js" />
+  <file src="\Ui\js\bootstrap.min.js" />
+  <file src="\Ui\js\inventory.js" />
+  <file src="\Ui\js\npm.js" />
+  <file src="\Ui\js\vue.js" />
+  <file src="\Ui\js\vue.min.js" />
+  <script src="\Ui\cef.client.js" type="client" lang="javascript" />
   <file src="\Ui\meta.xml" />
   <file src="\Ui\page.html" />
   <file src="\Ui\page.html.test" />
-  <script src="\Vehicle\Vehicle.js" type="client" lang="javascript" />
+  <script src="\Vehicle\Vehicle.client.js" type="client" lang="javascript" />
 </meta>

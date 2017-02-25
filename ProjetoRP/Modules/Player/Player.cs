@@ -15,6 +15,8 @@ namespace ProjetoRP.Modules.Player
 {
     public class Player : Script
     {
+        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
+
         const int NULL_DIMENSION = int.MaxValue;
         const int MAX_LOGIN_TRIES = 3;
         const int MAX_CHARACTERS_PER_PLAYER = 3;
@@ -75,6 +77,56 @@ namespace ProjetoRP.Modules.Player
                     {
                         Player_KickForInvalidTrigger(player);
                     }
+                    break;
+                case "CS_UI_PRELOAD_READY":
+                    if (player.getData("PLAYER_IS_CEF_ENABLED"))
+                    {
+                        API.call("Ui", "fixCursor", player, true);
+                        API.call("Ui", "evalUi", player, "login_app.display=true;");
+                    }
+                    break;
+                case "CS_LOGIN_SUBMIT":
+                    var data = API.fromJson((string)args[0]);
+
+                    Player_Login(player, (string)data.user, (string)data.pass);
+                    break;
+                case "CS_CHARSEL_SWITCH":
+                    if (player.getData("PLAYER_STATUS") != PlayerStatus.CharacterSelection)
+                    {
+                        Player_KickForInvalidTrigger(player);
+                        return;
+                    }
+
+                    var switch_data = API.fromJson((string)args[0]);
+                    List<Character> lcd = player.getData("PLAYER_CHARSEL_DATA");
+
+                    Character selected = lcd.Single(x => x.Id == (int)switch_data.character_id);
+
+                    PedHash pedHash;
+                    Enum.TryParse(selected.Skin, out pedHash);
+
+                    player.setSkin(pedHash);
+
+                    break;
+                case "CS_CHARSEL_SUBMIT":
+                    if (player.getData("PLAYER_STATUS") != PlayerStatus.CharacterSelection)
+                    {
+                        Player_KickForInvalidTrigger(player);
+                        return;
+                    }
+
+                    var submit_data = API.fromJson((string)args[0]);
+                    int cid = (int)submit_data.character_id;
+
+                    if (cid == 0)
+                    {
+                        // suspicious
+                        API.consoleOutput("Player " + player.socialClubName + " tried to spawn cid 0");
+                        return;
+                    }
+                    API.call("Ui", "evalUi", player, "charsel_app.display=false;");
+
+                    Player_Spawn(player, cid);
                     break;
             }
         }
@@ -345,6 +397,25 @@ namespace ProjetoRP.Modules.Player
         private int GetXpNeededToLevelUp(int level)
         {
             return 8 + (4 * level);
+        }
+
+
+        //Commands
+
+        [Command("comprar")]
+        public void BuyCommand(Client player)
+        {
+            Entities.Property.Property prop = PropBLL.Property_GetNearestInRange(player, 4.0);
+
+            if (prop != null)
+            {
+                PropBLL.Property_BuyCommand(player, prop, false);
+            }
+            //else if otherbuycases
+            else
+            {
+                API.sendChatMessageToPlayer(player, "Você não está próximo a nada que possa comprar!");
+            }
         }
     }
 }

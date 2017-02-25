@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GTANetworkServer;
+using GTANetworkShared;
 
 namespace ProjetoRP.Entities.Property
 {
@@ -19,9 +21,6 @@ namespace ProjetoRP.Entities.Property
 
     public abstract class Property
     {
-        //[Key]
-        //public virtual Property Prop { get; set; }
-
         [Key]
         public int Id { get; set; }
 
@@ -37,6 +36,14 @@ namespace ProjetoRP.Entities.Property
         [Required]
         public int Dimension { get; set; }
 
-        public string Address { get; set; }        
+        public string Address { get; set; }
+
+        [Required]
+        public int Price { get; set; }
+
+        [NotMapped]
+        public Marker Pickup { get; set; }
+        [NotMapped]    
+        public TextLabel TextLabel { get; set; }
     }
 }

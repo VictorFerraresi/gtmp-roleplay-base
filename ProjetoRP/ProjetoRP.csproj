@@ -100,8 +100,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\BusinessBLL.cs" />
+<<<<<<< HEAD
     <Compile Include="Business\GlobalVariables.cs" />
     <Compile Include="Business\HouseBLL.cs" />
+=======
+    <Compile Include="Business\DoorBLL.cs" />
+    <Compile Include="Business\GlobalVariables.cs" />
+    <Compile Include="Business\HouseBLL.cs" />
+    <Compile Include="Business\PlayerBLL.cs" />
+>>>>>>> master
     <Compile Include="Business\PropertyBLL.cs" />
     <Compile Include="Configurations\Character.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -143,9 +150,23 @@
     <Compile Include="Migrations\201702180103055_AddVehicle.Designer.cs">
       <DependentUpon>201702180103055_AddVehicle.cs</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Migrations\201702182240018_AddProperty.cs" />
     <Compile Include="Migrations\201702182240018_AddProperty.Designer.cs">
       <DependentUpon>201702182240018_AddProperty.cs</DependentUpon>
+=======
+    <Compile Include="Migrations\201702192022287_AddProperty.cs" />
+    <Compile Include="Migrations\201702192022287_AddProperty.Designer.cs">
+      <DependentUpon>201702192022287_AddProperty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702250229029_AddDoor.cs" />
+    <Compile Include="Migrations\201702250229029_AddDoor.Designer.cs">
+      <DependentUpon>201702250229029_AddDoor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702250404033_AddPropertyPrice.cs" />
+    <Compile Include="Migrations\201702250404033_AddPropertyPrice.Designer.cs">
+      <DependentUpon>201702250404033_AddPropertyPrice.cs</DependentUpon>
+>>>>>>> master
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
@@ -196,8 +217,19 @@
     <EmbeddedResource Include="Migrations\201702180103055_AddVehicle.resx">
       <DependentUpon>201702180103055_AddVehicle.cs</DependentUpon>
     </EmbeddedResource>
+<<<<<<< HEAD
     <EmbeddedResource Include="Migrations\201702182240018_AddProperty.resx">
       <DependentUpon>201702182240018_AddProperty.cs</DependentUpon>
+=======
+    <EmbeddedResource Include="Migrations\201702192022287_AddProperty.resx">
+      <DependentUpon>201702192022287_AddProperty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702250229029_AddDoor.resx">
+      <DependentUpon>201702250229029_AddDoor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702250404033_AddPropertyPrice.resx">
+      <DependentUpon>201702250404033_AddPropertyPrice.cs</DependentUpon>
+>>>>>>> master
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -208,14 +240,18 @@
     <EmbeddedResource Include="Modules\Property\Messages.resx" />
     <EmbeddedResource Include="Modules\Vehicle\Messages.resx" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Modules\Player\Client\Player.js" />
-  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+<<<<<<< HEAD
     <Content Include="Modules\Admin\Client\Admin.js" />
     <Content Include="Modules\Property\Client\Property.js" />
     <Content Include="Modules\Vehicle\Client\Vehicle.js" />
+=======
+    <Content Include="Modules\Admin\Client\Admin.client.js" />
+    <Content Include="Modules\Player\Client\Player.client.js" />
+    <Content Include="Modules\Property\Client\Property.client.js" />
+    <Content Include="Modules\Vehicle\Client\Vehicle.client.js" />
+>>>>>>> master
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

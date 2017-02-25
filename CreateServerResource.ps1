@@ -34,7 +34,7 @@ foreach ($item in $arr)
 	# New-Item -ItemType Directory -Force -Path "$($ServerResourcePath)\$($Module)"
 	# xcopy $item.fullname "$($ServerResourcePath)\$($Module)" /y
 	
-	if ($item.fullname -like "*.js") 
+	if ($item.fullname -like "*.client.js") 
 	{
 		$Script = $xml.CreateElement("script");
 		

@@ -12,6 +12,7 @@ namespace ProjetoRP.Modules.Admin
     {
         private DiscordBot _discordBot = new DiscordBot();
         private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
+        private Business.DoorBLL DoorBLL = new Business.DoorBLL();
 
         public Admin()
         {
@@ -55,12 +56,16 @@ namespace ProjetoRP.Modules.Admin
         }
 
         [Command("criarpropriedade", GreedyArg = true)]
-        public void CreatePropertyCommand(Client sender, int type, string address)
+        public void CreatePropertyCommand(Client sender, int type, int price, string address)
         {
             //if (sender.IsAdmin()){
-            if(!Enum.IsDefined(typeof(Entities.Property.PropertyType), type))
+            if (!Enum.IsDefined(typeof(Entities.Property.PropertyType), type))
             {
                 API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
+            }
+            else if(price < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Escolha um preço maior do que 0!");
             }
             else
             {
@@ -75,6 +80,7 @@ namespace ProjetoRP.Modules.Admin
                         prop.X = sender.position.X;
                         prop.Y = sender.position.Y;
                         prop.Z = sender.position.Z;
+                        prop.Price = price;
                         break;
 
                     case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
@@ -84,18 +90,102 @@ namespace ProjetoRP.Modules.Admin
                         prop.X = sender.position.X;
                         prop.Y = sender.position.Y;
                         prop.Z = sender.position.Z;
+                        prop.Price = price;
                         break;
 
                     case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
-                        ///TODO
+                        ///TODO                        
+                        break;
+
+                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
+                        //TODO
                         break;
 
                     case (int)Entities.Property.PropertyType.PROPERTY_TYPE_OFFICE:
                         //TODO
                         break;
                 }
+                PropBLL.Property_Create(prop, sender.dimension);
+                API.sendChatMessageToPlayer(sender, "Você criou uma propriedade com sucesso!");
+            }
+            //}
+        }
 
-                PropBLL.Property_Create(prop);
+        [Command("deletarpropriedade")]
+        public void DeletePropertyCommand(Client sender, int id)
+        {
+            //if (sender.IsAdmin()){
+            if (id < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Não existem propriedades com ID menor que 1!");
+            }
+            else
+            {
+                Entities.Property.Property prop = PropBLL.FindPropertyById(id);
+
+                if (prop == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Esta propriedade não existe!");
+                }
+                else
+                {
+                    PropBLL.Property_Delete(prop);
+                    API.sendChatMessageToPlayer(sender, "Você deletou esta propriedade com sucesso!");
+                }
+            }
+            //}
+        }
+
+        [Command("criarporta")]
+        public void CreateDoorCommand(Client sender, int propid, long model)
+        {
+            //if (sender.IsAdmin()){
+            if(propid < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Não existem propriedades com ID menor que 1!");
+            }
+            //else if(model is invalid && != 0)
+            //{
+                //API.sendChatMessageToPlayer(sender, "Este modelo de porta é inválido!");
+            //}
+            else
+            {
+                Entities.Property.Property prop = PropBLL.FindPropertyById(propid);
+
+                if (prop == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Esta propriedade não existe!");
+                }
+                else
+                {                    
+                    DoorBLL.Door_Create(prop, model, true, new Vector3(sender.position.X, sender.position.Y, sender.position.Z), sender.dimension, new Vector3(-18.77586, -581.755, 90.11491), prop.Id);
+                    API.sendChatMessageToPlayer(sender, "Você criou uma porta com sucesso!");
+                }
+            }
+            //}
+        }
+
+        [Command("deletarporta")]
+        public void DeleteDoorCommand(Client sender, int doorid)
+        {
+            //if (sender.IsAdmin()){
+            if (doorid < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Não existem portas com ID menor que 1!");
+            }
+            else
+            {
+                Entities.Property.Door door = DoorBLL.FindDoorById(doorid);
+
+                if (door == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Esta porta não existe!");
+                }
+                else
+                {
+                    DoorBLL.Door_Delete(door);
+                    API.sendChatMessageToPlayer(sender, "Você deletou esta porta com sucesso!");
+                }
             }
             //}
         }
