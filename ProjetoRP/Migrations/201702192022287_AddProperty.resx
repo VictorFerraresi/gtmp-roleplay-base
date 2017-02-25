@@ -117,55 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="command_login" xml:space="preserve">
-    <value>login</value>
+  <data name="Target" xml:space="preserve">
+    <value>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</value>
   </data>
-  <data name="console_startup" xml:space="preserve">
-    <value>Módulo Player carregado!</value>
-  </data>
-  <data name="player_cef_disabled" xml:space="preserve">
-    <value>Você está com o CEF desabilitado e sua experiência de jogo será afetada. Habilite-o nas opções</value>
-  </data>
-  <data name="player_cef_is_disabled" xml:space="preserve">
-    <value>Você está com o CEF desabilitado e sua experiência de jogo será afetada. Habilite-o nas opções.</value>
-  </data>
-  <data name="player_character_idx_not_exists" xml:space="preserve">
-    <value>Você não possui um personagem nesse slot!</value>
-  </data>
-  <data name="player_character_n" xml:space="preserve">
-    <value>({0}) {1}: Level {2} ({3}/{4}) ${5} + ${6} (banco)</value>
-  </data>
-  <data name="player_kicked_inconsistency" xml:space="preserve">
-    <value>Você foi kickado por inconsistencia de informações transmitidas.</value>
-  </data>
-  <data name="player_last_logins" xml:space="preserve">
-    <value>Seu último login foi {0} pelo IP {1}. Desde então, você teve {2} tentativas de login falhas.</value>
-  </data>
-  <data name="player_login_success" xml:space="preserve">
-    <value>Você fez o login com sucesso!</value>
-  </data>
-  <data name="player_not_near_any_buyable" xml:space="preserve">
-    <value>Você não está próximo a nada que possa comprar!</value>
-  </data>
-  <data name="player_not_registered" xml:space="preserve">
-    <value>Você ainda não está registrado em nosso servidor.</value>
-  </data>
-  <data name="player_please_login" xml:space="preserve">
-    <value>Para realizar login, por favor digite suas informações abaixo.</value>
-  </data>
-  <data name="player_please_login_nocef" xml:space="preserve">
-    <value>Para realizar login, digite /login [usuário] [senha].</value>
-  </data>
-  <data name="player_registered" xml:space="preserve">
-    <value>Você já possui uma conta. Faça o login agora com /login.</value>
-  </data>
-  <data name="player_welcome_message" xml:space="preserve">
-    <value>~w~Bem-vindo ao ~o~Projeto~w~RP</value>
-  </data>
-  <data name="player_wrong_password" xml:space="preserve">
-    <value>Você errou a senha. Tente novamente. Você está na tentativa {0} de {1}</value>
-  </data>
-  <data name="player_your_characters" xml:space="preserve">
-    <value>Estes são os seus personagens. Use /spawn [n] para jogar:</value>
+  <data name="DefaultSchema" xml:space="preserve">
+    <value>dbo</value>
   </data>
 </root>

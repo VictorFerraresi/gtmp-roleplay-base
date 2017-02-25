@@ -19,5 +19,7 @@ namespace ProjetoRP
         public DbSet<Character> Characters { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<Entities.Property.Property> Properties { get; set; }
+        public DbSet<Entities.Property.Door> Doors { get; set; }
     }
 }
