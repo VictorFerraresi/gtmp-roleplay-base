@@ -21,9 +21,6 @@ namespace ProjetoRP.Entities.Property
 
     public abstract class Property
     {
-        //[Key]
-        //public virtual Property Prop { get; set; }
-
         [Key]
         public int Id { get; set; }
 
@@ -40,6 +37,9 @@ namespace ProjetoRP.Entities.Property
         public int Dimension { get; set; }
 
         public string Address { get; set; }
+
+        [Required]
+        public int Price { get; set; }
 
         [NotMapped]
         public Marker Pickup { get; set; }

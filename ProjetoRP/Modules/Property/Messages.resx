@@ -120,7 +120,4 @@
   <data name="console_startup" xml:space="preserve">
     <value>Módulo Property carregado!</value>
   </data>
-  <data name="property_not_near_any_door" xml:space="preserve">
-    <value>Você não está próximo a nenhuma porta!</value>
-  </data>
 </root>

@@ -22,10 +22,10 @@ namespace ProjetoRP.Migrations
                         InteriorY = c.Double(nullable: false),
                         InteriorZ = c.Double(nullable: false),
                         InteriorDimension = c.Int(nullable: false),
-                        Property_Id = c.Int(),
+                        Property_Id = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Properties", t => t.Property_Id)
+                .ForeignKey("dbo.Properties", t => t.Property_Id, cascadeDelete: true)
                 .Index(t => t.Property_Id);
             
         }

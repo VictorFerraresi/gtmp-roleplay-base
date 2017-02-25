@@ -13,6 +13,7 @@ namespace ProjetoRP.Entities.Property
         [Key]
         public int Id { get; set; }
 
+        [Required]
         public Property Property { get; set; }
 
         public long Model { get; set; }

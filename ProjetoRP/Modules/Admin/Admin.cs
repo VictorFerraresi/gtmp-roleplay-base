@@ -56,12 +56,16 @@ namespace ProjetoRP.Modules.Admin
         }
 
         [Command("criarpropriedade", GreedyArg = true)]
-        public void CreatePropertyCommand(Client sender, int type, string address)
+        public void CreatePropertyCommand(Client sender, int type, int price, string address)
         {
             //if (sender.IsAdmin()){
             if (!Enum.IsDefined(typeof(Entities.Property.PropertyType), type))
             {
                 API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
+            }
+            else if(price < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Escolha um preço maior do que 0!");
             }
             else
             {
@@ -76,6 +80,7 @@ namespace ProjetoRP.Modules.Admin
                         prop.X = sender.position.X;
                         prop.Y = sender.position.Y;
                         prop.Z = sender.position.Z;
+                        prop.Price = price;
                         break;
 
                     case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
@@ -85,10 +90,11 @@ namespace ProjetoRP.Modules.Admin
                         prop.X = sender.position.X;
                         prop.Y = sender.position.Y;
                         prop.Z = sender.position.Z;
+                        prop.Price = price;
                         break;
 
                     case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
-                        ///TODO
+                        //TODO
                         break;
 
                     case (int)Entities.Property.PropertyType.PROPERTY_TYPE_OFFICE:
@@ -101,7 +107,7 @@ namespace ProjetoRP.Modules.Admin
             //}
         }
 
-        [Command("deletarpropriedade", GreedyArg = true)]
+        [Command("deletarpropriedade")]
         public void DeletePropertyCommand(Client sender, int id)
         {
             //if (sender.IsAdmin()){
@@ -112,8 +118,8 @@ namespace ProjetoRP.Modules.Admin
             else
             {
                 Entities.Property.Property prop = PropBLL.FindPropertyById(id);
-                
-                if(prop == null)
+
+                if (prop == null)
                 {
                     API.sendChatMessageToPlayer(sender, "Esta propriedade não existe!");
                 }
@@ -121,12 +127,12 @@ namespace ProjetoRP.Modules.Admin
                 {
                     PropBLL.Property_Delete(prop);
                     API.sendChatMessageToPlayer(sender, "Você deletou esta propriedade com sucesso!");
-                }                             
+                }
             }
             //}
         }
 
-        [Command("criarporta", GreedyArg = true)]
+        [Command("criarporta")]
         public void CreateDoorCommand(Client sender, int propid, long model)
         {
             //if (sender.IsAdmin()){
@@ -147,10 +153,34 @@ namespace ProjetoRP.Modules.Admin
                     API.sendChatMessageToPlayer(sender, "Esta propriedade não existe!");
                 }
                 else
-                {
-                    
-                    DoorBLL.Door_Create(prop, model, true, new Vector3(sender.position.X, sender.position.Y, sender.position.Z), sender.dimension, new Vector3(-773.8976, 342.1525, 196.6863), prop.Id);
+                {                    
+                    DoorBLL.Door_Create(prop, model, true, new Vector3(sender.position.X, sender.position.Y, sender.position.Z), sender.dimension, new Vector3(-18.77586, -581.755, 90.11491), prop.Id);
                     API.sendChatMessageToPlayer(sender, "Você criou uma porta com sucesso!");
+                }
+            }
+            //}
+        }
+
+        [Command("deletarporta")]
+        public void DeleteDoorCommand(Client sender, int doorid)
+        {
+            //if (sender.IsAdmin()){
+            if (doorid < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Não existem portas com ID menor que 1!");
+            }
+            else
+            {
+                Entities.Property.Door door = DoorBLL.FindDoorById(doorid);
+
+                if (door == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Esta porta não existe!");
+                }
+                else
+                {
+                    DoorBLL.Door_Delete(door);
+                    API.sendChatMessageToPlayer(sender, "Você deletou esta porta com sucesso!");
                 }
             }
             //}

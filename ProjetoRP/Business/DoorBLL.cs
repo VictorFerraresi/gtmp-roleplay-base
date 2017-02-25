@@ -68,20 +68,22 @@ namespace ProjetoRP.Business
                 context.Doors.Attach(door);
                 context.Doors.Remove(door);
                 context.SaveChanges();
-            }
+            }            
 
             Business.GlobalVariables.Instance.ServerDoors.Remove(door);
         }
 
         public void Door_DeleteFromProperty(Entities.Property.Property prop)
         {
-            foreach(var door in Business.GlobalVariables.Instance.ServerDoors)
+            List<Entities.Property.Door> toDelete = Business.GlobalVariables.Instance.ServerDoors.Copy();
+
+            foreach (var door in toDelete)
             {
                 if(door.Property == prop)
-                {
+                {                    
                     Door_Delete(door);
                 }
-            }
+            }            
         }
 
         public Entities.Property.Door Door_GetNearestInRange(Client player, double range, bool outside)
@@ -147,6 +149,22 @@ namespace ProjetoRP.Business
                 doors = (from d in context.Doors select d).Include(v => v.Property).AsNoTracking().ToList();                                       
             }
             return doors;
+        }
+
+        public Entities.Property.Door FindDoorById(int id) //Should we be using C#'s predicate List find?
+        {
+            Entities.Property.Door found = null;
+
+            foreach (var door in Business.GlobalVariables.Instance.ServerDoors)
+            {
+                if (door.Id == id)
+                {
+                    found = door;
+                    break;
+                }
+            }
+
+            return found;
         }
     }
 }

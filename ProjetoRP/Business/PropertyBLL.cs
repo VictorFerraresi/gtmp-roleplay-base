@@ -31,6 +31,16 @@ namespace ProjetoRP.Business
             }
         }
 
+        public void Property_Save(Entities.Property.House prop)
+        {
+            using (var context = new DatabaseContext())
+            {
+                context.Properties.Attach(prop);
+                context.Entry(prop).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
         public void DrawPropertiesPickups()
         {            
             foreach (Entities.Property.Property prop in Business.GlobalVariables.Instance.ServerProperties)
@@ -48,7 +58,7 @@ namespace ProjetoRP.Business
 
                 bll.DrawPickup(prop);
             }            
-        }        
+        }
 
         // SQL Functions
         public Entities.Property.Property SQL_FetchPropertyData(int property_id)
@@ -85,7 +95,7 @@ namespace ProjetoRP.Business
             using (var context = new DatabaseContext())
             {
                 context.Properties.Add(prop);
-                context.SaveChanges();                
+                context.SaveChanges();
             }
 
             Business.GlobalVariables.Instance.ServerProperties.Add(prop);
@@ -108,16 +118,16 @@ namespace ProjetoRP.Business
 
         public void Property_Delete(Entities.Property.Property prop)
         {
-            using (var context = new DatabaseContext())
-            {
-                context.Properties.Attach(prop);
-                context.Properties.Remove(prop);
-                context.SaveChanges();
-            }
-
             Business.DoorBLL DoorBLL = new Business.DoorBLL();
             DoorBLL.Door_DeleteFromProperty(prop);
 
+            using (var context = new DatabaseContext())
+            {                
+                context.Properties.Attach(prop);
+                context.Properties.Remove(prop);                
+                context.SaveChanges();
+            }
+            
             Business.GlobalVariables.Instance.ServerProperties.Remove(prop);
 
             DeletePickup(prop);
@@ -151,6 +161,52 @@ namespace ProjetoRP.Business
             }
 
             return found;
+        }
+
+        public Entities.Property.Property Property_GetNearestInRange(Client player, double range)
+        {
+            Vector3 playerPos = API.shared.getEntityPosition(player);            
+
+            Entities.Property.Property nearestProp = null;
+
+            double nearestDistance = range;
+
+            foreach (var prop in Business.GlobalVariables.Instance.ServerProperties)
+            {
+                Vector3 propPos;
+                propPos = new Vector3(prop.X, prop.Y, prop.Z);
+
+                float distance = playerPos.DistanceTo(propPos);                
+
+                if (prop.Dimension == player.dimension && distance <= range && distance <= nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestProp = prop;
+                }
+            }
+            return nearestProp;
+        }
+
+        public void Property_BuyCommand(Client player, Entities.Property.Property prop, bool confirmed)
+        {
+            Entities.Property.IProperty<Entities.Property.Property> bll = null;
+
+            if (prop is Entities.Property.House)
+            {
+                bll = HouseBll;
+            }
+            else if (prop is Entities.Property.Business)
+            {
+                bll = BusinessBll;
+            }
+
+            bool success = bll.TryToBuy(player, prop, confirmed);
+
+            if (success)
+            {
+                Entities.Property.House h = (Entities.Property.House)prop;
+                Property_Save(h);
+            }
         }
     }
 }

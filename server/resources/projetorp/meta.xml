@@ -4,7 +4,7 @@
   <export class="Ui" event="onUiEventTrigger" />
   <script src="\Admin\Admin.client.js" type="client" lang="javascript" />
   <script src="\Player\Player.client.js" type="client" lang="javascript" />
-  <file src="\Property\Property.js" />
+  <script src="\Property\Property.client.js" type="client" lang="javascript" />
   <file src="\Ui\css\bootstrap-slider.min.css" />
   <file src="\Ui\css\bootstrap-theme.css" />
   <file src="\Ui\css\bootstrap-theme.css.map" />
@@ -43,5 +43,5 @@
   <file src="\Ui\meta.xml" />
   <file src="\Ui\page.html" />
   <file src="\Ui\page.html.test" />
-  <file src="\Vehicle\Vehicle.js" />
+  <script src="\Vehicle\Vehicle.client.js" type="client" lang="javascript" />
 </meta>

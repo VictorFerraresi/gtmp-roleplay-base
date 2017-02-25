@@ -103,6 +103,7 @@
     <Compile Include="Business\DoorBLL.cs" />
     <Compile Include="Business\GlobalVariables.cs" />
     <Compile Include="Business\HouseBLL.cs" />
+    <Compile Include="Business\PlayerBLL.cs" />
     <Compile Include="Business\PropertyBLL.cs" />
     <Compile Include="Configurations\Character.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -148,9 +149,13 @@
     <Compile Include="Migrations\201702192022287_AddProperty.Designer.cs">
       <DependentUpon>201702192022287_AddProperty.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201702211815319_AddDoor.cs" />
-    <Compile Include="Migrations\201702211815319_AddDoor.Designer.cs">
-      <DependentUpon>201702211815319_AddDoor.cs</DependentUpon>
+    <Compile Include="Migrations\201702250229029_AddDoor.cs" />
+    <Compile Include="Migrations\201702250229029_AddDoor.Designer.cs">
+      <DependentUpon>201702250229029_AddDoor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702250404033_AddPropertyPrice.cs" />
+    <Compile Include="Migrations\201702250404033_AddPropertyPrice.Designer.cs">
+      <DependentUpon>201702250404033_AddPropertyPrice.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
@@ -204,8 +209,11 @@
     <EmbeddedResource Include="Migrations\201702192022287_AddProperty.resx">
       <DependentUpon>201702192022287_AddProperty.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702211815319_AddDoor.resx">
-      <DependentUpon>201702211815319_AddDoor.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702250229029_AddDoor.resx">
+      <DependentUpon>201702250229029_AddDoor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702250404033_AddPropertyPrice.resx">
+      <DependentUpon>201702250404033_AddPropertyPrice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -220,8 +228,8 @@
   <ItemGroup>
     <Content Include="Modules\Admin\Client\Admin.client.js" />
     <Content Include="Modules\Player\Client\Player.client.js" />
-    <Content Include="Modules\Property\Client\Property.js" />
-    <Content Include="Modules\Vehicle\Client\Vehicle.js" />
+    <Content Include="Modules\Property\Client\Property.client.js" />
+    <Content Include="Modules\Vehicle\Client\Vehicle.client.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

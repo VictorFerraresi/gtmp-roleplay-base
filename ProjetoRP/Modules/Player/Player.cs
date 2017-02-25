@@ -15,6 +15,8 @@ namespace ProjetoRP.Modules.Player
 {
     public class Player : Script
     {
+        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
+
         const int NULL_DIMENSION = int.MaxValue;
         const int MAX_LOGIN_TRIES = 3;
         const int MAX_CHARACTERS_PER_PLAYER = 3;
@@ -401,6 +403,25 @@ namespace ProjetoRP.Modules.Player
         private int GetXpNeededToLevelUp(int level)
         {
             return 8 + (4 * level);
+        }
+
+
+        //Commands
+
+        [Command("comprar")]
+        public void BuyCommand(Client player)
+        {
+            Entities.Property.Property prop = PropBLL.Property_GetNearestInRange(player, 4.0);
+
+            if (prop != null)
+            {
+                PropBLL.Property_BuyCommand(player, prop, false);
+            }
+            //else if otherbuycases
+            else
+            {
+                API.sendChatMessageToPlayer(player, "Você não está próximo a nada que possa comprar!");
+            }
         }
     }
 }
