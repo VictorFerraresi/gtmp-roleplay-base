@@ -145,10 +145,6 @@
     <Compile Include="Migrations\201702180103055_AddVehicle.Designer.cs">
       <DependentUpon>201702180103055_AddVehicle.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201702260538558_AddItem.cs" />
-    <Compile Include="Migrations\201702260538558_AddItem.Designer.cs">
-      <DependentUpon>201702260538558_AddItem.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
     <Compile Include="Modules\Admin\Colors.Designer.cs">
@@ -198,9 +194,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702180103055_AddVehicle.resx">
       <DependentUpon>201702180103055_AddVehicle.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702260538558_AddItem.resx">
-      <DependentUpon>201702260538558_AddItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>

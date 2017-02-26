@@ -15,6 +15,8 @@ namespace ProjetoRP.Modules.Player
 {
     public class Player : Script
     {
+        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
+
         const int NULL_DIMENSION = int.MaxValue;
         const int MAX_LOGIN_TRIES = 3;
         const int MAX_CHARACTERS_PER_PLAYER = 3;
@@ -47,11 +49,6 @@ namespace ProjetoRP.Modules.Player
                 API.sendChatMessageToPlayer(player, Messages.player_cef_is_disabled);
                 player.setData("PLAYER_IS_CEF_ENABLED", false);
             }
-        }
-
-        private void OnPlayerDisconnected(Client player, string reason)
-        {
-            Player_Save(player);
         }
 
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
@@ -313,7 +310,7 @@ namespace ProjetoRP.Modules.Player
 
             using (var context = new DatabaseContext())
             {
-                var player_data = (from p in context.Players where p.Id == id select p).AsNoTracking().Single(); 
+                var player_data = (from p in context.Players where p.Id == id select p).AsNoTracking().Single();
                 // AsNoTracking "detaches" the entity from the Context, allowing it to be kept in memory and used as please up until reattached again @Player_Save
                 player.setData("PlayerData", player_data);
                 // context.Entry(player_data).State = EntityState.Detached;
@@ -348,9 +345,9 @@ namespace ProjetoRP.Modules.Player
 
         public void Player_Save(Client player)
         {
-            if (player.getData("PLAYER_STATUS") == PlayerStatus.AccountOptions || 
+            if (player.getData("PLAYER_STATUS") == PlayerStatus.AccountOptions ||
                 player.getData("PLAYER_STATUS") == PlayerStatus.CharacterSelection ||
-                player.getData("PLAYER_STATUS") == PlayerStatus.Spawned) 
+                player.getData("PLAYER_STATUS") == PlayerStatus.Spawned)
             {
                 Entities.Player p = player.getData("PlayerData");
 
@@ -361,7 +358,6 @@ namespace ProjetoRP.Modules.Player
                     context.SaveChanges();
                 }
             }
-                
         }
 
         [Command("login", GreedyArg = true)]
@@ -401,6 +397,25 @@ namespace ProjetoRP.Modules.Player
         private int GetXpNeededToLevelUp(int level)
         {
             return 8 + (4 * level);
+        }
+
+
+        //Commands
+
+        [Command("comprar")]
+        public void BuyCommand(Client player)
+        {
+            Entities.Property.Property prop = PropBLL.Property_GetNearestInRange(player, 4.0);
+
+            if (prop != null)
+            {
+                PropBLL.Property_BuyCommand(player, prop, false);
+            }
+            //else if otherbuycases
+            else
+            {
+                API.sendChatMessageToPlayer(player, "Você não está próximo a nada que possa comprar!");
+            }
         }
     }
 }
