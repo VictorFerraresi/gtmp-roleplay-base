@@ -16,7 +16,7 @@ namespace ProjetoRP.Business
         {
             Entities.Property.Business b = (Entities.Property.Business)business;
 
-            business.Pickup = API.shared.createMarker(2, new Vector3(business.X, business.Y, business.Z), new Vector3(), new Vector3(), new Vector3(0.5, 0.5, 0.5), 255, 0, 0, 255, 1);            
+            business.Pickup = API.shared.createMarker(0, new Vector3(business.X, business.Y, business.Z - 0.25), new Vector3(), new Vector3(), new Vector3(0.5, 0.5, 0.5), 125, 0, 0, 255, 1);            
             if(b.Owner == null)
             {
                 business.TextLabel = API.shared.createTextLabel(business.Address + "\n$" + business.Price.ToString("N0"), new Vector3(business.X, business.Y, business.Z + 0.5), 20.0f, 0.5f, false);
@@ -59,8 +59,9 @@ namespace ProjetoRP.Business
                     b.TextLabel = null;
                 }
 
-                PlayerBLL.Player_TakeMoney(c, b.Price);
+                PlayerBLL.Player_TakeMoney(c, b.Price);                
                 b.Owner = c;
+                b.Owner_Id = c.Id;               
                 DrawPickup(b);
                 API.shared.sendChatMessageToPlayer(player, "Você adquiriu esta propriedade com sucesso!");
                 return true;

@@ -8,6 +8,7 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 
 namespace ProjetoRP.Modules.Property
@@ -32,7 +33,7 @@ namespace ProjetoRP.Modules.Property
         }
 
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
-        {                  
+        {                              
             switch (eventName)
             {
                 case "CS_BUY_PROP_CONFIRMATION":
@@ -128,7 +129,7 @@ namespace ProjetoRP.Modules.Property
         [Command("position")]
         public void getPosition(Client player)
         {
-            API.consoleOutput("{0},{1},{2}", player.position.X, player.position.Y, player.position.Z);            
-        }
+            API.consoleOutput("{0},{1},{2}", player.position.X, player.position.Y, player.position.Z);           
+        }     
     }
 }

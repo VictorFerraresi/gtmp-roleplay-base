@@ -13,7 +13,9 @@ namespace ProjetoRP.Entities.Property
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        public int? Property_Id { get; set; }
+
+        [ForeignKey("Property_Id")]
         public Property Property { get; set; }
 
         public long Model { get; set; }
