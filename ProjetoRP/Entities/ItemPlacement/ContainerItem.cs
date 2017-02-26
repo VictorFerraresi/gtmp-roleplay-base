@@ -8,9 +8,12 @@ using System.Threading.Tasks;
 
 namespace ProjetoRP.Entities.ItemPlacement
 {
-    [Table("ContainerItems")]
+    [Table("Placements_ContainerItems")]
     public class ContainerItem : Placement
     {
+        [Required]
+        public int? ParentItem_Id { get; set; }
+        [ForeignKey("ParentItem_Id")]
         public Item ParentItem { get; set; }
     }
 }

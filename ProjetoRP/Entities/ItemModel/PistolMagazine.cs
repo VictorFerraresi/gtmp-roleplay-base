@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -7,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace ProjetoRP.Entities.ItemModel
 {
-    [Table("Weapons")]
-    public class Weapon : Item
+    [Table("Items_PistolMagazines")]
+    public class PistolMagezines : Item
     {
+        [Required]
         public int Bullets { get; set; }
     }
 }

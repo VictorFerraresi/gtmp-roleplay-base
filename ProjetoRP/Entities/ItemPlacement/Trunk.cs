@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace ProjetoRP.Entities.ItemPlacement
 {
-    [Table("TrunkItems")]
+    [Table("Placements_TrunkItems")]
     public class Trunk : Placement
     {
-        // public Vehicle ParentVehicle { get; set; }
+        [Required]
+        public int? ParentVehicle_Id { get; set; }
+        [ForeignKey("ParentVehicle_Id")]
+        public Vehicle ParentVehicle { get; set; }
     }
 }
