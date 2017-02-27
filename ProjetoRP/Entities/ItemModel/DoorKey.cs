@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjetoRP.Entities.Property;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,6 +13,9 @@ namespace ProjetoRP.Entities.ItemModel
     public class DoorKey : Item
     {
         [Required]
-        public int Door_Id { get; set; }
+        public int? Door_Id { get; set; }
+
+        [ForeignKey("Door_Id")]
+        public Door Door { get; set; }
     }
 }

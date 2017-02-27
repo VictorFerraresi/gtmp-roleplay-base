@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ProjetoRP.Entities.ItemModel
 {
     [Table("Items_Medkits")]
-    public class Medkits : Item
+    public class Medkit : Item
     {
     }
 }

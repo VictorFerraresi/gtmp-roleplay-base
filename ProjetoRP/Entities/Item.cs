@@ -13,9 +13,6 @@ namespace ProjetoRP.Entities
         [Key]
         public int Id { get; set; }
 
-        public int? Placement_Id { get; set; }
-
-        [ForeignKey("Placement_Id")]
-        public ItemPlacement.Placement Placement { get; set; }
+        public virtual ItemPlacement.Placement Placement { get; set; }
     }
 }

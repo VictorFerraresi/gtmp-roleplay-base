@@ -97,10 +97,6 @@ namespace ProjetoRP.Modules.Admin
                         ///TODO                        
                         break;
 
-                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
-                        //TODO
-                        break;
-
                     case (int)Entities.Property.PropertyType.PROPERTY_TYPE_OFFICE:
                         //TODO
                         break;
