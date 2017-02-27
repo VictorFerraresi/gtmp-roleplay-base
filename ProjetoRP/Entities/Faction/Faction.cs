@@ -23,7 +23,6 @@ namespace ProjetoRP.Entities.Faction
         public Faction()
         {
             Ranks = new List<Rank>();
-            Members = new List<Character>();
         }
 
         [Key]
@@ -47,6 +46,5 @@ namespace ProjetoRP.Entities.Faction
 
 
         virtual public ICollection<Rank> Ranks { get; set; }
-        virtual public ICollection<Character> Members { get; set; }
     }
 }

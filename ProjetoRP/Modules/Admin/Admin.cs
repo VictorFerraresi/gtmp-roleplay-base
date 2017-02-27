@@ -620,10 +620,41 @@ namespace ProjetoRP.Modules.Admin
             //}
         }
 
-        [Command("darlider", GreedyArg = true)]
-        public void GiveFactionleaderCommand(Client sender, int id, string option, string value)
+        [Command("darlider")]
+        public void GiveFactionleaderCommand(Client sender, int playerid, int factionid)
         {
+            if(playerid < 0 || playerid > 1000)
+            {
+                API.sendChatMessageToPlayer(sender, "Escolha um playerid válido!");
+            }
+            else if (factionid < 0)
+            {
+                API.sendChatMessageToPlayer(sender, "Não existem facções com o ID menor que 1!");
+            }
+            else
+            {
+                Client target = API.getAllPlayers().Find(p => p.getData("playerId") == playerid);
+                Entities.Faction.Faction faction = FacBLL.FindFactionById(factionid);
+                if (target == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Este jogador não está conectado!");
+                }
+                else if(faction == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Esta facção não existe!");
+                }
+                else //Player is Connected and Faction Exists
+                {
+                    Entities.Character c = target.getData("CHARACTER_DATA");
+                    c.Faction = faction;
+                    c.Faction_Id = faction.Id;
+                    Entities.Faction.Rank rank = FacBLL.Faction_GetLeaderRank(faction);
+                    c.Rank = rank;
+                    c.Rank_Id = rank.Id;
 
+                    API.sendChatMessageToPlayer(sender, "Você setou o jogador " + c.Name + " como líder da facção " + faction.Name);
+                }
+            }                       
         }
     }
 }

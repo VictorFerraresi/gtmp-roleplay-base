@@ -59,7 +59,7 @@ namespace ProjetoRP.Business
         }        
 
         public void Faction_Delete(Entities.Faction.Faction faction)
-        {
+        {            
             using (var context = new DatabaseContext())
             {
                 context.Factions.Attach(faction);
@@ -130,6 +130,43 @@ namespace ProjetoRP.Business
             }
 
             return found;
+        }
+
+        public Entities.Faction.Rank Faction_GetLeaderRank(Entities.Faction.Faction faction)
+        {
+            Entities.Faction.Rank rank = null;
+            foreach(var r in faction.Ranks)
+            {
+                if(r.Leader)
+                {
+                    rank = r;
+                }
+            }
+
+            return rank;
+        }
+
+        public bool Faction_IsLeader(Entities.Character character, Entities.Faction.Faction faction)
+        {
+            if (Faction_GetLeader(faction).Id == character.Id)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public Entities.Character Faction_GetLeader(Entities.Faction.Faction faction)
+        {
+            Entities.Character character = null;            
+
+            Entities.Faction.Rank rank = faction.Ranks.FirstOrDefault(r => r.Leader == true);
+
+            using (var context = new DatabaseContext())
+            {                
+                character = (from c in context.Characters where c.Rank_Id == rank.Id select c).AsNoTracking().Single();
+            }            
+
+            return character;
         }
     }
 }
