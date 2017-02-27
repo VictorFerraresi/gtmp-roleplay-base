@@ -62,5 +62,9 @@ namespace ProjetoRP.Entities
         public double Xp { get; set; }
         [Required]
         public int Level { get; set; }
+
+        public int? Faction_Id { get; set; }
+        [ForeignKey("Faction_Id")]        
+        public Faction.Faction Faction { get; set; }
     }
 }

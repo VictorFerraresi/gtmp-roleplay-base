@@ -13,6 +13,7 @@ namespace ProjetoRP.Modules.Admin
         private DiscordBot _discordBot = new DiscordBot();
         private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
         private Business.DoorBLL DoorBLL = new Business.DoorBLL();
+        private Business.FactionBLL FacBLL = new Business.FactionBLL();
 
         public Admin()
         {
@@ -50,8 +51,8 @@ namespace ProjetoRP.Modules.Admin
         {
             Entities.Character character = sender.getData("CHARACTER_DATA");
             //if sender.IsAdmin(){
-                SendAdminChatMessage(character.Name, text);                
-                _discordBot.SendAdminChatMessageToDiscord(character.Name, text);                
+            SendAdminChatMessage(character.Name, text);
+            _discordBot.SendAdminChatMessageToDiscord(character.Name, text);
             //}
         }
 
@@ -63,7 +64,7 @@ namespace ProjetoRP.Modules.Admin
             {
                 API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
             }
-            else if(price < 1)
+            else if (price < 1)
             {
                 API.sendChatMessageToPlayer(sender, "Escolha um preço maior do que 0!");
             }
@@ -80,7 +81,7 @@ namespace ProjetoRP.Modules.Admin
                         prop.X = sender.position.X;
                         prop.Y = sender.position.Y;
                         prop.Z = sender.position.Z;
-                        prop.Price = price;                                                
+                        prop.Price = price;
                         break;
 
                     case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
@@ -159,13 +160,13 @@ namespace ProjetoRP.Modules.Admin
                             prop.Dimension = sender.dimension;
 
                             PropBLL.Property_Save(prop);
-                            PropBLL.RedrawPickup(prop);                            
+                            PropBLL.RedrawPickup(prop);
 
                             API.sendChatMessageToPlayer(sender, "Você alterou a posição da propriedade ID " + id + " para a sua localização!");
                             break;
 
                         case "endereco":
-                            if(value.Equals("default"))
+                            if (value.Equals("default"))
                             {
                                 API.sendChatMessageToPlayer(sender, "Escolha um endereço para a propriedade!");
                                 API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarpropriedade " + id + " endereco Rua Lorem Ipsum, 340!");
@@ -178,7 +179,7 @@ namespace ProjetoRP.Modules.Admin
                                 PropBLL.RedrawPickup(prop);
 
                                 API.sendChatMessageToPlayer(sender, "Você alterou o endereço da propriedade ID " + id + " para " + value);
-                            }                            
+                            }
                             break;
 
                         case "preco":
@@ -193,7 +194,7 @@ namespace ProjetoRP.Modules.Admin
 
                                 if (Int32.TryParse(value, out price))
                                 {
-                                    if(price < 1)
+                                    if (price < 1)
                                     {
                                         API.sendChatMessageToPlayer(sender, "Escolha um preço maior do que 0!");
                                         API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarpropriedade " + id + " preco 25000");
@@ -206,20 +207,20 @@ namespace ProjetoRP.Modules.Admin
                                         PropBLL.RedrawPickup(prop);
 
                                         API.sendChatMessageToPlayer(sender, "Você alterou o preço da propriedade ID " + id + " para $" + price.ToString("N0"));
-                                    }                                    
+                                    }
                                 }
                                 else
                                 {
                                     API.sendChatMessageToPlayer(sender, "Digite apenas números no valor!");
                                     API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarpropriedade " + id + " preco 25000");
-                                }                    
+                                }
                             }
                             break;
 
                         default:
                             API.sendChatMessageToPlayer(sender, "Escolha uma ação válida!");
                             API.sendChatMessageToPlayer(sender, "~y~[AÇÕES] ~w~pos, endereco, preco.");
-                            break;                        
+                            break;
                     }
                 }
             }
@@ -230,13 +231,13 @@ namespace ProjetoRP.Modules.Admin
         public void CreateDoorCommand(Client sender, int propid, long model)
         {
             //if (sender.IsAdmin()){
-            if(propid < 1)
+            if (propid < 1)
             {
                 API.sendChatMessageToPlayer(sender, "Não existem propriedades com ID menor que 1!");
             }
             //else if(model is invalid && != 0)
             //{
-                //API.sendChatMessageToPlayer(sender, "Este modelo de porta é inválido!");
+            //API.sendChatMessageToPlayer(sender, "Este modelo de porta é inválido!");
             //}
             else
             {
@@ -247,7 +248,7 @@ namespace ProjetoRP.Modules.Admin
                     API.sendChatMessageToPlayer(sender, "Esta propriedade não existe!");
                 }
                 else
-                {                    
+                {
                     DoorBLL.Door_Create(prop, model, true, new Vector3(sender.position.X, sender.position.Y, sender.position.Z), sender.dimension, new Vector3(-18.77586, -581.755, 90.11491), prop.Id);
                     API.sendChatMessageToPlayer(sender, "Você criou uma porta com sucesso!");
                 }
@@ -291,7 +292,7 @@ namespace ProjetoRP.Modules.Admin
             else
             {
                 Entities.Property.Door door = DoorBLL.FindDoorById(id);
-                
+
                 if (door == null)
                 {
                     API.sendChatMessageToPlayer(sender, "Esta porta não existe!");
@@ -306,7 +307,7 @@ namespace ProjetoRP.Modules.Admin
                             door.ExteriorZ = sender.position.Z;
                             door.ExteriorDimension = sender.dimension;
 
-                            DoorBLL.Door_Save(door);                            
+                            DoorBLL.Door_Save(door);
 
                             API.sendChatMessageToPlayer(sender, "Você alterou a posição da porta ID " + id + " para a sua localização!");
                             break;
@@ -343,7 +344,7 @@ namespace ProjetoRP.Modules.Admin
                                     {
                                         Entities.Property.Property prop = PropBLL.FindPropertyById(propid);
 
-                                        if(prop == null)
+                                        if (prop == null)
                                         {
                                             API.sendChatMessageToPlayer(sender, "Esta propriedade não existe!");
                                         }
@@ -352,10 +353,10 @@ namespace ProjetoRP.Modules.Admin
                                             door.Property = prop;
                                             door.Property_Id = prop.Id;
 
-                                            DoorBLL.Door_Save(door);                                            
+                                            DoorBLL.Door_Save(door);
 
                                             API.sendChatMessageToPlayer(sender, "Você alterou a propriedade da porta ID " + id + " para " + prop.Id);
-                                        }                                        
+                                        }
                                     }
                                 }
                                 else
@@ -385,10 +386,10 @@ namespace ProjetoRP.Modules.Admin
                                     }
                                     else
                                     {
-    
+
                                         door.Model = model;
 
-                                        DoorBLL.Door_Save(door);                                            
+                                        DoorBLL.Door_Save(door);
 
                                         API.sendChatMessageToPlayer(sender, "Você alterou o modelo da porta ID " + id + " para " + model);
                                     }
@@ -421,7 +422,7 @@ namespace ProjetoRP.Modules.Admin
                                     else
                                     {
 
-                                        if(locked == 0)
+                                        if (locked == 0)
                                         {
                                             door.Locked = false;
                                             API.sendChatMessageToPlayer(sender, "Você destrancou a porta ID " + id);
@@ -447,6 +448,171 @@ namespace ProjetoRP.Modules.Admin
                         default:
                             API.sendChatMessageToPlayer(sender, "Escolha uma ação válida!");
                             API.sendChatMessageToPlayer(sender, "~y~[AÇÕES] ~w~pos, interior, propriedade, modelo, trancado.");
+                            break;
+                    }
+                }
+            }
+            //}
+        }
+
+        [Command("criarfaccao", GreedyArg = true)]
+        public void CreateFactionCommand(Client sender, string acro, int type, int bank, string name)
+        {
+            //if (sender.IsAdmin()){            
+            if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Name == name) != null)
+            {
+                API.sendChatMessageToPlayer(sender, "Já existe uma facção com este nome!");
+            }
+            else if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Acro == acro) != null)
+            {
+                API.sendChatMessageToPlayer(sender, "Já existe uma facção com este acrônimo!");
+            }
+            else if (!Enum.IsDefined(typeof(Entities.Faction.FactionType), type))
+            {
+                API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
+            }
+            else if (bank < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Escolha um valor para o cofre maior do que 0!");
+            }
+            else
+            {
+                FacBLL.Faction_Create(name, acro, (Entities.Faction.FactionType)type, bank);
+                API.sendChatMessageToPlayer(sender, "Você criou uma facção com sucesso!");
+            }
+            //}
+        }
+
+        [Command("deletarfaccao")]
+        public void DeleteFactionCommand(Client sender, int factionid)
+        {
+            //if (sender.IsAdmin()){
+            if (factionid < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Não existem facções com ID menor que 1!");
+            }
+            else
+            {
+                Entities.Faction.Faction faction = FacBLL.FindFactionById(factionid);
+
+                if (faction == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Esta facção não existe!");
+                }
+                else
+                {
+                    FacBLL.Faction_Delete(faction);
+                    API.sendChatMessageToPlayer(sender, "Você deletou esta facção com sucesso!");
+                }
+            }
+            //}
+        }
+
+        [Command("editarfaccao", GreedyArg = true)]
+        public void EditFactionCommand(Client sender, int id, string option, string value)
+        {
+            //if (sender.IsAdmin()){
+            if (id < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Não existem facções com ID menor que 1!");
+            }
+            else
+            {
+                Entities.Faction.Faction faction = FacBLL.FindFactionById(id);
+
+                if (faction == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Esta facção não existe!");
+                }
+                else
+                {
+                    switch (option)
+                    {
+                        case "nome":
+                            if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Name == value) != null)
+                            {
+                                API.sendChatMessageToPlayer(sender, "Já existe uma facção com este nome!");
+                            }
+                            else
+                            {
+                                faction.Name = value;
+
+                                FacBLL.Faction_Save(faction);
+
+                                API.sendChatMessageToPlayer(sender, "Você alterou o nome da facção ID " + id + " para " + value);
+                            }                                                      
+                            break;
+
+                        case "acro":
+                            if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Acro == value) != null)
+                            {
+                                API.sendChatMessageToPlayer(sender, "Já existe uma facção com este acrônimo!");
+                            }
+                            else
+                            {
+                                faction.Acro = value;
+
+                                FacBLL.Faction_Save(faction);
+
+                                API.sendChatMessageToPlayer(sender, "Você alterou o acrônimo da facção ID " + id + " para " + value);
+                            }
+                            break;
+
+                        case "tipo":
+                            int type = 0;
+
+                            if (Int32.TryParse(value, out type))
+                            {
+                                if (!Enum.IsDefined(typeof(Entities.Faction.FactionType), type))
+                                {
+                                    API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
+                                    API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarfaccao " + id + " tipo 1");
+                                }
+                                else
+                                {
+                                    faction.Type = (Entities.Faction.FactionType)type;
+
+                                    FacBLL.Faction_Save(faction);
+
+                                    API.sendChatMessageToPlayer(sender, "Você alterou o tipo da facção ID " + id + " para " + type);
+                                }
+                            }
+                            else
+                            {
+                                API.sendChatMessageToPlayer(sender, "Digite apenas números no tipo da facção!");
+                                API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarfaccao " + id + " tipo 1");
+                            }
+                            break;
+
+                        case "cofre":
+                            int bank = 0;
+
+                            if (Int32.TryParse(value, out bank))
+                            {
+                                if (bank < 1)
+                                {
+                                    API.sendChatMessageToPlayer(sender, "Escolha um valor para o cofre maior do que 0!");
+                                    API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarfaccao " + id + " cofre 15000");
+                                }
+                                else
+                                {
+                                    faction.Bank = bank;
+
+                                    FacBLL.Faction_Save(faction);
+
+                                    API.sendChatMessageToPlayer(sender, "Você alterou o cofre da facção ID " + id + " para " + bank);
+                                }
+                            }
+                            else
+                            {
+                                API.sendChatMessageToPlayer(sender, "Digite apenas números no cofre da facção!");
+                                API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarfaccao " + id + " cofre 150000");
+                            }
+                            break;                       
+
+                        default:
+                            API.sendChatMessageToPlayer(sender, "Escolha uma ação válida!");
+                            API.sendChatMessageToPlayer(sender, "~y~[AÇÕES] ~w~nome, acro, tipo, cofre.");
                             break;
                     }
                 }
