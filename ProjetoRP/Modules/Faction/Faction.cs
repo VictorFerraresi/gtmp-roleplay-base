@@ -39,6 +39,22 @@ namespace ProjetoRP.Modules.Faction
         }
 
         //Commands        
-        
+        [Command("teste")]
+        public void CreateFactionCommand(Client sender, int id)
+        {            
+            if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Id == id) == null)
+            {
+                API.sendChatMessageToPlayer(sender, "Fac nao existe");
+            }           
+            else
+            {
+                Entities.Faction.Faction fac = Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Id == id);
+                foreach(var a in fac.Ranks)
+                {
+                    API.sendChatMessageToPlayer(sender, a.Name);
+                }
+            }            
+        }
+
     }
 }

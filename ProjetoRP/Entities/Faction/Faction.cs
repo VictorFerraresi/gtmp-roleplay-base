@@ -20,6 +20,12 @@ namespace ProjetoRP.Entities.Faction
 
     public class Faction
     {
+        public Faction()
+        {
+            Ranks = new List<Rank>();
+            Members = new List<Character>();
+        }
+
         [Key]
         public int Id { get; set; }
 

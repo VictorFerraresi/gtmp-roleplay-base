@@ -619,5 +619,11 @@ namespace ProjetoRP.Modules.Admin
             }
             //}
         }
+
+        [Command("darlider", GreedyArg = true)]
+        public void GiveFactionleaderCommand(Client sender, int id, string option, string value)
+        {
+
+        }
     }
 }
