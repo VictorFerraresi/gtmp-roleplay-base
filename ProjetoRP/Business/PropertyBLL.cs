@@ -60,6 +60,35 @@ namespace ProjetoRP.Business
             }            
         }
 
+        public bool Property_Validate(string address, int type, string price, out string msg)
+        {           
+            if (Business.GlobalVariables.Instance.ServerProperties.Find(x => x.Address == address) != null)
+            {                
+                msg = "Já existe uma propriedade com este endereço!";
+                return false;
+            }
+            if (!Enum.IsDefined(typeof(Entities.Property.PropertyType), type))
+            {                
+                msg = "Este tipo de é propriedade inválido!";
+                return false;
+            }
+
+            int priceVal = 0;
+
+            if (!int.TryParse(price, out priceVal))
+            {                
+                msg = "Digite apenas números no campo do preço!";
+                return false;
+            }
+            if (priceVal < 1)
+            {                
+                msg = "Escolha um valor para o preço maior do que 0!";
+                return false;
+            }            
+            msg = "Você criou esta propriedade com sucesso!";
+            return true;
+        }
+
         // SQL Functions
         public Entities.Property.Property SQL_FetchPropertyData(int property_id)
         {

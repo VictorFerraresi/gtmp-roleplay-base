@@ -92,6 +92,78 @@ namespace ProjetoRP.Business
             Faction_Save(faction);
         }
 
+        public Entities.Faction.Faction FindFactionById(int id) //Should we be using C#'s predicate List find?
+        {
+            Entities.Faction.Faction found = null;
+
+            foreach (var faction in Business.GlobalVariables.Instance.ServerFactions)
+            {
+                if (faction.Id == id)
+                {
+                    found = faction;
+                    break;
+                }
+            }
+
+            return found;
+        }
+
+        public Entities.Faction.Rank Faction_GetLeaderRank(Entities.Faction.Faction faction)
+        {
+            Entities.Faction.Rank rank = null;
+            foreach (var r in faction.Ranks)
+            {
+                if (r.Leader)
+                {
+                    rank = r;
+                }
+            }
+
+            return rank;
+        }
+
+        public bool Faction_IsLeader(Entities.Character character, Entities.Faction.Faction faction)
+        {
+            if (Faction_GetLeader(faction).Id == character.Id)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool Faction_Validate(string name, string acro, int type, string bank, out string msg)
+        {
+            if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Name == name) != null)
+            {
+                msg = "Já existe uma facção com este nome!";
+                return false;
+            }
+            if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Acro == acro) != null)
+            {
+                msg = "Já existe uma facção com este acrônimo!";
+                return false;
+            }
+            if (!Enum.IsDefined(typeof(Entities.Faction.FactionType), type))
+            {
+                msg = "Este tipo de facção é inválido!";
+                return false;
+            }
+
+            int bankVal = 0;
+
+            if(!int.TryParse(bank, out bankVal)){
+                msg = "Digite apenas números no campo do banco!";
+                return false;
+            }
+            if (bankVal < 1)
+            {
+                msg = "Escolha um valor para o cofre maior do que 0!";
+                return false;
+            }
+            msg = "Você criou esta facção com sucesso!";
+            return true;
+        }
+
         // SQL Functions
         public Entities.Faction.Faction SQL_FetchFactionData(int faction_id)
         {
@@ -114,46 +186,7 @@ namespace ProjetoRP.Business
                 factions = (from f in context.Factions select f).Include(f => f.Ranks).AsNoTracking().ToList();
             }
             return factions;
-        }
-
-        public Entities.Faction.Faction FindFactionById(int id) //Should we be using C#'s predicate List find?
-        {
-            Entities.Faction.Faction found = null;
-
-            foreach (var faction in Business.GlobalVariables.Instance.ServerFactions)
-            {
-                if (faction.Id == id)
-                {
-                    found = faction;
-                    break;
-                }
-            }
-
-            return found;
-        }
-
-        public Entities.Faction.Rank Faction_GetLeaderRank(Entities.Faction.Faction faction)
-        {
-            Entities.Faction.Rank rank = null;
-            foreach(var r in faction.Ranks)
-            {
-                if(r.Leader)
-                {
-                    rank = r;
-                }
-            }
-
-            return rank;
-        }
-
-        public bool Faction_IsLeader(Entities.Character character, Entities.Faction.Faction faction)
-        {
-            if (Faction_GetLeader(faction).Id == character.Id)
-            {
-                return true;
-            }
-            return false;
-        }
+        }        
 
         public Entities.Character Faction_GetLeader(Entities.Faction.Faction faction)
         {

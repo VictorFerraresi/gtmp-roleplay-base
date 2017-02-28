@@ -33,7 +33,105 @@ namespace ProjetoRP.Modules.Admin
 
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
         {
+            switch (eventName)
+            {
+                case "CS_CREATE_FACTION_SUBMIT":
+                    var datafc = API.fromJson((string)args[0]);
 
+                    string name = (string)datafc.factionname;
+                    string acro = (string)datafc.factionacro;
+                    int type = (int)datafc.factiontype;
+                    string bank = (string)datafc.factionbank;
+
+                    string msgfc;
+
+                    if (FacBLL.Faction_Validate(name, acro, type, bank, out msgfc))
+                    {
+                        int bankVal = 0;
+                        int.TryParse(bank, out bankVal);
+
+                        API.call("Ui", "evalUi", player, "factioncreate_app.display=false;factioncreate_app.blocked=false");
+                        API.call("Ui", "fixCursor", player, false);
+                        FacBLL.Faction_Create(name, acro, (Entities.Faction.FactionType)type, bankVal);
+                        API.sendChatMessageToPlayer(player, msgfc);
+                    }
+                    else
+                    {
+                        API.call("Ui", "evalUi", player, "factioncreate_app.blocked=false;factioncreate_app.error='" + msgfc + "';");
+                    }
+                    break;
+
+                case "CS_CREATE_FACTION_CANCEL":
+                    API.call("Ui", "evalUi", player, "factioncreate_app.display=false;factioncreate_app.blocked=false");
+                    API.call("Ui", "fixCursor", player, false);                   
+                   API.sendChatMessageToPlayer(player, "Você cancelou a criação da facção!");
+                    break;
+
+                case "CS_CREATE_PROPERTY_SUBMIT":                    
+                    var datapc = API.fromJson((string)args[0]);
+
+                    string address = (string)datapc.propertyaddress;                    
+                    int typepc = (int)datapc.propertytype;
+                    string price = (string)datapc.propertyprice;                    
+
+                    string msgpc;
+
+                    if (PropBLL.Property_Validate(address, typepc, price, out msgpc))
+                    {                        
+                        int priceVal = 0;
+                        int.TryParse(price, out priceVal);                        
+
+                        API.call("Ui", "evalUi", player, "propertycreate_app.display=false;propertycreate_app.blocked=false");
+                        API.call("Ui", "fixCursor", player, false);                        
+
+                        Entities.Property.Property prop = null;
+
+                        switch (typepc)
+                        {
+                            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE:
+                                prop = new Entities.Property.House();
+                                prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE;
+                                prop.Address = address;
+                                prop.X = player.position.X;
+                                prop.Y = player.position.Y;
+                                prop.Z = player.position.Z;
+                                prop.Price = priceVal;
+                                break;
+
+                            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
+                                prop = new Entities.Property.Business();
+                                prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS;
+                                prop.Address = address;
+                                prop.X = player.position.X;
+                                prop.Y = player.position.Y;
+                                prop.Z = player.position.Z;
+                                prop.Price = priceVal;
+                                break;
+
+                            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
+                                ///TODO                        
+                                break;
+
+                            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_OFFICE:
+                                //TODO
+                                break;
+                        }                                                
+
+                        PropBLL.Property_Create(prop, player.dimension);
+                        API.sendChatMessageToPlayer(player, msgpc);
+                    }
+                    else
+                    {                        
+                        API.call("Ui", "evalUi", player, "propertycreate_app.blocked=false;propertycreate_app.error='" + msgpc + "';");
+                    }
+                    break;
+
+                case "CS_CREATE_PROPERTY_CANCEL":
+                    API.call("Ui", "evalUi", player, "propertycreate_app.display=false;propertycreate_app.blocked=false");
+                    API.call("Ui", "fixCursor", player, false);
+                    API.sendChatMessageToPlayer(player, "Você cancelou a criação da propriedade!");
+                    break;
+            }
         }
 
         public void SendAdminChatMessage(string name, string text)
@@ -56,55 +154,64 @@ namespace ProjetoRP.Modules.Admin
             //}
         }
 
+        //[Command("criarpropriedade", GreedyArg = true)]
+        //public void CreatePropertyCommand(Client sender, int type, int price, string address)
+        //{
+        //    //if (sender.IsAdmin()){
+        //    if (!Enum.IsDefined(typeof(Entities.Property.PropertyType), type))
+        //    {
+        //        API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
+        //    }
+        //    else if (price < 1)
+        //    {
+        //        API.sendChatMessageToPlayer(sender, "Escolha um preço maior do que 0!");
+        //    }
+        //    else
+        //    {
+        //        Entities.Property.Property prop = null;
+
+        //        switch (type)
+        //        {
+        //            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE:
+        //                prop = new Entities.Property.House();
+        //                prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE;
+        //                prop.Address = address;
+        //                prop.X = sender.position.X;
+        //                prop.Y = sender.position.Y;
+        //                prop.Z = sender.position.Z;
+        //                prop.Price = price;
+        //                break;
+
+        //            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
+        //                prop = new Entities.Property.Business();
+        //                prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS;
+        //                prop.Address = address;
+        //                prop.X = sender.position.X;
+        //                prop.Y = sender.position.Y;
+        //                prop.Z = sender.position.Z;
+        //                prop.Price = price;
+        //                break;
+
+        //            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
+        //                ///TODO                        
+        //                break;
+
+        //            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_OFFICE:
+        //                //TODO
+        //                break;
+        //        }
+        //        PropBLL.Property_Create(prop, sender.dimension);
+        //        API.sendChatMessageToPlayer(sender, "Você criou uma propriedade com sucesso!");
+        //    }
+        //    //}
+        //}
+
         [Command("criarpropriedade", GreedyArg = true)]
-        public void CreatePropertyCommand(Client sender, int type, int price, string address)
+        public void CreatePropertyCommand(Client sender)
         {
             //if (sender.IsAdmin()){
-            if (!Enum.IsDefined(typeof(Entities.Property.PropertyType), type))
-            {
-                API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
-            }
-            else if (price < 1)
-            {
-                API.sendChatMessageToPlayer(sender, "Escolha um preço maior do que 0!");
-            }
-            else
-            {
-                Entities.Property.Property prop = null;
-
-                switch (type)
-                {
-                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE:
-                        prop = new Entities.Property.House();
-                        prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE;
-                        prop.Address = address;
-                        prop.X = sender.position.X;
-                        prop.Y = sender.position.Y;
-                        prop.Z = sender.position.Z;
-                        prop.Price = price;
-                        break;
-
-                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
-                        prop = new Entities.Property.Business();
-                        prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS;
-                        prop.Address = address;
-                        prop.X = sender.position.X;
-                        prop.Y = sender.position.Y;
-                        prop.Z = sender.position.Z;
-                        prop.Price = price;
-                        break;
-
-                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
-                        ///TODO                        
-                        break;
-
-                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_OFFICE:
-                        //TODO
-                        break;
-                }
-                PropBLL.Property_Create(prop, sender.dimension);
-                API.sendChatMessageToPlayer(sender, "Você criou uma propriedade com sucesso!");
-            }
+            API.call("Ui", "fixCursor", sender, true);
+            API.call("Ui", "evalUi", sender, "propertycreate_app.display=true;");
             //}
         }
 
@@ -455,31 +562,40 @@ namespace ProjetoRP.Modules.Admin
             //}
         }
 
+        //[Command("criarfaccao", GreedyArg = true)]
+        //public void CreateFactionCommand(Client sender, string acro, int type, int bank, string name)
+        //{
+        //    //if (sender.IsAdmin()){            
+        //    if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Name == name) != null)
+        //    {
+        //        API.sendChatMessageToPlayer(sender, "Já existe uma facção com este nome!");
+        //    }
+        //    else if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Acro == acro) != null)
+        //    {
+        //        API.sendChatMessageToPlayer(sender, "Já existe uma facção com este acrônimo!");
+        //    }
+        //    else if (!Enum.IsDefined(typeof(Entities.Faction.FactionType), type))
+        //    {
+        //        API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
+        //    }
+        //    else if (bank < 1)
+        //    {
+        //        API.sendChatMessageToPlayer(sender, "Escolha um valor para o cofre maior do que 0!");
+        //    }
+        //    else
+        //    {
+        //        FacBLL.Faction_Create(name, acro, (Entities.Faction.FactionType)type, bank);
+        //        API.sendChatMessageToPlayer(sender, "Você criou uma facção com sucesso!");
+        //    }
+        //    //}
+        //}
+
         [Command("criarfaccao", GreedyArg = true)]
-        public void CreateFactionCommand(Client sender, string acro, int type, int bank, string name)
+        public void CreateFactionCommand(Client sender)
         {
             //if (sender.IsAdmin()){            
-            if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Name == name) != null)
-            {
-                API.sendChatMessageToPlayer(sender, "Já existe uma facção com este nome!");
-            }
-            else if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Acro == acro) != null)
-            {
-                API.sendChatMessageToPlayer(sender, "Já existe uma facção com este acrônimo!");
-            }
-            else if (!Enum.IsDefined(typeof(Entities.Faction.FactionType), type))
-            {
-                API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
-            }
-            else if (bank < 1)
-            {
-                API.sendChatMessageToPlayer(sender, "Escolha um valor para o cofre maior do que 0!");
-            }
-            else
-            {
-                FacBLL.Faction_Create(name, acro, (Entities.Faction.FactionType)type, bank);
-                API.sendChatMessageToPlayer(sender, "Você criou uma facção com sucesso!");
-            }
+            API.call("Ui", "fixCursor", sender, true);
+            API.call("Ui", "evalUi", sender, "factioncreate_app.display=true;");
             //}
         }
 
@@ -654,7 +770,7 @@ namespace ProjetoRP.Modules.Admin
 
                     API.sendChatMessageToPlayer(sender, "Você setou o jogador " + c.Name + " como líder da facção " + faction.Name);
                 }
-            }                       
+            }
         }
     }
 }

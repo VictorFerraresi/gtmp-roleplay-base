@@ -30,7 +30,7 @@ namespace ProjetoRP.Modules.Faction
 
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
         {
-                        
+
         }
 
         private void Faction_KickForInvalidTrigger(Client player)
