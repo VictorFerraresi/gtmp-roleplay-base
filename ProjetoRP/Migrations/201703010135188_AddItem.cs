@@ -12,6 +12,7 @@ namespace ProjetoRP.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
+                        Variation = c.String(nullable: false, maxLength: 32, storeType: "nvarchar"),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -158,6 +159,7 @@ namespace ProjetoRP.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Items", t => t.Id)
                 .Index(t => t.Id);
+            
         }
         
         public override void Down()
