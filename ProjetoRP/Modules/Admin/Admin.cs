@@ -80,7 +80,7 @@ namespace ProjetoRP.Modules.Admin
                         prop.X = sender.position.X;
                         prop.Y = sender.position.Y;
                         prop.Z = sender.position.Z;
-                        prop.Price = price;
+                        prop.Price = price;                                                
                         break;
 
                     case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
@@ -95,10 +95,6 @@ namespace ProjetoRP.Modules.Admin
 
                     case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
                         ///TODO                        
-                        break;
-
-                    case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
-                        //TODO
                         break;
 
                     case (int)Entities.Property.PropertyType.PROPERTY_TYPE_OFFICE:
@@ -131,6 +127,100 @@ namespace ProjetoRP.Modules.Admin
                 {
                     PropBLL.Property_Delete(prop);
                     API.sendChatMessageToPlayer(sender, "Você deletou esta propriedade com sucesso!");
+                }
+            }
+            //}
+        }
+
+        [Command("editarpropriedade", GreedyArg = true)]
+        public void EditPropertyCommand(Client sender, int id, string option, string value = "default")
+        {
+            //if (sender.IsAdmin()){
+            if (id < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Não existem propriedades com ID menor que 1!");
+            }
+            else
+            {
+                Entities.Property.Property prop = PropBLL.FindPropertyById(id);
+
+                if (prop == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Esta propriedade não existe!");
+                }
+                else
+                {
+                    switch (option)
+                    {
+                        case "pos":
+                            prop.X = sender.position.X;
+                            prop.Y = sender.position.Y;
+                            prop.Z = sender.position.Z;
+                            prop.Dimension = sender.dimension;
+
+                            PropBLL.Property_Save(prop);
+                            PropBLL.RedrawPickup(prop);                            
+
+                            API.sendChatMessageToPlayer(sender, "Você alterou a posição da propriedade ID " + id + " para a sua localização!");
+                            break;
+
+                        case "endereco":
+                            if(value.Equals("default"))
+                            {
+                                API.sendChatMessageToPlayer(sender, "Escolha um endereço para a propriedade!");
+                                API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarpropriedade " + id + " endereco Rua Lorem Ipsum, 340!");
+                            }
+                            else
+                            {
+                                prop.Address = value;
+
+                                PropBLL.Property_Save(prop);
+                                PropBLL.RedrawPickup(prop);
+
+                                API.sendChatMessageToPlayer(sender, "Você alterou o endereço da propriedade ID " + id + " para " + value);
+                            }                            
+                            break;
+
+                        case "preco":
+                            if (value.Equals("default"))
+                            {
+                                API.sendChatMessageToPlayer(sender, "Escolha um preço para a propriedade!");
+                                API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarpropriedade " + id + " preco 25000");
+                            }
+                            else
+                            {
+                                int price = 0;
+
+                                if (Int32.TryParse(value, out price))
+                                {
+                                    if(price < 1)
+                                    {
+                                        API.sendChatMessageToPlayer(sender, "Escolha um preço maior do que 0!");
+                                        API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarpropriedade " + id + " preco 25000");
+                                    }
+                                    else
+                                    {
+                                        prop.Price = price;
+
+                                        PropBLL.Property_Save(prop);
+                                        PropBLL.RedrawPickup(prop);
+
+                                        API.sendChatMessageToPlayer(sender, "Você alterou o preço da propriedade ID " + id + " para $" + price.ToString("N0"));
+                                    }                                    
+                                }
+                                else
+                                {
+                                    API.sendChatMessageToPlayer(sender, "Digite apenas números no valor!");
+                                    API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarpropriedade " + id + " preco 25000");
+                                }                    
+                            }
+                            break;
+
+                        default:
+                            API.sendChatMessageToPlayer(sender, "Escolha uma ação válida!");
+                            API.sendChatMessageToPlayer(sender, "~y~[AÇÕES] ~w~pos, endereco, preco.");
+                            break;                        
+                    }
                 }
             }
             //}
@@ -185,6 +275,180 @@ namespace ProjetoRP.Modules.Admin
                 {
                     DoorBLL.Door_Delete(door);
                     API.sendChatMessageToPlayer(sender, "Você deletou esta porta com sucesso!");
+                }
+            }
+            //}
+        }
+
+        [Command("editarporta", GreedyArg = true)]
+        public void EditDoorCommand(Client sender, int id, string option, string value = "default")
+        {
+            //if (sender.IsAdmin()){
+            if (id < 1)
+            {
+                API.sendChatMessageToPlayer(sender, "Não existem portas com ID menor que 1!");
+            }
+            else
+            {
+                Entities.Property.Door door = DoorBLL.FindDoorById(id);
+                
+                if (door == null)
+                {
+                    API.sendChatMessageToPlayer(sender, "Esta porta não existe!");
+                }
+                else
+                {
+                    switch (option)
+                    {
+                        case "pos":
+                            door.ExteriorX = sender.position.X;
+                            door.ExteriorY = sender.position.Y;
+                            door.ExteriorZ = sender.position.Z;
+                            door.ExteriorDimension = sender.dimension;
+
+                            DoorBLL.Door_Save(door);                            
+
+                            API.sendChatMessageToPlayer(sender, "Você alterou a posição da porta ID " + id + " para a sua localização!");
+                            break;
+
+                        case "interior":
+                            door.InteriorX = sender.position.X;
+                            door.InteriorY = sender.position.Y;
+                            door.InteriorZ = sender.position.Z;
+                            door.InteriorDimension = sender.dimension;
+
+                            DoorBLL.Door_Save(door);
+
+                            API.sendChatMessageToPlayer(sender, "Você alterou o interior da porta ID " + id + " para a sua localização!");
+                            break;
+
+                        case "propriedade":
+                            if (value.Equals("default"))
+                            {
+                                API.sendChatMessageToPlayer(sender, "Escolha um ID de propriedade!");
+                                API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarporta " + id + " propriedade 245");
+                            }
+                            else
+                            {
+                                int propid = 0;
+
+                                if (Int32.TryParse(value, out propid))
+                                {
+                                    if (propid < 1)
+                                    {
+                                        API.sendChatMessageToPlayer(sender, "Escolha um ID de propriedade maior do que 0!");
+                                        API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarporta " + id + " propriedade 245");
+                                    }
+                                    else
+                                    {
+                                        Entities.Property.Property prop = PropBLL.FindPropertyById(propid);
+
+                                        if(prop == null)
+                                        {
+                                            API.sendChatMessageToPlayer(sender, "Esta propriedade não existe!");
+                                        }
+                                        else
+                                        {
+                                            door.Property = prop;
+                                            door.Property_Id = prop.Id;
+
+                                            DoorBLL.Door_Save(door);                                            
+
+                                            API.sendChatMessageToPlayer(sender, "Você alterou a propriedade da porta ID " + id + " para " + prop.Id);
+                                        }                                        
+                                    }
+                                }
+                                else
+                                {
+                                    API.sendChatMessageToPlayer(sender, "Digite apenas números no ID da propriedade!");
+                                    API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarporta " + id + " propriedade 245");
+                                }
+                            }
+                            break;
+
+                        case "modelo":
+                            if (value.Equals("default"))
+                            {
+                                API.sendChatMessageToPlayer(sender, "Escolha um modelo!");
+                                API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarporta " + id + " modelo 113");
+                            }
+                            else
+                            {
+                                int model = 0;
+
+                                if (Int32.TryParse(value, out model))
+                                {
+                                    if (model < 0) //Change to Is Valid Door Model
+                                    {
+                                        API.sendChatMessageToPlayer(sender, "Escolha um modelo maior do que 0!");
+                                        API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarporta " + id + " modelo 113");
+                                    }
+                                    else
+                                    {
+    
+                                        door.Model = model;
+
+                                        DoorBLL.Door_Save(door);                                            
+
+                                        API.sendChatMessageToPlayer(sender, "Você alterou o modelo da porta ID " + id + " para " + model);
+                                    }
+                                }
+                                else
+                                {
+                                    API.sendChatMessageToPlayer(sender, "Digite apenas números no modelo!");
+                                    API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarporta " + id + " modelo 113");
+                                }
+                            }
+                            break;
+
+                        case "trancado":
+                            if (value.Equals("default"))
+                            {
+                                API.sendChatMessageToPlayer(sender, "Escolha um valor (0 ou 1, destrancado ou trancado)!");
+                                API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarporta " + id + " trancado 0");
+                            }
+                            else
+                            {
+                                int locked = 0;
+
+                                if (Int32.TryParse(value, out locked))
+                                {
+                                    if (locked < 0 || locked > 1)
+                                    {
+                                        API.sendChatMessageToPlayer(sender, "Escolha um valor entre 0 e 1!");
+                                        API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarporta " + id + " trancado 0");
+                                    }
+                                    else
+                                    {
+
+                                        if(locked == 0)
+                                        {
+                                            door.Locked = false;
+                                            API.sendChatMessageToPlayer(sender, "Você destrancou a porta ID " + id);
+
+                                        }
+                                        else
+                                        {
+                                            door.Locked = true;
+                                            API.sendChatMessageToPlayer(sender, "Você trancou a porta ID " + id);
+                                        }
+
+                                        DoorBLL.Door_Save(door);
+                                    }
+                                }
+                                else
+                                {
+                                    API.sendChatMessageToPlayer(sender, "Digite apenas números no trancado!");
+                                    API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarporta " + id + " modelo 113");
+                                }
+                            }
+                            break;
+
+                        default:
+                            API.sendChatMessageToPlayer(sender, "Escolha uma ação válida!");
+                            API.sendChatMessageToPlayer(sender, "~y~[AÇÕES] ~w~pos, interior, propriedade, modelo, trancado.");
+                            break;
+                    }
                 }
             }
             //}

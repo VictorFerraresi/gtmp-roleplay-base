@@ -16,6 +16,7 @@ namespace ProjetoRP.Modules.Player
     public class Player : Script
     {
         private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
+        private Business.DoorBLL DoorBLL = new Business.DoorBLL();
 
         const int NULL_DIMENSION = int.MaxValue;
         const int MAX_LOGIN_TRIES = 3;
@@ -415,6 +416,22 @@ namespace ProjetoRP.Modules.Player
             else
             {
                 API.sendChatMessageToPlayer(player, "Você não está próximo a nada que possa comprar!");
+            }
+        }
+
+        [Command("trancar")]
+        public void LockCommand(Client player)
+        {
+            Entities.Property.Door door = DoorBLL.Door_GetNearestInRangeBothSides(player, 4.0);
+
+            if (door != null)
+            {
+                DoorBLL.Door_LockCommand(player, door);
+            }
+            //else if otherlockcases
+            else
+            {
+                API.sendChatMessageToPlayer(player, "Você não está próximo a nada que possa trancar!");
             }
         }
     }

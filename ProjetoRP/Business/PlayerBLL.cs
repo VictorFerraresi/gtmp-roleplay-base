@@ -13,12 +13,12 @@ namespace ProjetoRP.Business
     {               
         public void Player_GiveMoney(Entities.Character c, int amount)
         {
-            c.Bank += amount;
+            c.Cash += amount;
         }
 
         public void Player_TakeMoney(Entities.Character c, int amount)
         {
-            c.Bank -= amount;
+            c.Cash -= amount;
         }
     }
 }

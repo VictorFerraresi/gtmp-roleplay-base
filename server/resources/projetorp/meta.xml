@@ -2,15 +2,9 @@
   <info name="ProjetoRP Gamemode" author="Manajjdisc" type="script" />
   <script src="ProjetoRP.dll" type="server" lang="compiled" />
   <export class="Ui" event="onUiEventTrigger" />
-<<<<<<< HEAD
-  <script src="\Admin\Admin.js" type="client" lang="javascript" />
-  <script src="\Player\Player.js" type="client" lang="javascript" />
-  <script src="\Property\Property.js" type="client" lang="javascript" />
-=======
   <script src="\Admin\Admin.client.js" type="client" lang="javascript" />
   <script src="\Player\Player.client.js" type="client" lang="javascript" />
   <script src="\Property\Property.client.js" type="client" lang="javascript" />
->>>>>>> master
   <file src="\Ui\css\bootstrap-slider.min.css" />
   <file src="\Ui\css\bootstrap-theme.css" />
   <file src="\Ui\css\bootstrap-theme.css.map" />
