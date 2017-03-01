@@ -22,9 +22,7 @@ namespace ProjetoRP.Business
             {
                 foreach (var door in Business.GlobalVariables.Instance.ServerDoors)
                 {
-                    context.Properties.Attach(door.Property);
-                    context.Doors.Add(door);
-                    context.SaveChanges();
+                    Door_Save(door);
                 }
             }            
         }

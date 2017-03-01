@@ -3,6 +3,7 @@
   <script src="ProjetoRP.dll" type="server" lang="compiled" />
   <export class="Ui" event="onUiEventTrigger" />
   <script src="\Admin\Admin.client.js" type="client" lang="javascript" />
+  <script src="\Faction\Faction.client.js" type="client" lang="javascript" />
   <script src="\Player\Player.client.js" type="client" lang="javascript" />
   <script src="\Property\Property.client.js" type="client" lang="javascript" />
   <file src="\Ui\css\bootstrap-slider.min.css" />

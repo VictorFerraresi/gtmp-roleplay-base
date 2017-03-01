@@ -101,6 +101,7 @@
   <ItemGroup>
     <Compile Include="Business\BusinessBLL.cs" />
     <Compile Include="Business\DoorBLL.cs" />
+    <Compile Include="Business\FactionBLL.cs" />
     <Compile Include="Business\GlobalVariables.cs" />
     <Compile Include="Business\HouseBLL.cs" />
     <Compile Include="Business\PlayerBLL.cs" />
@@ -112,6 +113,8 @@
     </Compile>
     <Compile Include="DatabaseContext.cs" />
     <Compile Include="Entities\Character.cs" />
+    <Compile Include="Entities\Faction\Faction.cs" />
+    <Compile Include="Entities\Faction\Rank.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Entities\Property\Business.cs" />
     <Compile Include="Entities\Property\Door.cs" />
@@ -173,6 +176,18 @@
     <Compile Include="Migrations\201702260723393_ChangeDoorToForeignKey.Designer.cs">
       <DependentUpon>201702260723393_ChangeDoorToForeignKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702262249427_AddFaction.cs" />
+    <Compile Include="Migrations\201702262249427_AddFaction.Designer.cs">
+      <DependentUpon>201702262249427_AddFaction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702270136358_ChangeFactionNameSize.cs" />
+    <Compile Include="Migrations\201702270136358_ChangeFactionNameSize.Designer.cs">
+      <DependentUpon>201702270136358_ChangeFactionNameSize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702270410149_AddCharacterFactionRank.cs" />
+    <Compile Include="Migrations\201702270410149_AddCharacterFactionRank.Designer.cs">
+      <DependentUpon>201702270410149_AddCharacterFactionRank.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
     <Compile Include="Modules\Admin\Colors.Designer.cs">
@@ -182,6 +197,12 @@
     </Compile>
     <Compile Include="Modules\Admin\DiscordBot.cs" />
     <Compile Include="Modules\Admin\Messages.Designer.cs" />
+    <Compile Include="Modules\Faction\Faction.cs" />
+    <Compile Include="Modules\Faction\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Player\Messages.Designer.cs" />
     <Compile Include="Modules\Player\Player.cs" />
     <Compile Include="Modules\Player\Types.cs" />
@@ -243,11 +264,24 @@
     <EmbeddedResource Include="Migrations\201702260723393_ChangeDoorToForeignKey.resx">
       <DependentUpon>201702260723393_ChangeDoorToForeignKey.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702262249427_AddFaction.resx">
+      <DependentUpon>201702262249427_AddFaction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702270136358_ChangeFactionNameSize.resx">
+      <DependentUpon>201702270136358_ChangeFactionNameSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702270410149_AddCharacterFactionRank.resx">
+      <DependentUpon>201702270410149_AddCharacterFactionRank.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Colors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Messages.resx" />
+    <EmbeddedResource Include="Modules\Faction\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modules\Player\Messages.resx" />
     <EmbeddedResource Include="Modules\Property\Messages.resx" />
     <EmbeddedResource Include="Modules\Vehicle\Messages.resx" />
@@ -255,6 +289,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Modules\Admin\Client\Admin.client.js" />
+    <Content Include="Modules\Faction\Client\Faction.client.js" />
     <Content Include="Modules\Player\Client\Player.client.js" />
     <Content Include="Modules\Property\Client\Property.client.js" />
     <Content Include="Modules\Vehicle\Client\Vehicle.client.js" />

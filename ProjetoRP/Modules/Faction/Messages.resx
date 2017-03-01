@@ -117,55 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="command_login" xml:space="preserve">
-    <value>login</value>
-  </data>
   <data name="console_startup" xml:space="preserve">
-    <value>Módulo Player carregado!</value>
-  </data>
-  <data name="player_cef_disabled" xml:space="preserve">
-    <value>Você está com o CEF desabilitado e sua experiência de jogo será afetada. Habilite-o nas opções</value>
-  </data>
-  <data name="player_cef_is_disabled" xml:space="preserve">
-    <value>Você está com o CEF desabilitado e sua experiência de jogo será afetada. Habilite-o nas opções.</value>
-  </data>
-  <data name="player_character_idx_not_exists" xml:space="preserve">
-    <value>Você não possui um personagem nesse slot!</value>
-  </data>
-  <data name="player_character_n" xml:space="preserve">
-    <value>({0}) {1}: Level {2} ({3}/{4}) ${5} + ${6} (banco)</value>
+    <value>Módulo Faction carregado!</value>
   </data>
   <data name="player_kicked_inconsistency" xml:space="preserve">
     <value>Você foi kickado por inconsistencia de informações transmitidas.</value>
-  </data>
-  <data name="player_last_logins" xml:space="preserve">
-    <value>Seu último login foi {0} pelo IP {1}. Desde então, você teve {2} tentativas de login falhas.</value>
-  </data>
-  <data name="player_login_success" xml:space="preserve">
-    <value>Você fez o login com sucesso!</value>
-  </data>
-  <data name="player_not_near_any_buyable" xml:space="preserve">
-    <value>Você não está proximo a nada que possa comprar!</value>
-  </data>
-  <data name="player_not_registered" xml:space="preserve">
-    <value>Você ainda não está registrado em nosso servidor.</value>
-  </data>
-  <data name="player_please_login" xml:space="preserve">
-    <value>Para realizar login, por favor digite suas informações abaixo.</value>
-  </data>
-  <data name="player_please_login_nocef" xml:space="preserve">
-    <value>Para realizar login, digite /login [usuário] [senha].</value>
-  </data>
-  <data name="player_registered" xml:space="preserve">
-    <value>Você já possui uma conta. Faça o login agora com /login.</value>
-  </data>
-  <data name="player_welcome_message" xml:space="preserve">
-    <value>~w~Bem-vindo ao ~o~Projeto~w~RP</value>
-  </data>
-  <data name="player_wrong_password" xml:space="preserve">
-    <value>Você errou a senha. Tente novamente. Você está na tentativa {0} de {1}</value>
-  </data>
-  <data name="player_your_characters" xml:space="preserve">
-    <value>Estes são os seus personagens. Use /spawn [n] para jogar:</value>
   </data>
 </root>
