@@ -13,6 +13,8 @@ namespace ProjetoRP.Entities
         [Key]
         public int Id { get; set; }
 
+        [MaxLength(32), Required]
+        public string Variation { get; set; }
         public virtual ItemPlacement.Placement Placement { get; set; }
     }
 }

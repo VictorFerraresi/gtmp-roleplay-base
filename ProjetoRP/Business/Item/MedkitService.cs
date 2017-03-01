@@ -11,23 +11,36 @@ namespace ProjetoRP.Business.Item
 {
     class MedkitService : ItemModelService
     {
+        public override string[] ValidVariations
+        {
+            get
+            {
+                return new string[] { "aspirin", "adrenaline-shot" };
+            }
+        }
+
         public MedkitService(DatabaseContext context, Medkit item) : base(context, item)
         {
         }
 
         public override void Character_Activate(Character character)
         {
-            throw new NotImplementedException();
+            Consume();
         }
 
         public override bool Character_Equippable(Character character, EquipSlot slot)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public override void Character_PostEquipped(Character character, EquipSlot slot)
         {
-            throw new NotImplementedException();
+            throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
+        }
+
+        public override void Character_InventoryEquip(Character character)
+        {
+            throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
         }
     }
 }

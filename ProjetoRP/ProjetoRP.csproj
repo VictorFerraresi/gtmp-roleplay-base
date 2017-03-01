@@ -103,7 +103,9 @@
     <Compile Include="Business\DoorBLL.cs" />
     <Compile Include="Business\GlobalVariables.cs" />
     <Compile Include="Business\HouseBLL.cs" />
+    <Compile Include="Business\Item\ItemModelService.cs" />
     <Compile Include="Business\Item\ItemService.cs" />
+    <Compile Include="Business\Item\MedkitService.cs" />
     <Compile Include="Business\PlayerBLL.cs" />
     <Compile Include="Business\PropertyBLL.cs" />
     <Compile Include="Configurations\Character.Designer.cs">
@@ -134,6 +136,7 @@
     <Compile Include="Entities\Session.cs" />
     <Compile Include="Entities\Vehicle.cs" />
     <Compile Include="Entry.cs" />
+    <Compile Include="Exceptions\Item\InvalidItemModelServiceException.cs" />
     <Compile Include="Exceptions\Item\InvalidItemOperationException.cs" />
     <Compile Include="Migrations\201702170248522_AddPlayerAndCharacter.cs" />
     <Compile Include="Migrations\201702170248522_AddPlayerAndCharacter.Designer.cs">
@@ -166,6 +169,10 @@
     <Compile Include="Migrations\201702250229029_AddDoor.cs" />
     <Compile Include="Migrations\201702250229029_AddDoor.Designer.cs">
       <DependentUpon>201702250229029_AddDoor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702250404033_AddPropertyPrice.cs" />
+    <Compile Include="Migrations\201702250404033_AddPropertyPrice.Designer.cs">
+      <DependentUpon>201702250404033_AddPropertyPrice.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201702262349096_AddItem.cs" />
     <Compile Include="Migrations\201702262349096_AddItem.Designer.cs">
@@ -230,6 +237,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702250229029_AddDoor.resx">
       <DependentUpon>201702250229029_AddDoor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702250404033_AddPropertyPrice.resx">
+      <DependentUpon>201702250404033_AddPropertyPrice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702262349096_AddItem.resx">
       <DependentUpon>201702262349096_AddItem.cs</DependentUpon>

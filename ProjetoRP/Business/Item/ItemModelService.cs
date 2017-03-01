@@ -12,6 +12,10 @@ namespace ProjetoRP.Business.Item
         protected DatabaseContext DatabaseContext;
         protected Entities.Item Item;
 
+        public virtual string[] ValidVariations { get {
+            return new string[] { "default" };
+        } }
+
         public ItemModelService(DatabaseContext context, Entities.Item item)
         {
             DatabaseContext = context;
@@ -28,7 +32,31 @@ namespace ProjetoRP.Business.Item
             return Item;
         }
 
+        public void DropOnTheGround(double x, double y, double z, int dimension)
+        {
+            CleanPlacement();
+
+            DatabaseContext.ItemsPlacement.Add(new Entities.ItemPlacement.Drop()
+                { Item = Item, X = x, Y = y, Z = z, Dimension = dimension }
+            );
+
+            DatabaseContext.SaveChanges();
+        }
+
+        protected void CleanPlacement()
+        {
+            DatabaseContext.ItemsPlacement.RemoveRange(DatabaseContext.ItemsPlacement.Where(ip => ip.Item == Item));
+            DatabaseContext.SaveChanges();
+        }
+
+        protected void Consume()
+        {
+            DatabaseContext.Items.Remove(Item);
+            DatabaseContext.SaveChanges();
+        }
+
         public abstract bool Character_Equippable(Character character, Types.EquipSlot slot);
+        public abstract void Character_InventoryEquip(Character character);
         public abstract void Character_PostEquipped(Character character, Types.EquipSlot slot);
         public abstract void Character_Activate(Character character);  
     }

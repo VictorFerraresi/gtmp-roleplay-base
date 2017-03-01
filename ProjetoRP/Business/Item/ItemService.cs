@@ -19,6 +19,7 @@ namespace ProjetoRP.Business.Item
 
         public void AddNewItemToCharacter(Entities.Item item, Entities.Character character, Types.EquipSlot slot)
         {
+            // TODO: This wont work and possibly will spawn placement-less items on DB
             var current_item_in_slot = DatabaseContext.ItemsPlacement.OfType<CharacterInventoryItem>().Where(ip => ip.Character_Id == character.Id && ip.Slot == slot).Count();
 
             if(current_item_in_slot > 0)
@@ -29,15 +30,8 @@ namespace ProjetoRP.Business.Item
             DatabaseContext.Items.Add(item);
             DatabaseContext.SaveChanges();
 
-            var inventory_placement = new CharacterInventoryItem()
-            {
-                Character = character,
-                Item = item,
-                Slot = slot
-            };
-            DatabaseContext.ItemsPlacement.Add(inventory_placement);
-
-            DatabaseContext.SaveChanges();
+            var ims = GetItemModelServiceForItem(item);
+            ims.Character_InventoryEquip(character);
         }
 
         public List<Tuple<Types.EquipSlot, Entities.Item>> GetBareItemsFromPlayer(Entities.Character character)
@@ -67,7 +61,7 @@ namespace ProjetoRP.Business.Item
             return requested;
         }
 
-        public ItemModelService GetItemModelServiceForItem(Entities.Item item)
+        public ItemModelService GetItemModelServiceForItem(DatabaseContext context, Entities.Item item)
         {
             var itemType = item.GetType();
 
@@ -78,13 +72,18 @@ namespace ProjetoRP.Business.Item
             try
             {
                 serviceType = Type.GetType("ProjetoRP.Business.Item." + itemType.ToString() + "Service");
-            } 
-            catch(Exception e)
+            }
+            catch (Exception e)
             {
                 throw new Exceptions.Item.InvalidItemModelServiceException();
             }
 
-            return (ItemModelService)Activator.CreateInstance(serviceType, new object[] { DatabaseContext, item });
+            return (ItemModelService)Activator.CreateInstance(serviceType, new object[] { context, item });
+        }
+
+        private ItemModelService GetItemModelServiceForItem(Entities.Item item)
+        {
+            return GetItemModelServiceForItem(DatabaseContext, item);
         }
     }
 }
