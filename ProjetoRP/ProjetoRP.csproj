@@ -178,10 +178,6 @@
     <Compile Include="Migrations\201702250404033_AddPropertyPrice.Designer.cs">
       <DependentUpon>201702250404033_AddPropertyPrice.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201702262349096_AddItem.cs" />
-    <Compile Include="Migrations\201702262349096_AddItem.Designer.cs">
-      <DependentUpon>201702262349096_AddItem.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201702252332205_AddPropertyRemoveChildKey.cs" />
     <Compile Include="Migrations\201702252332205_AddPropertyRemoveChildKey.Designer.cs">
       <DependentUpon>201702252332205_AddPropertyRemoveChildKey.cs</DependentUpon>
@@ -209,6 +205,10 @@
     <Compile Include="Migrations\201702270410149_AddCharacterFactionRank.cs" />
     <Compile Include="Migrations\201702270410149_AddCharacterFactionRank.Designer.cs">
       <DependentUpon>201702270410149_AddCharacterFactionRank.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703010135188_AddItem.cs" />
+    <Compile Include="Migrations\201703010135188_AddItem.Designer.cs">
+      <DependentUpon>201703010135188_AddItem.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
@@ -282,9 +282,6 @@
     <EmbeddedResource Include="Migrations\201702250404033_AddPropertyPrice.resx">
       <DependentUpon>201702250404033_AddPropertyPrice.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702262349096_AddItem.resx">
-      <DependentUpon>201702262349096_AddItem.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702252332205_AddPropertyRemoveChildKey.resx">
       <DependentUpon>201702252332205_AddPropertyRemoveChildKey.cs</DependentUpon>
     </EmbeddedResource>
@@ -305,6 +302,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702270410149_AddCharacterFactionRank.resx">
       <DependentUpon>201702270410149_AddCharacterFactionRank.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703010135188_AddItem.resx">
+      <DependentUpon>201703010135188_AddItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
