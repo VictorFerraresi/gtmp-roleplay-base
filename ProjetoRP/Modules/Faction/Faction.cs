@@ -30,7 +30,20 @@ namespace ProjetoRP.Modules.Faction
 
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
         {
+            switch (eventName)
+            {
+                case "CS_EDIT_RANKS_SUBMIT":
+                    API.sendChatMessageToPlayer(player, (string)args[0]);
+                    var dataer = API.fromJson((string)args[0]);
 
+                    foreach(var rank in dataer.ranks)
+                    {
+                        string name = rank.name;
+                        API.sendChatMessageToPlayer(player, name);
+                    }                                        
+
+                    break;
+            }
         }
 
         private void Faction_KickForInvalidTrigger(Client player)
@@ -38,23 +51,36 @@ namespace ProjetoRP.Modules.Faction
             player.kick(Messages.player_kicked_inconsistency);
         }
 
-        //Commands        
-        [Command("teste")]
-        public void CreateFactionCommand(Client sender, int id)
-        {            
-            if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Id == id) == null)
-            {
-                API.sendChatMessageToPlayer(sender, "Fac nao existe");
-            }           
-            else
-            {
-                Entities.Faction.Faction fac = Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Id == id);
-                foreach(var a in fac.Ranks)
-                {
-                    API.sendChatMessageToPlayer(sender, a.Name);
-                }
-            }            
-        }
+        //Commands
+        [Command("editarrank", GreedyArg = true)]
+        public void CreateFactionCommand(Client sender)
+        {
+            Entities.Character c = sender.getData("CHARACTER_DATA");
 
+            if(c.Faction == null || !FacBLL.Faction_IsLeader(c, c.Faction))
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {              
+                dynamic ranks = new List<System.Dynamic.ExpandoObject>();
+
+                foreach(Entities.Faction.Rank r in c.Faction.Ranks)
+                {                    
+                    dynamic dyn = new System.Dynamic.ExpandoObject();
+
+                    dyn.id = r.Id;                    
+                    dyn.name = r.Name;
+                    dyn.level = r.Level;
+                    dyn.leader = r.Leader;                    
+
+                    ranks.Add(dyn);                    
+                }
+
+                string _in = API.toJson(ranks);                
+                API.call("Ui", "fixCursor", sender, true);
+                API.call("Ui", "evalUi", sender, "rankedit_app.ranks = " + _in + ";rankedit_app.display=true;");
+            }
+        }
     }
 }
