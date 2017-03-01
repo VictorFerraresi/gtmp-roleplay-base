@@ -22,11 +22,19 @@ namespace ProjetoRP.Business
             {
                 foreach (var door in Business.GlobalVariables.Instance.ServerDoors)
                 {
-                    context.Properties.Attach(door.Property);
-                    context.Doors.Add(door);
-                    context.SaveChanges();
+                    Door_Save(door);
                 }
             }            
+        }
+
+        public void Door_Save(Entities.Property.Door door)
+        {
+            using (var context = new DatabaseContext())
+            {
+                context.Doors.Attach(door);
+                context.Entry(door).State = EntityState.Modified;
+                context.SaveChanges();
+            }
         }
 
         public void Door_Create(Entities.Property.Property prop, long model, bool locked, Vector3 exterior, int exteriorDimension, Vector3 interior, int interiorDimension)
@@ -121,6 +129,36 @@ namespace ProjetoRP.Business
             return nearestDoor;
         }
 
+        public Entities.Property.Door Door_GetNearestInRangeBothSides(Client player, double range)
+        {
+            Vector3 playerPos = API.shared.getEntityPosition(player);
+
+            Entities.Property.Door nearestDoor = null;
+
+            double nearestDistance = range;
+
+            foreach (var door in Business.GlobalVariables.Instance.ServerDoors)
+            {
+                Vector3 doorPosExt = new Vector3(door.ExteriorX, door.ExteriorY, door.ExteriorZ);
+                Vector3 doorPosInt = new Vector3(door.InteriorX, door.InteriorY, door.InteriorZ);
+
+                float distanceExt = playerPos.DistanceTo(doorPosExt);
+                float distanceInt = playerPos.DistanceTo(doorPosInt);
+
+                if (door.ExteriorDimension == player.dimension  && distanceExt <= range && distanceExt <= nearestDistance)                     
+                {
+                    nearestDistance = distanceExt;
+                    nearestDoor = door;
+                }
+                else if (door.InteriorDimension == player.dimension && distanceInt <= range && distanceInt <= nearestDistance)
+                {
+                    nearestDistance = distanceInt;
+                    nearestDoor = door;
+                }
+            }            
+            return nearestDoor;
+        }
+
         public bool Door_IsLocked(Entities.Property.Door door)
         {
             return door.Locked;
@@ -165,6 +203,55 @@ namespace ProjetoRP.Business
             }
 
             return found;
+        }
+
+        public void Door_LockCommand(Client player, Entities.Property.Door door) //To change with the item-key system
+        {
+            Entities.Character c = player.getData("CHARACTER_DATA");
+
+            if (door.Property is Entities.Property.House)
+            {
+                Entities.Property.House h = (Entities.Property.House)door.Property;
+                if (h.Owner_Id == c.Id)
+                {
+                    if (Door_IsLocked(door))
+                    {
+                        door.Locked = false;
+                        API.shared.sendNotificationToPlayer(player, "Porta destrancada");
+                    }
+                    else
+                    {
+                        door.Locked = true;
+                        API.shared.sendNotificationToPlayer(player, "Porta trancada");
+                    }
+                }
+                else
+                {
+                    API.shared.sendChatMessageToPlayer(player, "Você não possui as chaves desta porta!");
+                }
+                
+            }
+            else if (door.Property is Entities.Property.Business)
+            {
+                Entities.Property.Business b = (Entities.Property.Business)door.Property;
+                if (b.Owner_Id == c.Id)
+                {
+                    if (Door_IsLocked(door))
+                    {
+                        door.Locked = false;
+                        API.shared.sendNotificationToPlayer(player, "Porta destrancada");
+                    }
+                    else
+                    {
+                        door.Locked = true;
+                        API.shared.sendNotificationToPlayer(player, "Porta trancada");
+                    }
+                }
+                else
+                {
+                    API.shared.sendChatMessageToPlayer(player, "Você não possui as chaves desta porta!");
+                }
+            }            
         }
     }
 }

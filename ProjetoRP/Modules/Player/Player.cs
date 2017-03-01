@@ -16,6 +16,8 @@ namespace ProjetoRP.Modules.Player
     public class Player : Script
     {
         private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
+        private Business.DoorBLL DoorBLL = new Business.DoorBLL();
+        private Business.PlayerBLL PlayerBLL = new Business.PlayerBLL();
 
         const int NULL_DIMENSION = int.MaxValue;
         const int MAX_LOGIN_TRIES = 3;
@@ -59,6 +61,7 @@ namespace ProjetoRP.Modules.Player
                     if (player.getData("PLAYER_STATUS") == PlayerStatus.PreLoad)
                     {
                         bool isCefEnabled = player.getData("PLAYER_IS_CEF_ENABLED");
+                        player.setData("playerId", PlayerBLL.Player_GetNextFreeId());
 
                         API.sendChatMessageToPlayer(player, Messages.player_welcome_message);
                         if (isCefEnabled)
@@ -137,7 +140,7 @@ namespace ProjetoRP.Modules.Player
             {
                 int player_id;
                 string hashed;
-                bool isCefEnabled = sender.getData("PLAYER_IS_CEF_ENABLED");
+                bool isCefEnabled = sender.getData("PLAYER_IS_CEF_ENABLED");                
 
                 using (var context = new DatabaseContext())
                 {
@@ -327,7 +330,7 @@ namespace ProjetoRP.Modules.Player
             {
                 Character cd = (from c in context.Characters where c.Id == character_id && c.Player.Id == id select c).AsNoTracking().Single();
                 player.setData("CHARACTER_DATA", cd);
-                player.setData("CHARACTER_ID", cd.Id);
+                player.setData("CHARACTER_ID", cd.Id);                                
 
                 PedHash pedHash;
                 Enum.TryParse(cd.Skin, out pedHash);
@@ -415,6 +418,32 @@ namespace ProjetoRP.Modules.Player
             else
             {
                 API.sendChatMessageToPlayer(player, "Você não está próximo a nada que possa comprar!");
+            }
+        }
+
+        [Command("trancar")]
+        public void LockCommand(Client player)
+        {
+            Entities.Property.Door door = DoorBLL.Door_GetNearestInRangeBothSides(player, 4.0);
+
+            if (door != null)
+            {
+                DoorBLL.Door_LockCommand(player, door);
+            }
+            //else if otherlockcases
+            else
+            {
+                API.sendChatMessageToPlayer(player, "Você não está próximo a nada que possa trancar!");
+            }
+        }
+
+        [Command("players")]
+        public void PlayersCommand(Client player)
+        {
+            foreach(var p in API.getAllPlayers())
+            {
+                Character c = p.getData("CHARACTER_DATA");
+                API.sendChatMessageToPlayer(player, "(" + p.getData("playerId") + ") " + c.Name);
             }
         }
     }

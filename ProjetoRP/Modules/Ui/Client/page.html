@@ -183,7 +183,139 @@
     </template>
     </transition>
   </div> -->
+
+  <div id="factioncreate-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-small">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="row masthead"></div>
+              <div class="row"  style="margin-left: 5px; margin-right: 5px">
+                <div class="panel-body">
+                  <h1 style="font-family: HouseScript">Criar Nova Facção</h1>
+                  <div class="alert alert-danger" role="alert" v-if="error.length > 0">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Erro:</span>
+                    {{ error }}
+                  </div>
+                  <form v-on:submit.prevent="onSubmit">
+                    <div class="form-group">
+                      <label for="facname">Nome da Facção:</label>
+                      <input type="text" class="form-control" id="facname" v-model="out.factionname" v-bind:disabled="blocked" autofocus required>
+                    </div>
+                    <div class="form-group">
+                      <label for="facacro">Acrônimo:</label>
+                      <input type="text" class="form-control" id="facacro" v-model="out.factionacro" v-bind:disabled="blocked" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="factype">Tipo:</label>
+                        <select class="form-control" id="factype" v-model="out.factiontype" v-bind:disabled="blocked" required>
+                          <option value="" disabled>Selecione um Tipo</option>
+                          <option value="1">Civil</option>
+                          <option value="2">Policial</option>
+                          <option value="3">Médico</option>
+                          <option value="4">Gang</option>
+                          <option value="5">Máfia</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="facbank">Cofre:</label>
+                      <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="form-control" id="facbank" v-model="out.factionbank" v-bind:disabled="blocked" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Criar</button>
+                    <button type="button" v-on:click="cancel" class="btn btn-danger btn-striped pull-right" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Cancelar</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </transition>
+  </div>
+
+  <div id="propertycreate-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-small">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="row masthead"></div>
+              <div class="row"  style="margin-left: 5px; margin-right: 5px">
+                <div class="panel-body">
+                  <h1 style="font-family: HouseScript">Criar Nova Propriedade</h1>
+                  <div class="alert alert-danger" role="alert" v-if="error.length > 0">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Erro:</span>
+                    {{ error }}
+                  </div>
+                  <form v-on:submit.prevent="onSubmit">
+                    <div class="form-group">
+                      <label for="propaddress">Endereço da Propriedade:</label>
+                      <input type="text" class="form-control" id="propaddress" v-model="out.propertyaddress" v-bind:disabled="blocked" autofocus required>
+                    </div>                    
+                    <div class="form-group">
+                      <label for="proptype">Tipo:</label>
+                        <select class="form-control" id="proptype" v-model="out.propertytype" v-bind:disabled="blocked" required>
+                          <option value="" disabled>Selecione um Tipo</option>
+                          <option value="1">Casa</option>
+                          <option value="2">Empresa</option>
+                          <option value="3">Escritório</option>
+                          <option value="4">Entrada</option>                          
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="propprice">Preço:</label>
+                      <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="form-control" id="propprice" v-model="out.propertyprice" v-bind:disabled="blocked" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Criar</button>
+                    <button type="button" v-on:click="cancel" class="btn btn-danger btn-striped pull-right" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Cancelar</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </transition>
+  </div>
+
+  <div id="rankedit-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-small">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="row masthead"></div>
+              <div class="row"  style="margin-left: 5px; margin-right: 5px">
+                <div class="panel-body">
+                  <h1 style="font-family: HouseScript">Editar Ranks</h1>
+                  <div class="alert alert-danger" role="alert" v-if="error.length > 0">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Erro:</span>
+                    {{ error }}
+                  </div>              
+                  <draggable :list="ranks" :options="{group:'rank'}" @start="drag=true" @end="drag=false">                          
+                    <div v-for="rank in ranks">{{rank.name}}</div>                    
+                  </draggable>   
+                  <form v-on:submit.prevent="onSubmit">
+                    <button type="submit" class="btn btn-danger btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Atualizar</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </transition>
+  </div>
+
   <script src="js/vue.js"></script>
+  <script src="js/Sortable.js"></script>
+  <script src="js/vuedraggable.min.js"></script>
   <!-- <script src="js/inventory.js"></script> -->
   <script type="text/javascript">
     function range(start, end) {
@@ -214,7 +346,7 @@
           }
         }
       });
-
+    
     charsel_app = new Vue({
       el: '#charsel-app',
       data: {
@@ -286,6 +418,76 @@
           }
         }
       }
+    });
+
+    factioncreate_app = new Vue({
+        el: '#factioncreate-app',
+        data: {
+            display: false,
+            blocked: false,
+            error: '',
+            out: {
+                factionname: '',
+                factionacro: '',
+                factiontype: '',
+                factionbank: ''
+            }
+        },
+        methods: {
+            onSubmit: function () {
+                this.blocked = true;
+                resourceCall('triggerEvent', 'CS_CREATE_FACTION_SUBMIT', JSON.stringify(this.out));
+            },
+            cancel: function () {                
+                this.blocked = true;
+                resourceCall('triggerEvent', 'CS_CREATE_FACTION_CANCEL');
+            }
+        }
+    });
+
+    propertycreate_app = new Vue({
+        el: '#propertycreate-app',
+        data: {
+            display: false,
+            blocked: false,
+            error: '',
+            out: {
+                propertyaddress: '',
+                propertytype: '',
+                propertyprice: ''                
+            }
+        },
+        methods: {
+            onSubmit: function () {
+                this.blocked = true;
+                resourceCall('triggerEvent', 'CS_CREATE_PROPERTY_SUBMIT', JSON.stringify(this.out));
+            },
+            cancel: function () {
+                this.blocked = true;
+                resourceCall('triggerEvent', 'CS_CREATE_PROPERTY_CANCEL');
+            }
+        }
+    });
+
+    rankedit_app = new Vue({
+        el: '#rankedit-app',
+        data: {
+            display: false,
+            blocked: false,
+            error: '',              
+            ranks: [
+            ]
+        },
+        methods: {
+            onSubmit: function () {
+                this.blocked = true;
+                resourceCall('triggerEvent', 'CS_EDIT_RANKS_SUBMIT', JSON.stringify(this.ranks));
+            },
+            cancel: function () {
+                this.blocked = true;
+                resourceCall('triggerEvent', 'CS_CREATE_PROPERTY_CANCEL');
+            }
+        }
     });
 
 //     inv_app = new Vue({

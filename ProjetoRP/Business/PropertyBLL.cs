@@ -12,7 +12,7 @@ namespace ProjetoRP.Business
     public class PropertyBLL
     {        
         public Entities.Property.IProperty<Entities.Property.Property> HouseBll = new Business.HouseBLL();
-        public Entities.Property.IProperty<Entities.Property.Property> BusinessBll = new Business.BusinessBLL();        
+        public Entities.Property.IProperty<Entities.Property.Property> BusinessBll = new Business.BusinessBLL();
 
         public void LoadProperties()
         {
@@ -31,11 +31,11 @@ namespace ProjetoRP.Business
             }
         }
 
-        public void Property_Save(Entities.Property.House prop)
-        {
+        public void Property_Save(Entities.Property.Property prop)
+        {            
             using (var context = new DatabaseContext())
             {
-                context.Properties.Attach(prop);
+                context.Properties.Attach(prop);                
                 context.Entry(prop).State = EntityState.Modified;
                 context.SaveChanges();
             }
@@ -58,6 +58,35 @@ namespace ProjetoRP.Business
 
                 bll.DrawPickup(prop);
             }            
+        }
+
+        public bool Property_Validate(string address, int type, string price, out string msg)
+        {           
+            if (Business.GlobalVariables.Instance.ServerProperties.Find(x => x.Address == address) != null)
+            {                
+                msg = "Já existe uma propriedade com este endereço!";
+                return false;
+            }
+            if (!Enum.IsDefined(typeof(Entities.Property.PropertyType), type))
+            {                
+                msg = "Este tipo de é propriedade inválido!";
+                return false;
+            }
+
+            int priceVal = 0;
+
+            if (!int.TryParse(price, out priceVal))
+            {                
+                msg = "Digite apenas números no campo do preço!";
+                return false;
+            }
+            if (priceVal < 1)
+            {                
+                msg = "Escolha um valor para o preço maior do que 0!";
+                return false;
+            }            
+            msg = "Você criou esta propriedade com sucesso!";
+            return true;
         }
 
         // SQL Functions
@@ -98,20 +127,9 @@ namespace ProjetoRP.Business
                 context.SaveChanges();
             }
 
-            Business.GlobalVariables.Instance.ServerProperties.Add(prop);
+            Business.GlobalVariables.Instance.ServerProperties.Add(prop);            
 
-            Entities.Property.IProperty<Entities.Property.Property> bll = null;
-
-            if (prop is Entities.Property.House)
-            {
-                bll = HouseBll;
-            }
-            else if (prop is Entities.Property.Business)
-            {
-                bll = BusinessBll;
-            }
-
-            bll.DrawPickup(prop);
+            DrawPickup(prop);
             Business.DoorBLL DoorBLL = new Business.DoorBLL();
             DoorBLL.Door_Create(prop, 0, true, new Vector3(prop.X, prop.Y, prop.Z), dimension, new Vector3(-18.77586, -581.755, 90.11491), prop.Id);
         }
@@ -133,6 +151,22 @@ namespace ProjetoRP.Business
             DeletePickup(prop);
         }
 
+        public void DrawPickup(Entities.Property.Property prop)
+        {
+            Entities.Property.IProperty<Entities.Property.Property> bll = null;
+
+            if (prop is Entities.Property.House)
+            {
+                bll = HouseBll;
+            }
+            else if (prop is Entities.Property.Business)
+            {
+                bll = BusinessBll;
+            }
+
+            bll.DrawPickup(prop);
+        }
+
         public void DeletePickup(Entities.Property.Property prop)
         {
             if(prop.Pickup != null)
@@ -145,6 +179,12 @@ namespace ProjetoRP.Business
                 API.shared.deleteEntity(prop.TextLabel);
                 prop.TextLabel = null;
             }
+        }
+
+        public void RedrawPickup(Entities.Property.Property prop)
+        {
+            DeletePickup(prop);
+            DrawPickup(prop);
         }
 
         public Entities.Property.Property FindPropertyById(int id) //Should we be using C#'s predicate List find?
@@ -172,7 +212,7 @@ namespace ProjetoRP.Business
             double nearestDistance = range;
 
             foreach (var prop in Business.GlobalVariables.Instance.ServerProperties)
-            {
+            {                
                 Vector3 propPos;
                 propPos = new Vector3(prop.X, prop.Y, prop.Z);
 
@@ -203,10 +243,9 @@ namespace ProjetoRP.Business
             bool success = bll.TryToBuy(player, prop, confirmed);
 
             if (success)
-            {
-                Entities.Property.House h = (Entities.Property.House)prop;
-                Property_Save(h);
+            {                
+                Property_Save(prop);                
             }
-        }
+        }        
     }
 }

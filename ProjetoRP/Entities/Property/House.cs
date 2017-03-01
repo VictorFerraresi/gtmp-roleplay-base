@@ -12,9 +12,9 @@ namespace ProjetoRP.Entities.Property
     [Table("Houses")]
     public class House : Property
     {
-        [Key]
-        public int Id { get; set; }
+        public int? Owner_Id { get; set; }
 
-        public virtual Character Owner { get; set; }
+        [ForeignKey("Owner_Id")]
+        public Character Owner { get; set; }
     }
 }

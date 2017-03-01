@@ -145,7 +145,7 @@
     <value>Você fez o login com sucesso!</value>
   </data>
   <data name="player_not_near_any_buyable" xml:space="preserve">
-    <value>Você não está próximo a nada que possa comprar!</value>
+    <value>Você não está proximo a nada que possa comprar!</value>
   </data>
   <data name="player_not_registered" xml:space="preserve">
     <value>Você ainda não está registrado em nosso servidor.</value>

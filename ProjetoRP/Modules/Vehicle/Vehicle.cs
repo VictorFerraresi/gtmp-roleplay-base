@@ -150,6 +150,18 @@ namespace ProjetoRP.Modules.Vehicle
             return vehs;
         }
 
+        public void Vehicle_Save(Entities.Vehicle veh)
+        {
+            using (var context = new DatabaseContext())
+            {
+                context.Database.Log = s => API.shared.consoleOutput(s);
+
+                context.Vehicles.Attach(veh);
+                context.Entry(veh).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
         private void Vehicle_KickForInvalidTrigger(Client player)
         {
             player.kick(Player.Messages.player_kicked_inconsistency);
@@ -193,36 +205,36 @@ namespace ProjetoRP.Modules.Vehicle
             }
         }
 
-        [Command("trancar")]
-        public void LockCommand(Client player)
-        {
-            GTANetworkServer.Vehicle serverVeh = Vehicle_GetNearestInRange(player, 4.0);
+        //[Command("trancar")]
+        //public void LockCommand(Client player)
+        //{
+        //    GTANetworkServer.Vehicle serverVeh = Vehicle_GetNearestInRange(player, 4.0);
 
-            if (serverVeh == null)
-            {
-                API.sendChatMessageToPlayer(player, Messages.vehicle_not_near_any);
-                return;
-            }
+        //    if (serverVeh == null)
+        //    {
+        //        API.sendChatMessageToPlayer(player, Messages.vehicle_not_near_any);
+        //        return;
+        //    }
 
-            Entities.Vehicle veh = API.getEntityData(serverVeh, "VEHICLE_DATA");
+        //    Entities.Vehicle veh = API.getEntityData(serverVeh, "VEHICLE_DATA");
 
-            if (!Vehicle_IsOwner(player.getData("CHARACTER_DATA"), veh)) //GETCHARID
-            {
-                API.sendChatMessageToPlayer(player, Messages.vehicle_no_keys);
-                return;
-            }
+        //    if (!Vehicle_IsOwner(player.getData("CHARACTER_DATA"), veh)) //GETCHARID
+        //    {
+        //        API.sendChatMessageToPlayer(player, Messages.vehicle_no_keys);
+        //        return;
+        //    }
 
-            if (veh.Locked == true)
-            {
-                API.setVehicleLocked(serverVeh, false);
-                veh.Locked = false;
-            }
-            else
-            {
-                API.setVehicleLocked(serverVeh, true);
-                veh.Locked = true;
-            }
-        }
+        //    if (veh.Locked == true)
+        //    {
+        //        API.setVehicleLocked(serverVeh, false);
+        //        veh.Locked = false;
+        //    }
+        //    else
+        //    {
+        //        API.setVehicleLocked(serverVeh, true);
+        //        veh.Locked = true;
+        //    }
+        //}
 
         [Command("veh")]
         public void VehCommand(Client player, string name, int color1, int color2)
@@ -236,7 +248,7 @@ namespace ProjetoRP.Modules.Vehicle
         public void SkinCommand(Client player, long hash)
         {
             API.setPlayerSkin(player, (PedHash)hash);
-        }
+        }    
 
         [Command("portamalas")]
         public void TrunkCommand(Client player, string action)
