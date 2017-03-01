@@ -7,13 +7,13 @@ namespace ProjetoRP.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddProperty : IMigrationMetadata
+    public sealed partial class AddItem : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddProperty));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddItem));
         
         string IMigrationMetadata.Id
         {
-            get { return "201702182240018_AddProperty"; }
+            get { return "201702262349096_AddItem"; }
         }
         
         string IMigrationMetadata.Source

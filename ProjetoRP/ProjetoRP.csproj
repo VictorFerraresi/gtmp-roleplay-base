@@ -104,6 +104,10 @@
     <Compile Include="Business\FactionBLL.cs" />
     <Compile Include="Business\GlobalVariables.cs" />
     <Compile Include="Business\HouseBLL.cs" />
+    <Compile Include="Business\Item\ItemModelService.cs" />
+    <Compile Include="Business\Item\ItemService.cs" />
+    <Compile Include="Business\Item\MedkitService.cs" />
+    <Compile Include="Business\Item\Messages.Designer.cs" />
     <Compile Include="Business\PlayerBLL.cs" />
     <Compile Include="Business\PropertyBLL.cs" />
     <Compile Include="Configurations\Character.Designer.cs">
@@ -113,6 +117,18 @@
     </Compile>
     <Compile Include="DatabaseContext.cs" />
     <Compile Include="Entities\Character.cs" />
+    <Compile Include="Entities\Item.cs" />
+    <Compile Include="Entities\ItemModel\CarKey.cs" />
+    <Compile Include="Entities\ItemModel\DoorKey.cs" />
+    <Compile Include="Entities\ItemModel\Identification.cs" />
+    <Compile Include="Entities\ItemModel\Medkit.cs" />
+    <Compile Include="Entities\ItemModel\Pistol.cs" />
+    <Compile Include="Entities\ItemModel\PistolMagazine.cs" />
+    <Compile Include="Entities\ItemPlacement\ContainerItem.cs" />
+    <Compile Include="Entities\ItemPlacement\Drop.cs" />
+    <Compile Include="Entities\ItemPlacement\Placement.cs" />
+    <Compile Include="Entities\ItemPlacement\CharacterInventoryItem.cs" />
+    <Compile Include="Entities\ItemPlacement\Trunk.cs" />
     <Compile Include="Entities\Faction\Faction.cs" />
     <Compile Include="Entities\Faction\Rank.cs" />
     <Compile Include="Entities\Player.cs" />
@@ -124,6 +140,8 @@
     <Compile Include="Entities\Session.cs" />
     <Compile Include="Entities\Vehicle.cs" />
     <Compile Include="Entry.cs" />
+    <Compile Include="Exceptions\Item\InvalidItemModelServiceException.cs" />
+    <Compile Include="Exceptions\Item\InvalidItemOperationException.cs" />
     <Compile Include="Migrations\201702170248522_AddPlayerAndCharacter.cs" />
     <Compile Include="Migrations\201702170248522_AddPlayerAndCharacter.Designer.cs">
       <DependentUpon>201702170248522_AddPlayerAndCharacter.cs</DependentUpon>
@@ -159,6 +177,10 @@
     <Compile Include="Migrations\201702250404033_AddPropertyPrice.cs" />
     <Compile Include="Migrations\201702250404033_AddPropertyPrice.Designer.cs">
       <DependentUpon>201702250404033_AddPropertyPrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702262349096_AddItem.cs" />
+    <Compile Include="Migrations\201702262349096_AddItem.Designer.cs">
+      <DependentUpon>201702262349096_AddItem.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201702252332205_AddPropertyRemoveChildKey.cs" />
     <Compile Include="Migrations\201702252332205_AddPropertyRemoveChildKey.Designer.cs">
@@ -197,6 +219,7 @@
     </Compile>
     <Compile Include="Modules\Admin\DiscordBot.cs" />
     <Compile Include="Modules\Admin\Messages.Designer.cs" />
+    <Compile Include="Modules\Item\Item.cs" />
     <Compile Include="Modules\Faction\Faction.cs" />
     <Compile Include="Modules\Faction\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -212,6 +235,10 @@
     <Compile Include="Modules\Vehicle\Messages.Designer.cs" />
     <Compile Include="Modules\Vehicle\Vehicle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types\EquipSlot.cs" />
+    <Compile Include="Types\EyeColor.cs" />
+    <Compile Include="Types\Gender.cs" />
+    <Compile Include="Types\HairColor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".bin\git.cmd" />
@@ -223,6 +250,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Business\Item\Messages.resx" />
     <EmbeddedResource Include="Configurations\Character.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Character.Designer.cs</LastGenOutput>
@@ -253,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702250404033_AddPropertyPrice.resx">
       <DependentUpon>201702250404033_AddPropertyPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702262349096_AddItem.resx">
+      <DependentUpon>201702262349096_AddItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702252332205_AddPropertyRemoveChildKey.resx">
       <DependentUpon>201702252332205_AddPropertyRemoveChildKey.cs</DependentUpon>
@@ -294,6 +325,8 @@
     <Content Include="Modules\Faction\Client\Faction.client.js" />
     <Content Include="Modules\Player\Client\Player.client.js" />
     <Content Include="Modules\Property\Client\Property.client.js" />
+    <Content Include="Modules\Property\Client\Property.js" />
+    <Content Include="Modules\Vehicle\Client\Vehicle.js" />
     <Content Include="Modules\Vehicle\Client\Vehicle.client.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
