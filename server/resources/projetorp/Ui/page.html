@@ -9,6 +9,10 @@
 </head>
 
 <body style="background-color:rgba(0, 0, 0, 0);">
+  <script src="js/vue.js"></script>
+  <script src="js/Sortable.js"></script>
+  <script src="js/vuedraggable.min.js"></script>
+
   magicscript v1
   <div id="login-app">
     <transition name="fade">
@@ -283,7 +287,37 @@
     </transition>
   </div>
 
-  <script src="js/vue.js"></script>
+  <div id="rankedit-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-small">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="row masthead"></div>
+              <div class="row"  style="margin-left: 5px; margin-right: 5px">
+                <div class="panel-body">
+                  <h1 style="font-family: HouseScript">Editar Ranks</h1>
+                  <div class="alert alert-danger" role="alert" v-if="error.length > 0">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Erro:</span>
+                    {{ error }}
+                  </div>              
+                  <draggable :list="ranks" :options="{group:'rank'}" @start="drag=true" @end="drag=false">                          
+                    <div v-for="rank in ranks">{{rank.name}}</div>                    
+                  </draggable>   
+                  <form v-on:submit.prevent="onSubmit">
+                    <button type="submit" class="btn btn-danger btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Atualizar</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </transition>
+  </div>
+    
+      
   <!-- <script src="js/inventory.js"></script> -->
   <script type="text/javascript">
     function range(start, end) {
@@ -314,7 +348,7 @@
           }
         }
       });
-
+    
     charsel_app = new Vue({
       el: '#charsel-app',
       data: {
@@ -429,6 +463,27 @@
             onSubmit: function () {
                 this.blocked = true;
                 resourceCall('triggerEvent', 'CS_CREATE_PROPERTY_SUBMIT', JSON.stringify(this.out));
+            },
+            cancel: function () {
+                this.blocked = true;
+                resourceCall('triggerEvent', 'CS_CREATE_PROPERTY_CANCEL');
+            }
+        }
+    });
+
+    rankedit_app = new Vue({
+        el: '#rankedit-app',
+        data: {
+            display: false,
+            blocked: false,
+            error: '',              
+            ranks: [
+            ]
+        },
+        methods: {
+            onSubmit: function () {
+                this.blocked = true;
+                resourceCall('triggerEvent', 'CS_EDIT_RANKS_SUBMIT', JSON.stringify(this.ranks));
             },
             cancel: function () {
                 this.blocked = true;
