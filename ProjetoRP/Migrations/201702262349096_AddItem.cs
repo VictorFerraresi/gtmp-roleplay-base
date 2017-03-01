@@ -158,8 +158,6 @@ namespace ProjetoRP.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Items", t => t.Id)
                 .Index(t => t.Id);
-            
-            AddColumn("dbo.Properties", "Price", c => c.Int(nullable: false));
         }
         
         public override void Down()
@@ -196,7 +194,6 @@ namespace ProjetoRP.Migrations
             DropIndex("dbo.Placements_CharacterInventoryItems", new[] { "Character_Id" });
             DropIndex("dbo.Placements_CharacterInventoryItems", new[] { "Item_Id" });
             DropIndex("dbo.Placements", new[] { "Item_Id" });
-            DropColumn("dbo.Properties", "Price");
             DropTable("dbo.Items_PistolMagazines");
             DropTable("dbo.Items_Pistols");
             DropTable("dbo.Items_Medkits");
