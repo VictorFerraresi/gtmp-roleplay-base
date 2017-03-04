@@ -13,10 +13,7 @@
 	<file src="css/bootstrap.min.css" />
 	<file src="css/main.css" />
 	<file src="js/vue.js" />
-  <file src="js/vuedraggable.min.js" />
-  <file src="js/Sortable.js" />
-	<file src="js/inventory.js" />
-
+  
 	<export class="Ui" event="onUiEventTrigger" />
 	<export class="Ui" function="evalUi" />
 	<export class="Ui" function="fixCursor" />

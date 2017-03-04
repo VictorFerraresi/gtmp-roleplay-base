@@ -124,7 +124,7 @@ namespace ProjetoRP.Business
 
         public bool Faction_IsLeader(Entities.Character character, Entities.Faction.Faction faction)
         {
-            if (Faction_GetLeader(faction).Id == character.Id)
+            if (character.Faction_Id == faction.Id && character.Rank.Leader == true)
             {
                 return true;
             }
@@ -192,7 +192,7 @@ namespace ProjetoRP.Business
         {
             Entities.Character character = null;            
 
-            Entities.Faction.Rank rank = faction.Ranks.FirstOrDefault(r => r.Leader == true);
+            Entities.Faction.Rank rank = faction.Ranks.FirstOrDefault(r => r.Leader == true);            
 
             using (var context = new DatabaseContext())
             {                

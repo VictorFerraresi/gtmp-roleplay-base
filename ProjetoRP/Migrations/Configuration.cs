@@ -41,6 +41,29 @@ namespace ProjetoRP.Migrations
                 new Entities.Character { Name = "Dominic Fisherman", Player = context.Players.Where(p => p.Name == "victor").Single(), Cash = 500, Bank = 250000, Savings = 0, Skin = "Michael", X = 13.92, Y = 2.04, Z = 2.04, Dimension = 1, Xp = 0, Level = 1 }
             );
             context.SaveChanges();
+
+            context.Factions.AddOrUpdate(
+                p => p.Name,
+                new Entities.Faction.Faction { Name = "Los Santos Police Department", Acro = "LSPD", Type = (Entities.Faction.FactionType)2, Bank = 250000 },
+                new Entities.Faction.Faction { Name = "Los Santos Fire Department", Acro = "LSFD", Type = (Entities.Faction.FactionType)3, Bank = 150000 }
+            );
+            context.SaveChanges();
+
+            context.Ranks.AddOrUpdate(
+                p => p.Name,
+                new Entities.Faction.Rank { Name = "Líder", Level = 5, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(),Leader = true },
+                new Entities.Faction.Rank { Name = "Sub-Líder", Level = 4, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = true },
+                new Entities.Faction.Rank { Name = "Comandante", Level = 3, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = true },
+                new Entities.Faction.Rank { Name = "Sargento", Level = 2, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = true },
+                new Entities.Faction.Rank { Name = "Recruta", Level = 1, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = true },
+
+                new Entities.Faction.Rank { Name = "Líder", Level = 5, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = true },
+                new Entities.Faction.Rank { Name = "Sub-Líder", Level = 4, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = true },
+                new Entities.Faction.Rank { Name = "Comandante", Level = 3, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = true },
+                new Entities.Faction.Rank { Name = "Doutor", Level = 2, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = true },
+                new Entities.Faction.Rank { Name = "Paramédico", Level = 1, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = true }
+            );
+            context.SaveChanges();
         }
     }
 }
