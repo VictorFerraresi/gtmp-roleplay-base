@@ -286,7 +286,7 @@
   <div id="rankedit-app">
     <transition name="fade">
       <template v-if="display === true">
-        <div class="container container-table container-small">
+        <div class="container container-table container-medium">
           <div class="row vertical-center-row">
             <div class="panel panel-default game-box">
               <div class="row masthead"></div>
@@ -297,12 +297,31 @@
                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                     <span class="sr-only">Erro:</span>
                     {{ error }}
-                  </div>              
-                  <draggable :list="ranks" :options="{group:'rank'}" @start="drag=true" @end="drag=false">                          
-                    <div v-for="rank in ranks">{{rank.name}}</div>                    
-                  </draggable>   
+                  </div>   
+                  <table class="table table-striped">
+                    <thead>                        
+                      <tr>
+                        <th>Level</th>
+                        <th>Rank</th>
+                        <th>Editar</th>
+                        <th>Alterar Ordem</th>
+                        <th>Excluir</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="rank in ranks">
+                          <td>{{ rank.level }}</td>
+                          <td>{{ rank.name }}</td>                                                   
+                          <td><i style="font-size: 18px" class="material-icons clickable-icon">mode_edit</i></td>
+                          <td><i v-if="!rank.leader" v-on:click="move('up', rank.level)" class="material-icons clickable-icon">arrow_upward</i> <i v-if="!rank.leader && rank.level != 1" v-on:click="move('down', rank.level)" class="material-icons clickable-icon">arrow_downward</i></td>
+                          <td><i v-if="!rank.leader" v-on:click="deleterank(rank.level)" class="material-icons clickable-icon">clear</i></td>
+                      </tr>
+                    </tbody>
+                  </table>                                            
                   <form v-on:submit.prevent="onSubmit">
-                    <button type="submit" class="btn btn-danger btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Atualizar</button>
+                    <button type="submit" class="btn btn-primary btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Atualizar</button>
+                    <button type="button" v-on:click="cancel" class="btn btn-danger btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Cancelar</button>
+                    <button type="button" v-on:click="create" class="btn btn-success btn-striped pull-right" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Novo Rank</button>                      
                   </form>
                 </div>
               </div>
@@ -314,8 +333,6 @@
   </div>
 
   <script src="js/vue.js"></script>
-  <script src="js/Sortable.js"></script>
-  <script src="js/vuedraggable.min.js"></script>
   <!-- <script src="js/inventory.js"></script> -->
   <script type="text/javascript">
     function range(start, end) {
@@ -486,6 +503,57 @@
             cancel: function () {
                 this.blocked = true;
                 resourceCall('triggerEvent', 'CS_CREATE_PROPERTY_CANCEL');
+            },
+            move: function (type, lv) {
+                switch (type) {
+                    case "up":
+                        if (this.ranks.length - lv == 1) {
+                            this.error = "O level lider não deve ser alterado!";
+                        } else {                        	
+                            var idx = this.ranks.length - lv;                            
+                            var aux = this.ranks[idx];
+                            this.ranks[idx].level += 1;
+                            this.ranks[idx - 1].level -= 1;
+                            Vue.set(this.ranks, idx, this.ranks[idx - 1]);
+                            Vue.set(this.ranks, idx - 1, aux);
+
+                            this.error = "";
+                        }
+                        break;
+
+                    case "down":
+                        if (this.ranks.length - lv == 0) {
+                            this.error = "O level lider nao deve ser alterado!";
+                        } else if (lv == 1) {
+                            this.error = "O level já é o mínimo!";
+                        } else {
+                            var idx = this.ranks.length - lv;
+                            var aux = this.ranks[idx];
+                            this.ranks[idx].level -= 1;
+                            this.ranks[idx + 1].level += 1;
+                            Vue.set(this.ranks, idx, this.ranks[idx + 1]);
+                            Vue.set(this.ranks, idx + 1, aux);
+
+                            this.error = "";
+                        }
+                        break;
+                }                
+            },
+            deleterank: function (lv) {
+                var idx = this.ranks.length - lv;
+                this.ranks.splice(idx, 1);
+                for (var i = idx - 1; i >= 0; i--) {
+                    this.ranks[i].level--;
+                    Vue.set(this.ranks, i, this.ranks[i]);
+                }
+            },
+            create: function () {
+                var newrank = { name: "Novo Rank", level: 1, leader: false };
+                Vue.set(this.ranks, this.ranks.length, newrank);
+                for (var i = 0; i < this.ranks.length - 1; i++) {
+                    this.ranks[i].level++;
+                    Vue.set(this.ranks, i, this.ranks[i]);
+                }
             }
         }
     });

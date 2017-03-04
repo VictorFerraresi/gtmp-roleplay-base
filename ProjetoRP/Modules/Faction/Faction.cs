@@ -72,7 +72,7 @@ namespace ProjetoRP.Modules.Faction
                     dyn.id = r.Id;                    
                     dyn.name = r.Name;
                     dyn.level = r.Level;
-                    dyn.leader = r.Leader;                    
+                    dyn.leader = r.Leader;
 
                     ranks.Add(dyn);                    
                 }
