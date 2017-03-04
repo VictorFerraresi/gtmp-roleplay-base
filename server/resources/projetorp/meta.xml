@@ -16,6 +16,9 @@
   <file src="\Ui\css\bootstrap.min.css" />
   <file src="\Ui\css\bootstrap.min.css.map" />
   <file src="\Ui\css\main.css" />
+  <file src="\Ui\css\MaterialIcons-Regular.ttf" />
+  <file src="\Ui\css\MaterialIcons-Regular.woff" />
+  <file src="\Ui\css\MaterialIcons-Regular.woff2" />
   <file src="\Ui\fonts\glyphicons-halflings-regular.eot" />
   <file src="\Ui\fonts\glyphicons-halflings-regular.svg" />
   <file src="\Ui\fonts\glyphicons-halflings-regular.ttf" />
@@ -38,13 +41,11 @@
   <file src="\Ui\js\bootstrap.min.js" />
   <file src="\Ui\js\inventory.js" />
   <file src="\Ui\js\npm.js" />
-  <file src="\Ui\js\Sortable.js" />
   <file src="\Ui\js\vue.js" />
   <file src="\Ui\js\vue.min.js" />
-  <file src="\Ui\js\vuedraggable.min.js" />
   <script src="\Ui\cef.client.js" type="client" lang="javascript" />
   <file src="\Ui\meta.xml" />
   <file src="\Ui\page.html" />
-  <file src="\Ui\page.html.test" />
+  <file src="\Ui\test.html" />
   <script src="\Vehicle\Vehicle.client.js" type="client" lang="javascript" />
 </meta>

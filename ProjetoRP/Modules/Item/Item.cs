@@ -19,26 +19,7 @@ namespace ProjetoRP.Modules.Item
 
         public void OnResourceStart()
         {
-            API.consoleOutput("== ITEM.CS ==");
-
-            DatabaseContext dc = new DatabaseContext();
-            ItemService ts = new ItemService(dc);
-
-            Character c = dc.Characters.First();
-
-            try
-            {
-                ts.AddNewItemToCharacter(new Entities.ItemModel.Medkit(), c, Types.EquipSlot.Legs);
-            }
-            catch (Exception e)
-            {
-                API.consoleOutput(e.Message);
-            }
             
-            foreach(var t in ts.GetItemsFromPlayer(c))
-            {
-                API.consoleOutput(t.Item1.ToString() + " -> " + t.Item2.ToString());
-            }
         }
         public void OnResourceStop()
         {
