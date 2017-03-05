@@ -1,5 +1,6 @@
 ﻿using GTANetworkServer;
 using GTANetworkShared;
+using ProjetoRP.Business.Character;
 using ProjetoRP.Entities;
 using ProjetoRP.Modules.Player.Types;
 using System;
@@ -27,7 +28,18 @@ namespace ProjetoRP.Modules.Player
         {
             API.onResourceStart += OnResourceStart;
             API.onPlayerConnected += OnPlayerConnected;
+            API.onPlayerDisconnected += OnPlayerDisconnected;
             API.onClientEventTrigger += OnClientEventTrigger;
+        }
+
+        private void OnPlayerDisconnected(Client player, string reason)
+        {
+            var ac = ActiveCharacter.Get(player);
+            if (null != ac) // Means that the player was spawned (has character instantiated)
+            {
+                Player_Save(player);
+                ac.Dispose(); // Removing from AC pool
+            }
         }
 
         public void OnResourceStart()
@@ -340,6 +352,9 @@ namespace ProjetoRP.Modules.Player
                 player.dimension = cd.Dimension;
                 player.freeze(false);
                 API.call("Ui", "freeCursor", player);
+
+                var samp_id = ActiveCharacter.Create(player, cd);
+                player.sendChatMessage(String.Format(Messages.player_your_id_is, samp_id));
 
                 player.setData("PLAYER_STATUS", PlayerStatus.Spawned);
                 API.triggerClientEvent(player, "SC_DO_SPAWN");
