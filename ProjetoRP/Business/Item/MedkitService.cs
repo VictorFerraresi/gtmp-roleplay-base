@@ -25,7 +25,10 @@ namespace ProjetoRP.Business.Item
 
         public override void Character_Activate(Character character)
         {
+            Validate();
             Consume();
+
+            // Give player health based on variation
         }
 
         public override bool Character_Equippable(Character character, EquipSlot slot)

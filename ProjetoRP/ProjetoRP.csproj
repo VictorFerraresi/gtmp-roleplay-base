@@ -107,7 +107,11 @@
     <Compile Include="Business\Item\ItemModelService.cs" />
     <Compile Include="Business\Item\ItemService.cs" />
     <Compile Include="Business\Item\MedkitService.cs" />
-    <Compile Include="Business\Item\Messages.Designer.cs" />
+    <Compile Include="Business\Item\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Business\PlayerBLL.cs" />
     <Compile Include="Business\PropertyBLL.cs" />
     <Compile Include="Configurations\Character.Designer.cs">
@@ -241,8 +245,6 @@
     <Compile Include="Types\HairColor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".bin\git.cmd" />
-    <None Include=".bin\node.cmd" />
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -250,7 +252,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Business\Item\Messages.resx" />
+    <EmbeddedResource Include="Business\Item\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Configurations\Character.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Character.Designer.cs</LastGenOutput>

@@ -22,7 +22,7 @@ namespace ProjetoRP.Modules.Player {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Messages {
+    public class Messages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace ProjetoRP.Modules.Player {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ProjetoRP.Modules.Player.Messages", typeof(Messages).Assembly);
@@ -51,7 +51,7 @@ namespace ProjetoRP.Modules.Player {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to login.
         /// </summary>
-        internal static string command_login {
+        public static string command_login {
             get {
                 return ResourceManager.GetString("command_login", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Módulo Player carregado!.
         /// </summary>
-        internal static string console_startup {
+        public static string console_startup {
             get {
                 return ResourceManager.GetString("console_startup", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Você está com o CEF desabilitado e sua experiência de jogo será afetada. Habilite-o nas opções.
         /// </summary>
-        internal static string player_cef_disabled {
+        public static string player_cef_disabled {
             get {
                 return ResourceManager.GetString("player_cef_disabled", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Você está com o CEF desabilitado e sua experiência de jogo será afetada. Habilite-o nas opções..
         /// </summary>
-        internal static string player_cef_is_disabled {
+        public static string player_cef_is_disabled {
             get {
                 return ResourceManager.GetString("player_cef_is_disabled", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Você não possui um personagem nesse slot!.
         /// </summary>
-        internal static string player_character_idx_not_exists {
+        public static string player_character_idx_not_exists {
             get {
                 return ResourceManager.GetString("player_character_idx_not_exists", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to ({0}) {1}: Level {2} ({3}/{4}) ${5} + ${6} (banco).
         /// </summary>
-        internal static string player_character_n {
+        public static string player_character_n {
             get {
                 return ResourceManager.GetString("player_character_n", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Você foi kickado por inconsistencia de informações transmitidas..
         /// </summary>
-        internal static string player_kicked_inconsistency {
+        public static string player_kicked_inconsistency {
             get {
                 return ResourceManager.GetString("player_kicked_inconsistency", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Seu último login foi {0} pelo IP {1}. Desde então, você teve {2} tentativas de login falhas..
         /// </summary>
-        internal static string player_last_logins {
+        public static string player_last_logins {
             get {
                 return ResourceManager.GetString("player_last_logins", resourceCulture);
             }
@@ -135,16 +135,25 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Você fez o login com sucesso!.
         /// </summary>
-        internal static string player_login_success {
+        public static string player_login_success {
             get {
                 return ResourceManager.GetString("player_login_success", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Você não está proximo a nada que possa comprar!.
+        /// </summary>
+        public static string player_not_near_any_buyable {
+            get {
+                return ResourceManager.GetString("player_not_near_any_buyable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Você ainda não está registrado em nosso servidor..
         /// </summary>
-        internal static string player_not_registered {
+        public static string player_not_registered {
             get {
                 return ResourceManager.GetString("player_not_registered", resourceCulture);
             }
@@ -153,7 +162,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Para realizar login, por favor digite suas informações abaixo..
         /// </summary>
-        internal static string player_please_login {
+        public static string player_please_login {
             get {
                 return ResourceManager.GetString("player_please_login", resourceCulture);
             }
@@ -162,7 +171,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Para realizar login, digite /login [usuário] [senha]..
         /// </summary>
-        internal static string player_please_login_nocef {
+        public static string player_please_login_nocef {
             get {
                 return ResourceManager.GetString("player_please_login_nocef", resourceCulture);
             }
@@ -171,7 +180,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Você já possui uma conta. Faça o login agora com /login..
         /// </summary>
-        internal static string player_registered {
+        public static string player_registered {
             get {
                 return ResourceManager.GetString("player_registered", resourceCulture);
             }
@@ -180,7 +189,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to ~w~Bem-vindo ao ~o~Projeto~w~RP.
         /// </summary>
-        internal static string player_welcome_message {
+        public static string player_welcome_message {
             get {
                 return ResourceManager.GetString("player_welcome_message", resourceCulture);
             }
@@ -189,7 +198,7 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Você errou a senha. Tente novamente. Você está na tentativa {0} de {1}.
         /// </summary>
-        internal static string player_wrong_password {
+        public static string player_wrong_password {
             get {
                 return ResourceManager.GetString("player_wrong_password", resourceCulture);
             }
@@ -198,9 +207,18 @@ namespace ProjetoRP.Modules.Player {
         /// <summary>
         ///   Looks up a localized string similar to Estes são os seus personagens. Use /spawn [n] para jogar:.
         /// </summary>
-        internal static string player_your_characters {
+        public static string player_your_characters {
             get {
                 return ResourceManager.GetString("player_your_characters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Você está logado como ID {0}.
+        /// </summary>
+        public static string player_your_id_is {
+            get {
+                return ResourceManager.GetString("player_your_id_is", resourceCulture);
             }
         }
     }

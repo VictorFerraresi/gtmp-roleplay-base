@@ -68,5 +68,23 @@ namespace ProjetoRP.Business.Item {
                 return ResourceManager.GetString("cant_equip", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A variação do item não é suportada pelo modelo instanciado..
+        /// </summary>
+        internal static string invalid_variation {
+            get {
+                return ResourceManager.GetString("invalid_variation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to O item não existe ou foi deletado..
+        /// </summary>
+        internal static string null_item {
+            get {
+                return ResourceManager.GetString("null_item", resourceCulture);
+            }
+        }
     }
 }

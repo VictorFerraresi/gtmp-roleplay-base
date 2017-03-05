@@ -168,4 +168,7 @@
   <data name="player_your_characters" xml:space="preserve">
     <value>Estes são os seus personagens. Use /spawn [n] para jogar:</value>
   </data>
+  <data name="player_your_id_is" xml:space="preserve">
+    <value>Você está logado como ID {0}</value>
+  </data>
 </root>
