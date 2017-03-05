@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using GTANetworkServer;
 using GTANetworkShared;
+using ProjetoRP.Business.Player;
 
 namespace ProjetoRP.Business
 {
@@ -207,7 +208,10 @@ namespace ProjetoRP.Business
 
         public void Door_LockCommand(Client player, Entities.Property.Door door) //To change with the item-key system
         {
-            Entities.Character c = player.getData("CHARACTER_DATA");
+            var ac = ActivePlayer.GetSpawned(player);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
 
             if (door.Property is Entities.Property.House)
             {

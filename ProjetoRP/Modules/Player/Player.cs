@@ -1,8 +1,10 @@
 ﻿using GTANetworkServer;
 using GTANetworkShared;
 using ProjetoRP.Business.Character;
+using ProjetoRP.Business.Player;
 using ProjetoRP.Entities;
 using ProjetoRP.Modules.Player.Types;
+using ProjetoRP.Types;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -34,7 +36,7 @@ namespace ProjetoRP.Modules.Player
 
         private void OnPlayerDisconnected(Client player, string reason)
         {
-            var ac = ActiveCharacter.Get(player);
+            var ac = ActivePlayer.GetSpawned(player);
             if (null != ac) // Means that the player was spawned (has character instantiated)
             {
                 Player_Save(player);
@@ -49,10 +51,11 @@ namespace ProjetoRP.Modules.Player
 
         private void OnPlayerConnected(Client player)
         {
-            player.setData("PLAYER_STATUS", PlayerStatus.PreLoad);
-            API.setEntityDimension(player.handle, NULL_DIMENSION);
+            var ac = new ActivePlayer(player);
+            ac.Status = PlayerStatus.PreLoad; // Redundant but healthy
 
-            API.consoleOutput("Player " + player.socialClubName + " connected.");
+            API.setEntityDimension(player.handle, NULL_DIMENSION);
+            API.consoleOutput("Player (" + ac.Id + ") " + player.socialClubName + " connected.");
 
             if (player.isCEFenabled)
             {
@@ -67,13 +70,13 @@ namespace ProjetoRP.Modules.Player
 
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
         {
+            var ac = ActivePlayer.Get(player);
             switch (eventName)
             {
                 case "CS_PLAYER_PRELOAD_READY":
-                    if (player.getData("PLAYER_STATUS") == PlayerStatus.PreLoad)
+                    if (ac.Status == PlayerStatus.PreLoad)
                     {
                         bool isCefEnabled = player.getData("PLAYER_IS_CEF_ENABLED");
-                        player.setData("playerId", PlayerBLL.Player_GetNextFreeId());
 
                         API.sendChatMessageToPlayer(player, Messages.player_welcome_message);
                         if (isCefEnabled)
@@ -85,7 +88,7 @@ namespace ProjetoRP.Modules.Player
                             API.sendChatMessageToPlayer(player, Messages.player_please_login_nocef);
                         }
 
-                        player.setData("PLAYER_STATUS", PlayerStatus.Login);
+                        ac.Status = PlayerStatus.Login;
                         player.setData("PLAYER_LOGIN_TRIES_COUNT", 0);
                     }
                     else
@@ -106,7 +109,7 @@ namespace ProjetoRP.Modules.Player
                     Player_Login(player, (string)data.user, (string)data.pass);
                     break;
                 case "CS_CHARSEL_SWITCH":
-                    if (player.getData("PLAYER_STATUS") != PlayerStatus.CharacterSelection)
+                    if (ac.Status != PlayerStatus.CharacterSelection)
                     {
                         Player_KickForInvalidTrigger(player);
                         return;
@@ -121,10 +124,9 @@ namespace ProjetoRP.Modules.Player
                     Enum.TryParse(selected.Skin, out pedHash);
 
                     player.setSkin(pedHash);
-
                     break;
                 case "CS_CHARSEL_SUBMIT":
-                    if (player.getData("PLAYER_STATUS") != PlayerStatus.CharacterSelection)
+                    if (ac.Status != PlayerStatus.CharacterSelection)
                     {
                         Player_KickForInvalidTrigger(player);
                         return;
@@ -148,7 +150,8 @@ namespace ProjetoRP.Modules.Player
 
         private void Player_Login(Client sender, string user, string password)
         {
-            if (sender.getData("PLAYER_STATUS") == PlayerStatus.Login)
+            var ac = ActivePlayer.Get(sender);
+            if (ac.Status == PlayerStatus.Login)
             {
                 int player_id;
                 string hashed;
@@ -198,7 +201,7 @@ namespace ProjetoRP.Modules.Player
                             context.Sessions.Add(s);
                             context.SaveChanges();
 
-                            sender.setData("PLAYER_SESSION", s);
+                            sender.setData("PLAYER_SESSION", s.Id);
 
                             Player_LoadData(sender);
                             Player_SetCharacterSelection(sender);
@@ -248,13 +251,15 @@ namespace ProjetoRP.Modules.Player
         {
             bool isCefEnabled = player.getData("PLAYER_IS_CEF_ENABLED");
 
-            player.setData("PLAYER_STATUS", PlayerStatus.CharacterSelection);
+            var ac = ActivePlayer.Get(player);
+            ac.Status = PlayerStatus.CharacterSelection;
+
             API.freezePlayer(player, true);
 
             using (var context = new DatabaseContext())
             {
                 var id = player.getData("id");
-                Entities.Player player_data = player.getData("PlayerData");
+                Entities.Player player_data = ac.Player;
 
                 var char_data = (from c in context.Characters where c.Player.Id == player_data.Id select c).AsNoTracking().ToList();
 
@@ -327,7 +332,8 @@ namespace ProjetoRP.Modules.Player
             {
                 var player_data = (from p in context.Players where p.Id == id select p).AsNoTracking().Single();
                 // AsNoTracking "detaches" the entity from the Context, allowing it to be kept in memory and used as please up until reattached again @Player_Save
-                player.setData("PlayerData", player_data);
+                var ac = ActivePlayer.Get(player);
+                ac.Player = player_data;
                 // context.Entry(player_data).State = EntityState.Detached;
             }
         }
@@ -341,8 +347,12 @@ namespace ProjetoRP.Modules.Player
             using (var context = new DatabaseContext())
             {
                 Character cd = (from c in context.Characters where c.Id == character_id && c.Player.Id == id select c).AsNoTracking().Single();
-                player.setData("CHARACTER_DATA", cd);
-                player.setData("CHARACTER_ID", cd.Id);                                
+
+                var ac = ActivePlayer.Get(player);
+                ac.Character = cd;                
+                
+                // player.setData("CHARACTER_DATA", cd);
+                // player.setData("CHARACTER_ID", cd.Id);                                
 
                 PedHash pedHash;
                 Enum.TryParse(cd.Skin, out pedHash);
@@ -353,21 +363,23 @@ namespace ProjetoRP.Modules.Player
                 player.freeze(false);
                 API.call("Ui", "freeCursor", player);
 
-                var samp_id = ActiveCharacter.Create(player, cd);
-                player.sendChatMessage(String.Format(Messages.player_your_id_is, samp_id));
+                player.sendChatMessage(String.Format(Messages.player_your_id_is, ac.Id));
 
-                player.setData("PLAYER_STATUS", PlayerStatus.Spawned);
+                ac.Status = PlayerStatus.Spawned;
                 API.triggerClientEvent(player, "SC_DO_SPAWN");
             }
         }
 
         public void Player_Save(Client player)
         {
-            if (player.getData("PLAYER_STATUS") == PlayerStatus.AccountOptions ||
-                player.getData("PLAYER_STATUS") == PlayerStatus.CharacterSelection ||
-                player.getData("PLAYER_STATUS") == PlayerStatus.Spawned)
+            var ac = ActivePlayer.Get(player);
+
+            if (ac.Status == PlayerStatus.AccountOptions ||
+                ac.Status == PlayerStatus.CharacterSelection ||
+                ac.Status == PlayerStatus.Spawned ||
+                ac.Status == PlayerStatus.AdminDuty)
             {
-                Entities.Player p = player.getData("PlayerData");
+                Entities.Player p = ac.Player;
 
                 using (var context = new DatabaseContext())
                 {
@@ -387,7 +399,8 @@ namespace ProjetoRP.Modules.Player
         [Command("spawn")]
         public void Player_SpawnCommand(Client player, int character_index)
         {
-            if (player.getData("PLAYER_STATUS") != PlayerStatus.CharacterSelection || player.getData("PLAYER_IS_CEF_ENABLED") == true)
+            var ac = ActivePlayer.Get(player);
+            if (ac.Status != PlayerStatus.CharacterSelection || player.getData("PLAYER_IS_CEF_ENABLED") == true)
             {
                 return;
             }
@@ -423,6 +436,7 @@ namespace ProjetoRP.Modules.Player
         [Command("comprar")]
         public void BuyCommand(Client player)
         {
+            if (ActivePlayer.GetSpawned(player) == null) return;
             Entities.Property.Property prop = PropBLL.Property_GetNearestInRange(player, 4.0);
 
             if (prop != null)
@@ -439,6 +453,7 @@ namespace ProjetoRP.Modules.Player
         [Command("trancar")]
         public void LockCommand(Client player)
         {
+            if (ActivePlayer.GetSpawned(player) == null) return;
             Entities.Property.Door door = DoorBLL.Door_GetNearestInRangeBothSides(player, 4.0);
 
             if (door != null)
@@ -457,8 +472,15 @@ namespace ProjetoRP.Modules.Player
         {
             foreach(var p in API.getAllPlayers())
             {
-                Character c = p.getData("CHARACTER_DATA");
-                API.sendChatMessageToPlayer(player, "(" + p.getData("playerId") + ") " + c.Name);
+                ActivePlayer ac = ActivePlayer.Get(p);
+                if(null != ac)
+                {
+                    API.sendChatMessageToPlayer(player, "(" + ac.Character.Id + ") " + ac.Character.Name);
+                }
+                else
+                {
+                    API.sendChatMessageToPlayer(player, "(NOT_LOGGED_IN) " + p.socialClubName);
+                }
             }
         }
     }
