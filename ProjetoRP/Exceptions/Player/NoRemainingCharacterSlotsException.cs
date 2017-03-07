@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjetoRP.Exceptions.Character
+namespace ProjetoRP.Exceptions.Player
 {
     class NoRemainingCharacterSlotsException : Exception
     {

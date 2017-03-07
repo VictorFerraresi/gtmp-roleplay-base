@@ -1,5 +1,6 @@
 ﻿using GTANetworkServer;
 using GTANetworkShared;
+using ProjetoRP.Business.Player;
 using ProjetoRP.Entities;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,9 @@ namespace ProjetoRP.Modules.Faction
             switch (eventName)
             {
                 case "CS_EDIT_RANKS_SUBMIT":
+                    var ac = ActivePlayer.GetSpawned(player);
+                    if (ac == null) return;
+
                     API.sendChatMessageToPlayer(player, (string)args[0]);
                     var dataer = API.fromJson((string)args[0]);
 
@@ -55,7 +59,10 @@ namespace ProjetoRP.Modules.Faction
         [Command("editarrank", GreedyArg = true)]
         public void CreateFactionCommand(Client sender)
         {
-            Entities.Character c = sender.getData("CHARACTER_DATA");
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
 
             if(c.Faction == null || !FacBLL.Faction_IsLeader(c, c.Faction))
             {

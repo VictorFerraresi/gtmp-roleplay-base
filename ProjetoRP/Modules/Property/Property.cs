@@ -1,5 +1,6 @@
 ﻿using GTANetworkServer;
 using GTANetworkShared;
+using ProjetoRP.Business.Player;
 using ProjetoRP.Entities;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace ProjetoRP.Modules.Property
             switch (eventName)
             {
                 case "CS_BUY_PROP_CONFIRMATION":
+                    if (ActivePlayer.GetSpawned(player) == null) return;
                     int resp = (int)args[0];
                     int propid = (int)args[1];
 
@@ -78,6 +80,9 @@ namespace ProjetoRP.Modules.Property
         [Command("entrar")]
         public void EnterCommand(Client player)
         {
+            var ac = ActivePlayer.GetSpawned(player);
+            if (ac == null) return;
+
             Entities.Property.Door door = DoorBLL.Door_GetNearestInRange(player, 4.0, true);
 
             if(door == null)
@@ -94,7 +99,7 @@ namespace ProjetoRP.Modules.Property
                 {
                     API.setEntityPosition(player.handle, new Vector3(door.InteriorX, door.InteriorY, door.InteriorZ));
                     API.setEntityDimension(player.handle, door.InteriorDimension);
-                    Character c = player.getData("CHARACTER_DATA");
+                    Character c = ac.Character;
                     //c.InsideHouse = door.Property; 
                 }
             }
@@ -103,6 +108,9 @@ namespace ProjetoRP.Modules.Property
         [Command("sair")]
         public void ExitCommand(Client player)
         {
+            var ac = ActivePlayer.GetSpawned(player);
+            if (ac == null) return;
+
             Entities.Property.Door door = DoorBLL.Door_GetNearestInRange(player, 4.0, false);
 
             if (door == null)
@@ -119,7 +127,7 @@ namespace ProjetoRP.Modules.Property
                 {
                     API.setEntityPosition(player.handle, new Vector3(door.ExteriorX, door.ExteriorY, door.ExteriorZ));
                     API.setEntityDimension(player.handle, door.ExteriorDimension);
-                    Character c = player.getData("CHARACTER_DATA");
+                    Character c = ac.Character;
                     //c.InsideHouse = null;
                 }
             }
