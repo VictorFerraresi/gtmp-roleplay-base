@@ -8,6 +8,7 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 
 namespace ProjetoRP.Modules.Faction
@@ -33,15 +34,49 @@ namespace ProjetoRP.Modules.Faction
             switch (eventName)
             {
                 case "CS_EDIT_RANKS_SUBMIT":
-                    API.sendChatMessageToPlayer(player, (string)args[0]);
-                    var dataer = API.fromJson((string)args[0]);
+                    List<Entities.Faction.Rank> ranks = JArray.Parse((string)args[0]).ToObject<List<Entities.Faction.Rank>>();
+                    Entities.Character c = player.getData("CHARACTER_DATA");
 
-                    foreach(var rank in dataer.ranks)
+                    foreach(var rank in ranks)
                     {
-                        string name = rank.name;
-                        API.sendChatMessageToPlayer(player, name);
-                    }                                        
+                        Entities.Faction.Rank oldRank = c.Faction.Ranks.FirstOrDefault(r => r.Id == rank.Id);
 
+                        if (oldRank == null)
+                        {
+                            rank.Faction = c.Faction;
+                            rank.Faction_Id = (int)c.Faction_Id;
+                            c.Faction.Ranks.Add(rank);
+                            FacBLL.Rank_Create(rank);
+                        }
+                        else
+                        {
+                            oldRank.Level = rank.Level;
+                            oldRank.Name = rank.Name;
+                            FacBLL.Rank_Save(oldRank);
+                        }
+                    }
+                                        
+                    foreach (var scriptRank in c.Faction.Ranks.Reverse())
+                    {
+                        Entities.Faction.Rank vueRank = ranks.FirstOrDefault(r => r.Id == scriptRank.Id);
+
+                        if (vueRank == null)
+                        {
+                            c.Faction.Ranks.Remove(scriptRank);
+                            FacBLL.Rank_Delete(scriptRank);
+                            //Need to deal with players that had a deleted rank
+                        }
+                    }
+
+                    API.call("Ui", "evalUi", player, "rankedit_app.display=false;rankedit_app.blocked=false");
+                    API.call("Ui", "fixCursor", player, false);
+                    API.sendChatMessageToPlayer(player, "Você editou os ranks com sucesso!");
+                    break;
+
+                case "CS_EDIT_RANKS_CANCEL":
+                    API.call("Ui", "evalUi", player, "rankedit_app.display=false;rankedit_app.blocked=false");
+                    API.call("Ui", "fixCursor", player, false);
+                    API.sendChatMessageToPlayer(player, "Você cancelou a edição dos ranks e nenhuma alteração foi salva!");
                     break;
             }
         }
@@ -53,7 +88,7 @@ namespace ProjetoRP.Modules.Faction
 
         //Commands
         [Command("editarrank", GreedyArg = true)]
-        public void CreateFactionCommand(Client sender)
+        public void EditRankCommand(Client sender)
         {
             Entities.Character c = sender.getData("CHARACTER_DATA");
 
@@ -62,24 +97,41 @@ namespace ProjetoRP.Modules.Faction
                 API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
             }
             else
-            {              
+            {
                 dynamic ranks = new List<System.Dynamic.ExpandoObject>();
 
-                foreach(Entities.Faction.Rank r in c.Faction.Ranks)
-                {                    
+                List<Entities.Faction.Rank> orderedByLevelDesc = c.Faction.Ranks.OrderByDescending(r => r.Level).ToList();
+
+                foreach (Entities.Faction.Rank r in orderedByLevelDesc)
+                {
                     dynamic dyn = new System.Dynamic.ExpandoObject();
 
-                    dyn.id = r.Id;                    
+                    dyn.id = r.Id;
                     dyn.name = r.Name;
                     dyn.level = r.Level;
                     dyn.leader = r.Leader;
 
-                    ranks.Add(dyn);                    
-                }
+                    ranks.Add(dyn);
+                }                
 
                 string _in = API.toJson(ranks);                
                 API.call("Ui", "fixCursor", sender, true);
                 API.call("Ui", "evalUi", sender, "rankedit_app.ranks = " + _in + ";rankedit_app.display=true;");
+            }
+        }
+
+        [Command("f", GreedyArg = true)]
+        public void FactionChatCommand(Client sender, string msg)
+        {
+            Entities.Character c = Business.Character.ActiveCharacter.Get(sender).Character;
+
+            if (c.Faction == null)
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {
+                FacBLL.Faction_SendChatMessage(c, msg);
             }
         }
     }

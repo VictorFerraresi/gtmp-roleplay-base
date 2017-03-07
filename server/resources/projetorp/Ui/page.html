@@ -311,8 +311,9 @@
                     <tbody>
                       <tr v-for="rank in ranks">
                           <td>{{ rank.level }}</td>
-                          <td>{{ rank.name }}</td>                                                   
-                          <td><i style="font-size: 18px" class="material-icons clickable-icon">mode_edit</i></td>
+                          <td v-if="!editing[rank.level-1]">{{ rank.name }}</td>
+                          <td v-if="editing[rank.level-1]"><input type="text" :value="rank.name" v-model="ranks[ranks.length - rank.level].name"/><i v-on:click="clearbox()" class="material-icons clickable-icon">done</i></td>
+                          <td><i v-on:click="edit(rank.level)" style="font-size: 18px" class="material-icons clickable-icon">mode_edit</i></td>
                           <td><i v-if="!rank.leader" v-on:click="move('up', rank.level)" class="material-icons clickable-icon">arrow_upward</i> <i v-if="!rank.leader && rank.level != 1" v-on:click="move('down', rank.level)" class="material-icons clickable-icon">arrow_downward</i></td>
                           <td><i v-if="!rank.leader" v-on:click="deleterank(rank.level)" class="material-icons clickable-icon">clear</i></td>
                       </tr>
@@ -491,9 +492,10 @@
         data: {
             display: false,
             blocked: false,
-            error: '',              
-            ranks: [
-            ]
+            editing: false,
+            error: '',
+            editing: [],
+            ranks: []
         },
         methods: {
             onSubmit: function () {
@@ -502,15 +504,17 @@
             },
             cancel: function () {
                 this.blocked = true;
-                resourceCall('triggerEvent', 'CS_CREATE_PROPERTY_CANCEL');
+                resourceCall('triggerEvent', 'CS_EDIT_RANKS_CANCEL');
             },
             move: function (type, lv) {
+                this.clearbox();
+
                 switch (type) {
                     case "up":
                         if (this.ranks.length - lv == 1) {
                             this.error = "O level lider não deve ser alterado!";
-                        } else {                        	
-                            var idx = this.ranks.length - lv;                            
+                        } else {
+                            var idx = this.ranks.length - lv;
                             var aux = this.ranks[idx];
                             this.ranks[idx].level += 1;
                             this.ranks[idx - 1].level -= 1;
@@ -537,9 +541,11 @@
                             this.error = "";
                         }
                         break;
-                }                
+                }
             },
             deleterank: function (lv) {
+                this.clearbox();
+
                 var idx = this.ranks.length - lv;
                 this.ranks.splice(idx, 1);
                 for (var i = idx - 1; i >= 0; i--) {
@@ -548,11 +554,22 @@
                 }
             },
             create: function () {
+                this.clearbox();
+
                 var newrank = { name: "Novo Rank", level: 1, leader: false };
                 Vue.set(this.ranks, this.ranks.length, newrank);
                 for (var i = 0; i < this.ranks.length - 1; i++) {
                     this.ranks[i].level++;
                     Vue.set(this.ranks, i, this.ranks[i]);
+                }
+            },
+            edit: function (lv) {
+                this.clearbox();
+                Vue.set(this.editing, lv - 1, true);
+            },
+            clearbox: function () {
+                for (var i = 0; i < this.editing.length; i++) {
+                    Vue.set(this.editing, i, false);
                 }
             }
         }

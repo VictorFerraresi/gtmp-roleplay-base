@@ -26,7 +26,7 @@ namespace ProjetoRP.Business
                 }
             }
         }
-
+        
         public void Faction_Save(Entities.Faction.Faction faction)
         {
             using (var context = new DatabaseContext())
@@ -90,6 +90,36 @@ namespace ProjetoRP.Business
             }
 
             Faction_Save(faction);
+        }
+
+        public void Rank_Save(Entities.Faction.Rank rank)
+        {
+            using (var context = new DatabaseContext())
+            {
+                context.Ranks.Attach(rank);
+                context.Entry(rank).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
+        public void Rank_Create(Entities.Faction.Rank rank)
+        {
+            using (var context = new DatabaseContext())
+            {
+                context.Ranks.Attach(rank);
+                context.Ranks.Add(rank);
+                context.SaveChanges();
+            }            
+        }
+
+        public void Rank_Delete(Entities.Faction.Rank rank)
+        {
+            using (var context = new DatabaseContext())
+            {
+                context.Ranks.Attach(rank);
+                context.Ranks.Remove(rank);
+                context.SaveChanges();
+            }
         }
 
         public Entities.Faction.Faction FindFactionById(int id) //Should we be using C#'s predicate List find?
@@ -200,6 +230,20 @@ namespace ProjetoRP.Business
             }            
 
             return character;
+        }
+
+        public void Faction_SendChatMessage(Entities.Character c, string msg) //Discord bot integration soon
+        {
+            foreach(var player in API.shared.getAllPlayers())
+            {
+                Entities.Character playerChar = Business.Character.ActiveCharacter.Get(player).Character;
+
+                if(playerChar.Faction_Id == c.Faction_Id)
+                {
+                    string finalMsg = string.Format("(( {0} {1}: {2} ))", c.Rank.Name, c.Name, msg);
+                    API.shared.sendChatMessageToPlayer(player, finalMsg);
+                }
+            }
         }
     }
 }
