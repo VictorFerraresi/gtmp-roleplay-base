@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\BusinessBLL.cs" />
+    <Compile Include="Business\Character\ActiveCharacter.cs" />
     <Compile Include="Business\DoorBLL.cs" />
     <Compile Include="Business\FactionBLL.cs" />
     <Compile Include="Business\GlobalVariables.cs" />
@@ -144,6 +145,8 @@
     <Compile Include="Entities\Session.cs" />
     <Compile Include="Entities\Vehicle.cs" />
     <Compile Include="Entry.cs" />
+    <Compile Include="Exceptions\Character\ActiveCharacterAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\Character\NoRemainingCharacterSlotsException.cs" />
     <Compile Include="Exceptions\Item\InvalidItemModelServiceException.cs" />
     <Compile Include="Exceptions\Item\InvalidItemOperationException.cs" />
     <Compile Include="Migrations\201702170248522_AddPlayerAndCharacter.cs" />
