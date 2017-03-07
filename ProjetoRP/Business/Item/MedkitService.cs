@@ -23,7 +23,7 @@ namespace ProjetoRP.Business.Item
         {
         }
 
-        public override void Character_Activate(Character character)
+        public override void Character_Activate(Entities.Character character)
         {
             Validate();
             Consume();
@@ -31,17 +31,17 @@ namespace ProjetoRP.Business.Item
             // Give player health based on variation
         }
 
-        public override bool Character_Equippable(Character character, EquipSlot slot)
+        public override bool Character_Equippable(Entities.Character character, EquipSlot slot)
         {
             return false;
         }
 
-        public override void Character_PostEquipped(Character character, EquipSlot slot)
+        public override void Character_PostEquipped(Entities.Character character, EquipSlot slot)
         {
             throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
         }
 
-        public override void Character_InventoryEquip(Character character)
+        public override void Character_InventoryEquip(Entities.Character character)
         {
             throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
         }

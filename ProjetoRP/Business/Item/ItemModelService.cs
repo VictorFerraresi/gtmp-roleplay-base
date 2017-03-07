@@ -69,9 +69,9 @@ namespace ProjetoRP.Business.Item
             }
         }
 
-        public abstract bool Character_Equippable(Character character, Types.EquipSlot slot);
-        public abstract void Character_InventoryEquip(Character character);
-        public abstract void Character_PostEquipped(Character character, Types.EquipSlot slot);
-        public abstract void Character_Activate(Character character);  
+        public abstract bool Character_Equippable(Entities.Character character, Types.EquipSlot slot);
+        public abstract void Character_InventoryEquip(Entities.Character character);
+        public abstract void Character_PostEquipped(Entities.Character character, Types.EquipSlot slot);
+        public abstract void Character_Activate(Entities.Character character);  
     }
 }
