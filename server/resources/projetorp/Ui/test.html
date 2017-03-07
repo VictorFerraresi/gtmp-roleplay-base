@@ -30,7 +30,8 @@
                     <thead>                        
                       <tr>
                         <th>Level</th>
-                        <th>Rank</th>                        
+                        <th>Rank</th>
+                        <th>Editar</th>
                         <th>Alterar Ordem</th>
                         <th>Excluir</th>
                       </tr>
@@ -38,13 +39,9 @@
                     <tbody>
                       <tr v-for="rank in ranks">
                           <td>{{ rank.level }}</td>
-<<<<<<< HEAD
                           <td v-if="!editing[rank.level-1]">{{ rank.name }}</td>
                           <td v-if="editing[rank.level-1]"><input type="text" :value="rank.name" v-model="ranks[ranks.length - rank.level].name"/><i v-on:click="clearbox()" class="material-icons clickable-icon">done</i></td>
                           <td><i v-on:click="edit(rank.level)" style="font-size: 18px" class="material-icons clickable-icon">mode_edit</i></td>
-=======
-                          <td v-on:click="edit(rank.level, $event)">{{ rank.name }}</td>                                                                             
->>>>>>> origin/master
                           <td><i v-if="!rank.leader" v-on:click="move('up', rank.level)" class="material-icons clickable-icon">arrow_upward</i> <i v-if="!rank.leader && rank.level != 1" v-on:click="move('down', rank.level)" class="material-icons clickable-icon">arrow_downward</i></td>
                           <td><i v-if="!rank.leader" v-on:click="deleterank(rank.level)" class="material-icons clickable-icon">clear</i></td>
                       </tr>
@@ -82,18 +79,9 @@
             display: true,
             blocked: false,
             editing: false,
-<<<<<<< HEAD
             error: '',
             editing: [],
             ranks: []
-=======
-            error: '',            
-            ranks: [{ name: "Rank1", level: 5, leader: true },
-                { name: "Rank2", level: 4, leader: false },
-                { name: "Rank3", level: 3, leader: false },
-                { name: "Rank4", level: 2, leader: false },
-                { name: "Rank5", level: 1, leader: false }]
->>>>>>> origin/master
         },
         methods: {
             onSubmit: function () {
@@ -161,7 +149,6 @@
                     Vue.set(this.ranks, i, this.ranks[i]);
                 }
             },
-<<<<<<< HEAD
             edit: function (lv) {
                 this.clearbox();
                 Vue.set(this.editing, lv - 1, true);
@@ -170,11 +157,6 @@
                 for (var i = 0; i < this.editing.length; i++) {
                     Vue.set(this.editing, i, false);
                 }
-=======
-            edit: function (lv, event) {	
-            	var oldName = event.currentTarget.innerText;
-				event.currentTarget.innerHTML = "<input type='text' name='newRankName' onclick='this.select()' value='"+oldName+"' maxlength='25' />"
->>>>>>> origin/master
             }
         }
     });   

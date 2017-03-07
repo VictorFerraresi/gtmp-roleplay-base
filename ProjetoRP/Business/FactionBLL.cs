@@ -236,7 +236,7 @@ namespace ProjetoRP.Business
         {
             foreach(var player in API.shared.getAllPlayers())
             {
-                Entities.Character playerChar = Business.Character.ActiveCharacter.Get(player).Character;
+                Entities.Character playerChar = Business.Player.ActivePlayer.GetSpawned(player).Character;
 
                 if(playerChar.Faction_Id == c.Faction_Id)
                 {

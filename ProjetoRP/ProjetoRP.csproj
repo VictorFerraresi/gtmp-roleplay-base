@@ -245,6 +245,7 @@
     <Compile Include="Types\EyeColor.cs" />
     <Compile Include="Types\Gender.cs" />
     <Compile Include="Types\HairColor.cs" />
+    <Compile Include="Types\PlayerStatus.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

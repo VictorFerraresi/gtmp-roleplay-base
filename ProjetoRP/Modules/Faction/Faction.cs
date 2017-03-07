@@ -40,15 +40,17 @@ namespace ProjetoRP.Modules.Faction
                     var ac = ActivePlayer.GetSpawned(player);
                     if (ac == null) return;
 
+                    Entities.Character c = ac.Character;
+
                     foreach(var rank in ranks)
                     {
-                        Entities.Faction.Rank oldRank = ac.Faction.Ranks.FirstOrDefault(r => r.Id == rank.Id);
+                        Entities.Faction.Rank oldRank = c.Faction.Ranks.FirstOrDefault(r => r.Id == rank.Id);
 
                         if (oldRank == null)
                         {
-                            rank.Faction = ac.Faction;
-                            rank.Faction_Id = (int)ac.Faction_Id;
-                            ac.Faction.Ranks.Add(rank);
+                            rank.Faction = c.Faction;
+                            rank.Faction_Id = (int)c.Faction_Id;
+                            c.Faction.Ranks.Add(rank);
                             FacBLL.Rank_Create(rank);
                         }
                         else
@@ -59,13 +61,13 @@ namespace ProjetoRP.Modules.Faction
                         }
                     }
                                         
-                    foreach (var scriptRank in ac.Faction.Ranks.Reverse())
+                    foreach (var scriptRank in c.Faction.Ranks.Reverse())
                     {
                         Entities.Faction.Rank vueRank = ranks.FirstOrDefault(r => r.Id == scriptRank.Id);
 
                         if (vueRank == null)
                         {
-                            ac.Faction.Ranks.Remove(scriptRank);
+                            c.Faction.Ranks.Remove(scriptRank);
                             FacBLL.Rank_Delete(scriptRank);
                             //Need to deal with players that had a deleted rank
                         }
@@ -129,7 +131,7 @@ namespace ProjetoRP.Modules.Faction
         [Command("f", GreedyArg = true)]
         public void FactionChatCommand(Client sender, string msg)
         {
-            Entities.Character c = Business.Character.ActiveCharacter.Get(sender).Character;
+            Entities.Character c = Business.Player.ActivePlayer.GetSpawned(sender).Character;
 
             if (c.Faction == null)
             {
