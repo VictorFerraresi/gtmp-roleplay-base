@@ -1,9 +1,7 @@
 ﻿using GTANetworkServer;
 using GTANetworkShared;
-using ProjetoRP.Business.Character;
 using ProjetoRP.Business.Player;
 using ProjetoRP.Entities;
-using ProjetoRP.Modules.Player.Types;
 using ProjetoRP.Types;
 using System;
 using System.Collections.Generic;
@@ -39,6 +37,7 @@ namespace ProjetoRP.Modules.Player
             var ac = ActivePlayer.GetSpawned(player);
             if (null != ac) // Means that the player was spawned (has character instantiated)
             {
+                
                 Player_Save(player);
                 ac.Dispose(); // Removing from AC pool
             }
@@ -386,6 +385,27 @@ namespace ProjetoRP.Modules.Player
                     context.Players.Attach(p);
                     context.Entry(p).State = EntityState.Modified;
                     context.SaveChanges();
+
+                    context.Entry(p).State = EntityState.Detached;
+
+                    if (ac.Status == PlayerStatus.Spawned)
+                    {
+                        Entities.Character c = ac.Character;
+
+                        Vector3 pos = player.position;
+                        int dimension = player.dimension;
+
+                        c.X = pos.X;
+                        c.Y = pos.Y;
+                        c.Z = pos.Z;
+                        c.Dimension = dimension;
+
+                        context.Characters.Attach(c);
+                        context.Entry(c).State = EntityState.Modified;
+                        context.SaveChanges();
+
+                        context.Entry(c).State = EntityState.Detached;
+                    }
                 }
             }
         }
