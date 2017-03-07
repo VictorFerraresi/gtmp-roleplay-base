@@ -53,6 +53,20 @@ namespace ProjetoRP.Business.Item
         {
             DatabaseContext.Items.Remove(Item);
             DatabaseContext.SaveChanges();
+            Item = null;
+        }
+
+        protected void Validate()
+        {
+            if(null == Item)
+            {
+                throw new Exceptions.Item.InvalidItemModelServiceException(Messages.null_item);
+            }
+
+            if(false == ValidVariations.Contains(Item.Variation)) 
+            {
+                throw new Exceptions.Item.InvalidItemModelServiceException(Messages.invalid_variation);
+            }
         }
 
         public abstract bool Character_Equippable(Character character, Types.EquipSlot slot);
