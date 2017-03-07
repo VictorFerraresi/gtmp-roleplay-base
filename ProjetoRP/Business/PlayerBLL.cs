@@ -21,7 +21,7 @@ namespace ProjetoRP.Business
             c.Cash -= amount;
         }
 
-        public int? Player_GetNextFreeId()
+        /*public int? Player_GetNextFreeId()
         {
             int? a = null;
             for(int i = 0; i < 1000; i++)
@@ -34,6 +34,6 @@ namespace ProjetoRP.Business
                 break;        
             }
             return a;
-        }
+        }*/
     }
 }

@@ -100,7 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\BusinessBLL.cs" />
-    <Compile Include="Business\Character\ActiveCharacter.cs" />
     <Compile Include="Business\DoorBLL.cs" />
     <Compile Include="Business\FactionBLL.cs" />
     <Compile Include="Business\GlobalVariables.cs" />
@@ -114,6 +113,7 @@
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
     <Compile Include="Business\PlayerBLL.cs" />
+    <Compile Include="Business\Player\ActivePlayer.cs" />
     <Compile Include="Business\PropertyBLL.cs" />
     <Compile Include="Configurations\Character.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -145,10 +145,10 @@
     <Compile Include="Entities\Session.cs" />
     <Compile Include="Entities\Vehicle.cs" />
     <Compile Include="Entry.cs" />
-    <Compile Include="Exceptions\Character\ActiveCharacterAlreadyExistsException.cs" />
-    <Compile Include="Exceptions\Character\NoRemainingCharacterSlotsException.cs" />
     <Compile Include="Exceptions\Item\InvalidItemModelServiceException.cs" />
     <Compile Include="Exceptions\Item\InvalidItemOperationException.cs" />
+    <Compile Include="Exceptions\Player\ActiveCharacterAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\Player\NoRemainingCharacterSlotsException.cs" />
     <Compile Include="Migrations\201702170248522_AddPlayerAndCharacter.cs" />
     <Compile Include="Migrations\201702170248522_AddPlayerAndCharacter.Designer.cs">
       <DependentUpon>201702170248522_AddPlayerAndCharacter.cs</DependentUpon>
@@ -235,7 +235,6 @@
     </Compile>
     <Compile Include="Modules\Player\Messages.Designer.cs" />
     <Compile Include="Modules\Player\Player.cs" />
-    <Compile Include="Modules\Player\Types.cs" />
     <Compile Include="Modules\Property\Messages.Designer.cs" />
     <Compile Include="Modules\Property\Property.cs" />
     <Compile Include="Modules\Ui\Ui.cs" />
@@ -330,7 +329,9 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Modules\Admin\Client\Admin.client.js" />
+    <Content Include="Modules\ContextMenu\Client\ContextMenu.client.js" />
     <Content Include="Modules\Faction\Client\Faction.client.js" />
+    <Content Include="Modules\Item\Client\Item.client.js" />
     <Content Include="Modules\Player\Client\Player.client.js" />
     <Content Include="Modules\Property\Client\Property.client.js" />
     <Content Include="Modules\Property\Client\Property.js" />

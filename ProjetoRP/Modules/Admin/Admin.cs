@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProjetoRP.Business.Player;
 
 namespace ProjetoRP.Modules.Admin
 {
@@ -36,6 +37,9 @@ namespace ProjetoRP.Modules.Admin
             switch (eventName)
             {
                 case "CS_CREATE_FACTION_SUBMIT":
+                    var ac = ActivePlayer.Get(player);
+                    if (ac == null || ac.Status != Types.PlayerStatus.AdminDuty) return;
+
                     var datafc = API.fromJson((string)args[0]);
 
                     string name = (string)datafc.factionname;
@@ -147,10 +151,13 @@ namespace ProjetoRP.Modules.Admin
         [Command("a", GreedyArg = true)]
         public void AdminChatCommand(Client sender, string text)
         {
-            Entities.Character character = sender.getData("CHARACTER_DATA");
+            var ac = ActivePlayer.Get(sender);
+            if (ac == null) return;
+
+            var player = ac.Player;
             //if sender.IsAdmin(){
-            SendAdminChatMessage(character.Name, text);
-            _discordBot.SendAdminChatMessageToDiscord(character.Name, text);
+            SendAdminChatMessage(player.Name, text);
+            _discordBot.SendAdminChatMessageToDiscord(player.Name, text);
             //}
         }
 
@@ -739,7 +746,8 @@ namespace ProjetoRP.Modules.Admin
         [Command("darlider")]
         public void GiveFactionleaderCommand(Client sender, int playerid, int factionid)
         {
-            if(playerid < 0 || playerid > 1000)
+            var ac = ActivePlayer.GetSpawned(playerid);
+            if (null == ac)
             {
                 API.sendChatMessageToPlayer(sender, "Escolha um playerid válido!");
             }
@@ -749,19 +757,15 @@ namespace ProjetoRP.Modules.Admin
             }
             else
             {
-                Client target = API.getAllPlayers().Find(p => p.getData("playerId") == playerid);
+                Client target = ac.Client;
                 Entities.Faction.Faction faction = FacBLL.FindFactionById(factionid);
-                if (target == null)
-                {
-                    API.sendChatMessageToPlayer(sender, "Este jogador não está conectado!");
-                }
-                else if(faction == null)
+                if(faction == null)
                 {
                     API.sendChatMessageToPlayer(sender, "Esta facção não existe!");
                 }
                 else //Player is Connected and Faction Exists
                 {
-                    Entities.Character c = target.getData("CHARACTER_DATA");
+                    Entities.Character c = ac.Character;
                     c.Faction = faction;
                     c.Faction_Id = faction.Id;
                     Entities.Faction.Rank rank = FacBLL.Faction_GetLeaderRank(faction);

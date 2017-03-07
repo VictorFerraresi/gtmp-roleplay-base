@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GTANetworkServer;
 using GTANetworkShared;
+using ProjetoRP.Business.Player;
 
 namespace ProjetoRP.Business
 {
@@ -32,7 +33,8 @@ namespace ProjetoRP.Business
         public bool TryToBuy(Client player, Entities.Property.Property business, bool confirmed)
         {
             Entities.Property.Business b = (Entities.Property.Business)business;
-            Entities.Character c = player.getData("CHARACTER_DATA");
+            var ac = ActivePlayer.GetSpawned(player);
+            var c = ac.Character;
 
             if (b.Owner != null)
             {

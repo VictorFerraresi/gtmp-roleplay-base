@@ -1,5 +1,6 @@
 ﻿using GTANetworkServer;
 using GTANetworkShared;
+using ProjetoRP.Business.Player;
 using ProjetoRP.Entities;
 using System;
 using System.Collections.Generic;
@@ -35,17 +36,19 @@ namespace ProjetoRP.Modules.Faction
             {
                 case "CS_EDIT_RANKS_SUBMIT":
                     List<Entities.Faction.Rank> ranks = JArray.Parse((string)args[0]).ToObject<List<Entities.Faction.Rank>>();
-                    Entities.Character c = player.getData("CHARACTER_DATA");
+                                        
+                    var ac = ActivePlayer.GetSpawned(player);
+                    if (ac == null) return;
 
                     foreach(var rank in ranks)
                     {
-                        Entities.Faction.Rank oldRank = c.Faction.Ranks.FirstOrDefault(r => r.Id == rank.Id);
+                        Entities.Faction.Rank oldRank = ac.Faction.Ranks.FirstOrDefault(r => r.Id == rank.Id);
 
                         if (oldRank == null)
                         {
-                            rank.Faction = c.Faction;
-                            rank.Faction_Id = (int)c.Faction_Id;
-                            c.Faction.Ranks.Add(rank);
+                            rank.Faction = ac.Faction;
+                            rank.Faction_Id = (int)ac.Faction_Id;
+                            ac.Faction.Ranks.Add(rank);
                             FacBLL.Rank_Create(rank);
                         }
                         else
@@ -56,13 +59,13 @@ namespace ProjetoRP.Modules.Faction
                         }
                     }
                                         
-                    foreach (var scriptRank in c.Faction.Ranks.Reverse())
+                    foreach (var scriptRank in ac.Faction.Ranks.Reverse())
                     {
                         Entities.Faction.Rank vueRank = ranks.FirstOrDefault(r => r.Id == scriptRank.Id);
 
                         if (vueRank == null)
                         {
-                            c.Faction.Ranks.Remove(scriptRank);
+                            ac.Faction.Ranks.Remove(scriptRank);
                             FacBLL.Rank_Delete(scriptRank);
                             //Need to deal with players that had a deleted rank
                         }
@@ -90,7 +93,10 @@ namespace ProjetoRP.Modules.Faction
         [Command("editarrank", GreedyArg = true)]
         public void EditRankCommand(Client sender)
         {
-            Entities.Character c = sender.getData("CHARACTER_DATA");
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
 
             if(c.Faction == null || !FacBLL.Faction_IsLeader(c, c.Faction))
             {
