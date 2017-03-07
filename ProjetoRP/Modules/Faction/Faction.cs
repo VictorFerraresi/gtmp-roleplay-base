@@ -142,5 +142,31 @@ namespace ProjetoRP.Modules.Faction
                 FacBLL.Faction_SendChatMessage(c, msg);
             }
         }
+
+        [Command("membros")]
+        public void SeeMembersCommand(Client sender)
+        {
+            Entities.Character c = Business.Player.ActivePlayer.GetSpawned(sender).Character;
+
+            if (c.Faction == null)
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {
+                FacBLL.Faction_ShowOnlineMembers(c.Faction, sender);
+            }
+        }
+
+        [Command("faccoes")]
+        public void SeeFactionsCommand(Client sender)
+        {
+            API.sendChatMessageToPlayer(sender, "__________________[Facções]__________________");
+            foreach(var fac in Business.GlobalVariables.Instance.ServerFactions)
+            {
+                string finalMsg = string.Format("{0} | Membros: {1}/{2}", fac.Name, FacBLL.Faction_GetOnlineMemberCount(fac), FacBLL.Faction_GetMemberCount(fac));
+                API.shared.sendChatMessageToPlayer(sender, finalMsg);
+            }
+        }
     }
 }

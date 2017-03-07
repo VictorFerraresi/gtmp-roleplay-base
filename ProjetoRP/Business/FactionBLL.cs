@@ -245,5 +245,53 @@ namespace ProjetoRP.Business
                 }
             }
         }
+
+        public int Faction_GetOnlineMemberCount(Entities.Faction.Faction fac)
+        {
+            int count = 0;
+
+            foreach(var player in API.shared.getAllPlayers())
+            {
+                Entities.Character c = Business.Player.ActivePlayer.Get(player).Character;
+
+                if(c.Faction_Id == fac.Id)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        public int Faction_GetMemberCount(Entities.Faction.Faction fac)
+        {
+            int count = 0;
+
+            using (var context = new DatabaseContext())
+            {
+                count = (from c in context.Characters
+                             where c.Faction_Id == fac.Id                             
+                             select c).Count();
+            }
+
+            return count;
+        }
+
+        public void Faction_ShowOnlineMembers(Entities.Faction.Faction fac, Client client)
+        {
+            API.shared.sendChatMessageToPlayer(client, "[" +fac.Acro+ "] Membros Online:");
+            foreach (var player in API.shared.getAllPlayers())
+            {
+                Player.ActivePlayer ac = Business.Player.ActivePlayer.Get(player);
+
+                Entities.Character c = ac.Character;
+
+                if(c.Faction_Id == fac.Id)
+                {
+                    string finalMsg = string.Format("{0} {1} (ID: {2})", c.Rank.Name, c.Name, ac.Id);
+                    API.shared.sendChatMessageToPlayer(client, finalMsg);
+                }
+            }
+        }
     }
 }
