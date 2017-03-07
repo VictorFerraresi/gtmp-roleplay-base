@@ -38,7 +38,7 @@
                     <tbody>
                       <tr v-for="rank in ranks">
                           <td>{{ rank.level }}</td>
-                          <td v-on:click="edit(rank.level, $event)">{{ rank.name }}</td>                                                                             
+                          <td v-on:click="edit(rank.level, $event, false)">{{ rank.name }}</td>                                                                             
                           <td><i v-if="!rank.leader" v-on:click="move('up', rank.level)" class="material-icons clickable-icon">arrow_upward</i> <i v-if="!rank.leader && rank.level != 1" v-on:click="move('down', rank.level)" class="material-icons clickable-icon">arrow_downward</i></td>
                           <td><i v-if="!rank.leader" v-on:click="deleterank(rank.level)" class="material-icons clickable-icon">clear</i></td>
                       </tr>
@@ -71,7 +71,7 @@
 
 
     rankedit_app = new Vue({
-        el: '#rankedit-app',
+        el: '#rankedit-app',        
         data: {
             display: true,
             blocked: false,
@@ -143,9 +143,18 @@
                     Vue.set(this.ranks, i, this.ranks[i]);
                 }
             },
-            edit: function (lv, event) {	
-            	var oldName = event.currentTarget.innerText;
-				event.currentTarget.innerHTML = "<input type='text' name='newRankName' onclick='this.select()' value='"+oldName+"' maxlength='25' />"
+            edit: function (lv, event, confirm) {
+				if(!this.editing){     
+					this.editing = true;     	
+	            	var oldName = event.currentTarget.innerText;
+					event.currentTarget.innerHTML = "<form v-on:submit.prevent='onSubmit'> <input type='text' name='newRankName' onclick='this.select()' value='"+oldName+"' maxlength='25' /> <button type='submit' class='btn btn-success btn-xs btn-striped' v-bind:disabled='blocked' v-bind:class='{ 'btn-processing': blocked }'><i class='material-icons'>done</i></button> </form>"
+				} else {
+					if(confirm){ //Edited
+					}
+				}
+            },
+            onSubmit: function () {                
+                alert("oi");
             }
         }
     });   
