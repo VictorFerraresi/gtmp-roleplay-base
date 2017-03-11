@@ -8,7 +8,7 @@ using GTANetworkServer;
 using GTANetworkShared;
 using ProjetoRP.Business.Player;
 
-namespace ProjetoRP.Business
+namespace ProjetoRP.Business.Property
 {
     public class DoorBLL
     {

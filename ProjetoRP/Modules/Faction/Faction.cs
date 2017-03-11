@@ -10,13 +10,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using ProjetoRP.Business.Faction;
 
 
 namespace ProjetoRP.Modules.Faction
 {
     public class Faction : Script
     {
-        private Business.FactionBLL FacBLL = new Business.FactionBLL();
+        private FactionBLL FacBLL = new FactionBLL();
 
         public Faction()
         {

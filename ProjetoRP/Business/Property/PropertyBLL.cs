@@ -7,12 +7,12 @@ using System.Data.Entity;
 using GTANetworkServer;
 using GTANetworkShared;
 
-namespace ProjetoRP.Business
+namespace ProjetoRP.Business.Property
 {
     public class PropertyBLL
     {        
-        public Entities.Property.IProperty<Entities.Property.Property> HouseBll = new Business.HouseBLL();
-        public Entities.Property.IProperty<Entities.Property.Property> BusinessBll = new Business.BusinessBLL();
+        public Entities.Property.IProperty<Entities.Property.Property> HouseBll = new HouseBLL();
+        public Entities.Property.IProperty<Entities.Property.Property> BusinessBll = new BusinessBLL();
 
         public void LoadProperties()
         {
@@ -130,13 +130,13 @@ namespace ProjetoRP.Business
             Business.GlobalVariables.Instance.ServerProperties.Add(prop);            
 
             DrawPickup(prop);
-            Business.DoorBLL DoorBLL = new Business.DoorBLL();
+            DoorBLL DoorBLL = new DoorBLL();
             DoorBLL.Door_Create(prop, 0, true, new Vector3(prop.X, prop.Y, prop.Z), dimension, new Vector3(-18.77586, -581.755, 90.11491), prop.Id);
         }
 
         public void Property_Delete(Entities.Property.Property prop)
         {
-            Business.DoorBLL DoorBLL = new Business.DoorBLL();
+            DoorBLL DoorBLL = new DoorBLL();
             DoorBLL.Door_DeleteFromProperty(prop);
 
             using (var context = new DatabaseContext())

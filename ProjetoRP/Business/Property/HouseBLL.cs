@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using GTANetworkServer;
 using GTANetworkShared;
+using ProjetoRP.Business.Player;
 
-namespace ProjetoRP.Business
+namespace ProjetoRP.Business.Property
 {
     public class HouseBLL : Entities.Property.IProperty<Entities.Property.Property>
     {
-        Business.PlayerBLL PlayerBLL = new Business.PlayerBLL();
+        PlayerBLL PlayerBLL = new PlayerBLL();
 
         public void DrawPickup(Entities.Property.Property house)
         {

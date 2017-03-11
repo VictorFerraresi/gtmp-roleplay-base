@@ -9,14 +9,15 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProjetoRP.Business.Property;
 
 
 namespace ProjetoRP.Modules.Property
 {
     public class Property : Script
     {
-        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
-        private Business.DoorBLL DoorBLL = new Business.DoorBLL();
+        private PropertyBLL PropBLL = new PropertyBLL();
+        private DoorBLL DoorBLL = new DoorBLL();
 
         public Property()
         {
@@ -137,6 +138,16 @@ namespace ProjetoRP.Modules.Property
         public void getPosition(Client player)
         {
             API.consoleOutput("{0},{1},{2}", player.position.X, player.position.Y, player.position.Z);           
-        }     
+        }
+
+        [Command("carpos")]
+        public void getCarPos(Client player)
+        {            
+            Vector3 vehPos = API.shared.getEntityPosition(player.vehicle);
+            API.consoleOutput("{0},{1},{2}", vehPos.X, vehPos.Y, vehPos.Z);
+            Vector3 vehRot = API.shared.getEntityRotation(player.vehicle);
+            API.consoleOutput("{0},{1},{2}", vehRot.X, vehRot.Y, vehRot.Z);
+            API.consoleOutput("----------------------------", vehRot.X, vehRot.Y, vehRot.Z);
+        }
     }
 }

@@ -7,7 +7,7 @@ using System.Data.Entity;
 using GTANetworkServer;
 using GTANetworkShared;
 
-namespace ProjetoRP.Business
+namespace ProjetoRP.Business.Faction
 {
     public class FactionBLL
     {

@@ -10,15 +10,16 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProjetoRP.Business.Property;
 
 
 namespace ProjetoRP.Modules.Player
 {
     public class Player : Script
     {
-        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
-        private Business.DoorBLL DoorBLL = new Business.DoorBLL();
-        private Business.PlayerBLL PlayerBLL = new Business.PlayerBLL();
+        private PropertyBLL PropBLL = new PropertyBLL();
+        private DoorBLL DoorBLL = new DoorBLL();
+        private PlayerBLL PlayerBLL = new PlayerBLL();
 
         const int NULL_DIMENSION = int.MaxValue;
         const int MAX_LOGIN_TRIES = 3;

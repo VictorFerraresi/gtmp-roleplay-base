@@ -6,15 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ProjetoRP.Business.Player;
+using ProjetoRP.Business.Faction;
+using ProjetoRP.Business.Property;
+using ProjetoRP.Business.Vehicle;
 
 namespace ProjetoRP.Modules.Admin
 {
     class Admin : Script
     {
         private DiscordBot _discordBot = new DiscordBot();
-        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
-        private Business.DoorBLL DoorBLL = new Business.DoorBLL();
-        private Business.FactionBLL FacBLL = new Business.FactionBLL();
+        private PropertyBLL PropBLL = new PropertyBLL();
+        private DoorBLL DoorBLL = new DoorBLL();
+        private FactionBLL FacBLL = new FactionBLL();
 
         public Admin()
         {

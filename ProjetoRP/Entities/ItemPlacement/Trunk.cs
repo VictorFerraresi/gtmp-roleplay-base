@@ -14,6 +14,6 @@ namespace ProjetoRP.Entities.ItemPlacement
         [Required]
         public int? ParentVehicle_Id { get; set; }
         [ForeignKey("ParentVehicle_Id")]
-        public Vehicle ParentVehicle { get; set; }
+        public Entities.Vehicle.Vehicle ParentVehicle { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace ProjetoRP
         public DbSet<Item> Items { get; set; }
         public DbSet<Placement> ItemsPlacement { get; set; }
 
-        public DbSet<Vehicle> Vehicles { get; set; }        
+        public DbSet<Entities.Vehicle.Vehicle> Vehicles { get; set; }        
 
         public DbSet<Entities.Property.Property> Properties { get; set; }
         public DbSet<Entities.Property.Door> Doors { get; set; }

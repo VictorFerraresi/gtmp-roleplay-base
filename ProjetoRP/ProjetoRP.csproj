@@ -99,11 +99,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\BusinessBLL.cs" />
-    <Compile Include="Business\DoorBLL.cs" />
-    <Compile Include="Business\FactionBLL.cs" />
+    <Compile Include="Business\Property\BusinessBLL.cs" />
+    <Compile Include="Business\Property\DoorBLL.cs" />
+    <Compile Include="Business\Faction\FactionBLL.cs" />
     <Compile Include="Business\GlobalVariables.cs" />
-    <Compile Include="Business\HouseBLL.cs" />
+    <Compile Include="Business\Property\HouseBLL.cs" />
     <Compile Include="Business\Item\ItemModelService.cs" />
     <Compile Include="Business\Item\ItemService.cs" />
     <Compile Include="Business\Item\MedkitService.cs" />
@@ -112,10 +112,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
-    <Compile Include="Business\PlayerBLL.cs" />
+    <Compile Include="Business\Player\PlayerBLL.cs" />
     <Compile Include="Business\Player\ActivePlayer.cs" />
-    <Compile Include="Business\PropertyBLL.cs" />
+    <Compile Include="Business\Property\PropertyBLL.cs" />
     <Compile Include="Business\Utils.cs" />
+    <Compile Include="Business\Vehicle\ActiveVehicle.cs" />
+    <Compile Include="Business\Vehicle\VehicleBLL.cs" />
     <Compile Include="Configurations\Character.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -144,12 +146,14 @@
     <Compile Include="Entities\Property\IProperty.cs" />
     <Compile Include="Entities\Property\Property.cs" />
     <Compile Include="Entities\Session.cs" />
-    <Compile Include="Entities\Vehicle.cs" />
+    <Compile Include="Entities\Vehicle\Vehicle.cs" />
     <Compile Include="Entry.cs" />
     <Compile Include="Exceptions\Item\InvalidItemModelServiceException.cs" />
     <Compile Include="Exceptions\Item\InvalidItemOperationException.cs" />
     <Compile Include="Exceptions\Player\ActiveCharacterAlreadyExistsException.cs" />
     <Compile Include="Exceptions\Player\NoRemainingCharacterSlotsException.cs" />
+    <Compile Include="Exceptions\Vehicle\ActiveVehicleAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\Vehicle\NoRemainingVehicleSlotsException.cs" />
     <Compile Include="Migrations\201702170248522_AddPlayerAndCharacter.cs" />
     <Compile Include="Migrations\201702170248522_AddPlayerAndCharacter.Designer.cs">
       <DependentUpon>201702170248522_AddPlayerAndCharacter.cs</DependentUpon>
@@ -218,6 +222,10 @@
     <Compile Include="Migrations\201703010135188_AddItem.Designer.cs">
       <DependentUpon>201703010135188_AddItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703110749543_ChangeVehicleOwner.cs" />
+    <Compile Include="Migrations\201703110749543_ChangeVehicleOwner.Designer.cs">
+      <DependentUpon>201703110749543_ChangeVehicleOwner.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
     <Compile Include="Modules\Admin\Colors.Designer.cs">
@@ -247,6 +255,7 @@
     <Compile Include="Types\Gender.cs" />
     <Compile Include="Types\HairColor.cs" />
     <Compile Include="Types\PlayerStatus.cs" />
+    <Compile Include="Types\VehicleStatus.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -314,6 +323,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703010135188_AddItem.resx">
       <DependentUpon>201703010135188_AddItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703110749543_ChangeVehicleOwner.resx">
+      <DependentUpon>201703110749543_ChangeVehicleOwner.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>

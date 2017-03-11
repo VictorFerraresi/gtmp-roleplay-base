@@ -11,7 +11,7 @@ namespace ProjetoRP.Business
         private static GlobalVariables instance;
         public List<Entities.Property.Property> ServerProperties;
         public List<Entities.Property.Door> ServerDoors;
-        public List<Entities.Faction.Faction> ServerFactions;
+        public List<Entities.Faction.Faction> ServerFactions;        
 
         private GlobalVariables() { }
 
