@@ -115,6 +115,7 @@
     <Compile Include="Business\PlayerBLL.cs" />
     <Compile Include="Business\Player\ActivePlayer.cs" />
     <Compile Include="Business\PropertyBLL.cs" />
+    <Compile Include="Business\Utils.cs" />
     <Compile Include="Configurations\Character.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -241,7 +241,7 @@ namespace ProjetoRP.Business
                 if(playerChar.Faction_Id == c.Faction_Id)
                 {
                     string finalMsg = string.Format("(( {0} {1}: {2} ))", c.Rank.Name, c.Name, msg);
-                    API.shared.sendChatMessageToPlayer(player, finalMsg);
+                    API.shared.sendChatMessageToPlayer(player, "~#AAA7FF~", finalMsg);
                 }
             }
         }
@@ -275,23 +275,6 @@ namespace ProjetoRP.Business
             }
 
             return count;
-        }
-
-        public void Faction_ShowOnlineMembers(Entities.Faction.Faction fac, Client client)
-        {
-            API.shared.sendChatMessageToPlayer(client, "[" +fac.Acro+ "] Membros Online:");
-            foreach (var player in API.shared.getAllPlayers())
-            {
-                Player.ActivePlayer ac = Business.Player.ActivePlayer.Get(player);
-
-                Entities.Character c = ac.Character;
-
-                if(c.Faction_Id == fac.Id)
-                {
-                    string finalMsg = string.Format("{0} {1} (ID: {2})", c.Rank.Name, c.Name, ac.Id);
-                    API.shared.sendChatMessageToPlayer(client, finalMsg);
-                }
-            }
         }
     }
 }

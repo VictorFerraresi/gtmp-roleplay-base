@@ -83,6 +83,16 @@ namespace ProjetoRP.Modules.Faction
                     API.call("Ui", "fixCursor", player, false);
                     API.sendChatMessageToPlayer(player, "Você cancelou a edição dos ranks e nenhuma alteração foi salva!");
                     break;
+
+                case "CS_SHOW_FACTION_MEMBERS_CLOSE":
+                    API.call("Ui", "evalUi", player, "factionmembers_app.display=false;factionmembers_app.blocked=false");
+                    API.call("Ui", "fixCursor", player, false);
+                    break;
+
+                case "CS_SHOW_FACTIONS_CLOSE":
+                    API.call("Ui", "evalUi", player, "showfactions_app.display=false;showfactions_app.blocked=false");
+                    API.call("Ui", "fixCursor", player, false);
+                    break;
             }
         }
 
@@ -91,7 +101,7 @@ namespace ProjetoRP.Modules.Faction
             player.kick(Messages.player_kicked_inconsistency);
         }
 
-        //Commands
+        //General Faction Commands
         [Command("editarrank", GreedyArg = true)]
         public void EditRankCommand(Client sender)
         {
@@ -154,18 +164,87 @@ namespace ProjetoRP.Modules.Faction
             }
             else
             {
-                FacBLL.Faction_ShowOnlineMembers(c.Faction, sender);
+                dynamic data = new System.Dynamic.ExpandoObject();
+
+                dynamic characters = new List<System.Dynamic.ExpandoObject>();
+
+                List<Entities.Character> orderedByRankDesc = new List<Entities.Character>();
+
+                foreach (var player in API.shared.getAllPlayers())
+                {
+                    Business.Player.ActivePlayer ac = Business.Player.ActivePlayer.Get(player);
+
+                    Entities.Character c2 = ac.Character;
+
+                    if (c2.Faction_Id == c.Faction.Id)
+                    {
+                        orderedByRankDesc.Add(c2);
+                    }
+                }
+
+                orderedByRankDesc.Sort((x, y) => y.Rank.Level.CompareTo(x.Rank.Level));
+
+                foreach (Entities.Character c2 in orderedByRankDesc)
+                {
+                    dynamic dyn = new System.Dynamic.ExpandoObject();
+
+                    dyn.id = c2.Id;
+                    dyn.activeId = Business.Player.ActivePlayer.Get(c2).Id;
+                    dyn.name = c2.Name;
+                    dyn.rank = c2.Rank.Name;
+
+                    characters.Add(dyn);
+                }
+
+                data.characters = characters;
+                data.faction = c.Faction.Name;
+
+                string _in = API.shared.toJson(data);
+                API.call("Ui", "fixCursor", sender, true);
+                API.call("Ui", "evalUi", sender, "factionmembers_app.in = " + _in + ";factionmembers_app.display=true;");
             }
         }
 
         [Command("faccoes")]
         public void SeeFactionsCommand(Client sender)
-        {
-            API.sendChatMessageToPlayer(sender, "__________________[Facções]__________________");
-            foreach(var fac in Business.GlobalVariables.Instance.ServerFactions)
+        {            
+            dynamic data = new System.Dynamic.ExpandoObject();
+
+            dynamic factions = new List<System.Dynamic.ExpandoObject>();            
+
+            foreach (Entities.Faction.Faction fac in Business.GlobalVariables.Instance.ServerFactions)
             {
-                string finalMsg = string.Format("{0} | Membros: {1}/{2}", fac.Name, FacBLL.Faction_GetOnlineMemberCount(fac), FacBLL.Faction_GetMemberCount(fac));
-                API.shared.sendChatMessageToPlayer(sender, finalMsg);
+                dynamic dyn = new System.Dynamic.ExpandoObject();
+                                
+                dyn.name = fac.Name;
+                dyn.onlineMembers = FacBLL.Faction_GetOnlineMemberCount(fac);
+                dyn.totalMembers = FacBLL.Faction_GetMemberCount(fac);
+
+                factions.Add(dyn);
+            }
+
+            data.factions = factions;            
+
+            string _in = API.shared.toJson(data);
+            API.call("Ui", "fixCursor", sender, true);
+            API.call("Ui", "evalUi", sender, "showfactions_app.in = " + _in + ";showfactions_app.display=true;");
+        }
+
+        //Police Faction Commands
+        [Command("m", GreedyArg = true)]
+        public void MegaphoneCommand(Client sender, string msg)
+        {
+            Entities.Character c = Business.Player.ActivePlayer.GetSpawned(sender).Character;
+
+            if (c.Faction == null || (c.Faction.Type != Entities.Faction.FactionType.FACTION_TYPE_POLICE && c.Faction.Type != Entities.Faction.FactionType.FACTION_TYPE_EMS))
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {
+                string finalmsg = String.Format("[{0} {1}:o< {2}]", c.Rank.Name, c.Name, msg);
+
+                Business.Utils.ProxDetector(30.0f, sender, finalmsg, "~#FFFF00~", "~#FFFF00~", "~#FFFF00~", "~#FFFF00~", "~#FFFF00~");
             }
         }
     }

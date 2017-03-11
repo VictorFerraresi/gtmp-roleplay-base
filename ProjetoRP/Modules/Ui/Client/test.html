@@ -11,7 +11,7 @@
 <body style="background-color:rgba(0, 0, 0, 0);">
   magicscript v1  
 
-  <div id="rankedit-app">
+  <div id="factionmembers-app">
     <transition name="fade">
       <template v-if="display === true">
         <div class="container container-table container-medium">
@@ -20,7 +20,7 @@
               <div class="row masthead"></div>
               <div class="row"  style="margin-left: 5px; margin-right: 5px">
                 <div class="panel-body">
-                  <h1 style="font-family: HouseScript">Editar Ranks</h1>
+                  <h1 style="font-family: HouseScript">{{ this.in.faction }}</h1>
                   <div class="alert alert-danger" role="alert" v-if="error.length > 0">
                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                     <span class="sr-only">Erro:</span>
@@ -29,29 +29,20 @@
                   <table class="table table-striped">
                     <thead>                        
                       <tr>
-                        <th>Level</th>
+                        <th>Nome</th>
+                        <th>ID</th>
                         <th>Rank</th>
-                        <th>Editar</th>
-                        <th>Alterar Ordem</th>
-                        <th>Excluir</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="rank in ranks">
-                          <td>{{ rank.level }}</td>
-                          <td v-if="!editing[rank.level-1]">{{ rank.name }}</td>
-                          <td v-if="editing[rank.level-1]"><input type="text" :value="rank.name" v-model="ranks[ranks.length - rank.level].name"/><i v-on:click="clearbox()" class="material-icons clickable-icon">done</i></td>
-                          <td><i v-on:click="edit(rank.level)" style="font-size: 18px" class="material-icons clickable-icon">mode_edit</i></td>
-                          <td><i v-if="!rank.leader" v-on:click="move('up', rank.level)" class="material-icons clickable-icon">arrow_upward</i> <i v-if="!rank.leader && rank.level != 1" v-on:click="move('down', rank.level)" class="material-icons clickable-icon">arrow_downward</i></td>
-                          <td><i v-if="!rank.leader" v-on:click="deleterank(rank.level)" class="material-icons clickable-icon">clear</i></td>
+                      <tr v-for="character in this.in.characters">
+                          <td>{{ character.name }}</td>
+                          <td>{{ character.activeId }}</td>
+                          <td>{{ character.rank }}</td>
                       </tr>
                     </tbody>
-                  </table>                                            
-                  <form v-on:submit.prevent="onSubmit">
-                    <button type="submit" class="btn btn-primary btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Atualizar</button>
-                    <button type="button" v-on:click="cancel" class="btn btn-danger btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Cancelar</button>
-                    <button type="button" v-on:click="create" class="btn btn-success btn-striped pull-right" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Novo Rank</button>                      
-                  </form>
+                  </table>                                                              
+                  <button type="button" v-on:click="close" class="btn btn-danger btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Fechar</button>                                      
                 </div>
               </div>
             </div>
@@ -60,6 +51,7 @@
       </template>
     </transition>
   </div>
+
 
   <script src="js/vue.js"></script>
   <!-- <script src="js/inventory.js"></script> -->
@@ -73,93 +65,28 @@
     }   
 
 
-    rankedit_app = new Vue({
-        el: '#rankedit-app',        
+    factionmembers_app = new Vue({
+        el: '#factionmembers-app',
         data: {
             display: true,
             blocked: false,
-            editing: false,
             error: '',
-            editing: [],
-            ranks: []
+            in: {
+                characters: [{id: 1, activeId: 0, name: 'Victor Ferraresi', rank: 'Chief of Police'}, 
+                			{id: 2, activeId: 10, name: 'Victor Ferraresi2', rank: 'Deputy of Police'}, 
+                			{id: 3, activeId: 20, name: 'Victor Ferraresi3', rank: 'Commander'}, 
+                			{id: 4, activeId: 30, name: 'Victor Ferraresi4', rank: 'Lieutenant'}, 
+                			{id: 5, activeId: 40, name: 'Victor Ferraresi5', rank: 'Sergeant'}, ],
+                faction: 'Los Santos Police Department'
+            }
         },
         methods: {
-            onSubmit: function () {
-                this.blocked = true;
-                resourceCall('triggerEvent', 'CS_EDIT_RANKS_SUBMIT', JSON.stringify(this.ranks));
-            },
-            cancel: function () {
-                this.blocked = true;
-                resourceCall('triggerEvent', 'CS_CREATE_PROPERTY_CANCEL');
-            },
-            move: function (type, lv) {
-                this.clearbox();
-
-                switch (type) {
-                    case "up":
-                        if (this.ranks.length - lv == 1) {
-                            this.error = "O level lider não deve ser alterado!";
-                        } else {
-                            var idx = this.ranks.length - lv;
-                            var aux = this.ranks[idx];
-                            this.ranks[idx].level += 1;
-                            this.ranks[idx - 1].level -= 1;
-                            Vue.set(this.ranks, idx, this.ranks[idx - 1]);
-                            Vue.set(this.ranks, idx - 1, aux);
-
-                            this.error = "";
-                        }
-                        break;
-
-                    case "down":
-                        if (this.ranks.length - lv == 0) {
-                            this.error = "O level lider nao deve ser alterado!";
-                        } else if (lv == 1) {
-                            this.error = "O level já é o mínimo!";
-                        } else {
-                            var idx = this.ranks.length - lv;
-                            var aux = this.ranks[idx];
-                            this.ranks[idx].level -= 1;
-                            this.ranks[idx + 1].level += 1;
-                            Vue.set(this.ranks, idx, this.ranks[idx + 1]);
-                            Vue.set(this.ranks, idx + 1, aux);
-
-                            this.error = "";
-                        }
-                        break;
-                }
-            },
-            deleterank: function (lv) {
-                this.clearbox();
-
-            	var idx = this.ranks.length - lv;            	
-            	this.ranks.splice(idx, 1);                                
-                for (var i = idx-1; i >= 0; i--) {                	
-                    this.ranks[i].level--;
-                    Vue.set(this.ranks, i, this.ranks[i]);
-                }
-            },
-            create: function () {
-                this.clearbox();
-
-                var newrank = { name: "Novo Rank", level: 1, leader: false };
-                Vue.set(this.ranks, this.ranks.length, newrank);
-                for (var i = 0; i < this.ranks.length-1; i++) {
-                    this.ranks[i].level++;
-                    Vue.set(this.ranks, i, this.ranks[i]);
-                }
-            },
-            edit: function (lv) {
-                this.clearbox();
-                Vue.set(this.editing, lv - 1, true);
-            },
-            clearbox: function () {
-                for (var i = 0; i < this.editing.length; i++) {
-                    Vue.set(this.editing, i, false);
-                }
+            close: function () {
+                this.blocked = false;
+                resourceCall('triggerEvent', 'CS_SHOW_FACTION_MEMBERS_CLOSE');
             }
         }
-    });   
+    });
 </script>
 </body>
 </html>

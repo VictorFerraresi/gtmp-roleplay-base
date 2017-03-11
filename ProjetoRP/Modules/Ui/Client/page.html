@@ -333,6 +333,88 @@
     </transition>
   </div>
 
+  <div id="factionmembers-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-medium">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="row masthead"></div>
+              <div class="row"  style="margin-left: 5px; margin-right: 5px">
+                <div class="panel-body">
+                  <h1 style="font-family: HouseScript">{{ this.in.faction }}</h1>
+                  <div class="alert alert-danger" role="alert" v-if="error.length > 0">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Erro:</span>
+                    {{ error }}
+                  </div>   
+                  <table class="table table-striped">
+                    <thead>                        
+                      <tr>
+                        <th>Nome</th>
+                        <th>ID</th>
+                        <th>Rank</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="character in this.in.characters">
+                          <td>{{ character.name }}</td>
+                          <td>{{ character.activeId }}</td>
+                          <td>{{ character.rank }}</td>
+                      </tr>
+                    </tbody>
+                  </table>                                                              
+                  <button type="button" v-on:click="close" class="btn btn-danger btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Fechar</button>                                      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </transition>
+  </div>
+
+  <div id="showfactions-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-medium">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="row masthead"></div>
+              <div class="row"  style="margin-left: 5px; margin-right: 5px">
+                <div class="panel-body">
+                  <h1 style="font-family: HouseScript">Facções</h1>
+                  <div class="alert alert-danger" role="alert" v-if="error.length > 0">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Erro:</span>
+                    {{ error }}
+                  </div>   
+                  <table class="table table-striped">
+                    <thead>                        
+                      <tr>
+                        <th>Nome</th>
+                        <th>Membros Online</th>
+                        <th>Total de Membros</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="faction in this.in.factions">
+                          <td>{{ faction.name }}</td>
+                          <td>{{ faction.onlineMembers }}</td>
+                          <td>{{ faction.totalMembers }}</td>
+                      </tr>
+                    </tbody>
+                  </table>                                                              
+                  <button type="button" v-on:click="close" class="btn btn-danger btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Fechar</button>                                      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </transition>
+  </div>
+
   <script src="js/vue.js"></script>
   <!-- <script src="js/inventory.js"></script> -->
   <script type="text/javascript">
@@ -571,6 +653,43 @@
                 for (var i = 0; i < this.editing.length; i++) {
                     Vue.set(this.editing, i, false);
                 }
+            }
+        }
+    });
+
+    factionmembers_app = new Vue({
+        el: '#factionmembers-app',
+        data: {
+            display: false,
+            blocked: false,
+            error: '',
+            in: {
+                characters: [],
+                faction: ''
+            }
+        },
+        methods: {
+            close: function () {
+                this.blocked = false;
+                resourceCall('triggerEvent', 'CS_SHOW_FACTION_MEMBERS_CLOSE');
+            }
+        }
+    });
+
+    showfactions_app = new Vue({
+        el: '#showfactions-app',
+        data: {
+            display: false,
+            blocked: false,
+            error: '',
+            in: {
+                factions: []
+            }
+        },
+        methods: {
+            close: function () {
+                this.blocked = false;
+                resourceCall('triggerEvent', 'CS_SHOW_FACTIONS_CLOSE');
             }
         }
     });
