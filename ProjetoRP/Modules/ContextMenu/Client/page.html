@@ -1,0 +1,94 @@
+﻿<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <style>
+
+      body {
+        font-family: monospace;
+        font-weight: 900;
+    font-size: 15px;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      width: 200px;
+      }
+    ul li {
+      position: relative;
+      margin:5px;
+      }
+
+      li ul {
+      position: absolute;
+      left: 190px;
+      top: -5px;
+      display: none;
+      }
+
+      ul li a {
+      display: block;
+      text-decoration: none;
+      color: #FFF;
+
+      padding: 7px;
+    }
+
+    li:hover {
+
+    }
+
+    li:hover ul {
+      display: block;
+
+    }
+
+    li > a {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    li:hover > a {
+      background: rgba(255, 119, 0, 0.7);
+    }
+
+
+    </style>
+
+    <script>
+  function hide() {
+    document.getElementById("nav").style.display = 'none';
+  }
+
+  function show() {
+    document.getElementById("nav").style.display = 'block';
+  }
+
+    </script>
+</head>
+
+<body style="background-color:rgba(0, 0, 0, 0);">
+    <ul id="nav" style="display: none">
+        <li>
+            <a href="#">Emote >></a>
+            <ul>
+                <li><a href="#">Braços Cruzados</a></li>
+                <li><a href="#">Encostar na parede</a></li>
+                <li><a href="#">Fumar</a></li>
+                <li><a href="#">Dançar</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">Jogar no chão >></a>
+            <ul>
+                <li><a href="#">Inventário...</a></li>
+                <li><a href="#">Molho de chaves</a></li>
+                <li><a href="#">AK-47</a></li>
+                <li><a href="#">Óculos de sol</a></li>
+            </ul>
+        </li>
+
+        <li><a href="#">Trocar de personagem...</a></li>
+    </ul>
+    </div>
+</body>
+</html>

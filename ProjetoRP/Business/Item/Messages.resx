@@ -120,6 +120,9 @@
   <data name="cant_equip" xml:space="preserve">
     <value>Você não pode equipar este item!</value>
   </data>
+  <data name="cant_use" xml:space="preserve">
+    <value>Você não pode usar este item!</value>
+  </data>
   <data name="invalid_variation" xml:space="preserve">
     <value>A variação do item não é suportada pelo modelo instanciado.</value>
   </data>

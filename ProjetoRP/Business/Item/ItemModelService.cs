@@ -10,26 +10,36 @@ namespace ProjetoRP.Business.Item
     public abstract class ItemModelService
     {
         protected DatabaseContext DatabaseContext;
-        protected Entities.Item Item;
+        public Entities.Item Item { get; private set; }
+        public Entities.ItemPlacement.Placement Placement
+        {
+            get
+            {
+                return DatabaseContext.ItemsPlacement.Where(ip => ip.Item == Item).Single();
+            }
+            private set {}
+        }
 
         public virtual string[] ValidVariations { get {
             return new string[] { "default" };
+        } }
+
+        public virtual bool IsEquippable { get {
+                return false;
+        } }
+
+        public virtual bool IsActivatable { get {
+                return false;
+        } }
+
+        public virtual bool IsDroppable { get {
+                return false;
         } }
 
         public ItemModelService(DatabaseContext context, Entities.Item item)
         {
             DatabaseContext = context;
             Item = item;
-        }
-
-        public Entities.ItemPlacement.Placement GetPlacement()
-        {
-            return DatabaseContext.ItemsPlacement.Where(ip => ip.Item == Item).Single();
-        }
-
-        public Entities.Item GetItem()
-        {
-            return Item;
         }
 
         public void DropOnTheGround(double x, double y, double z, int dimension)
@@ -43,12 +53,13 @@ namespace ProjetoRP.Business.Item
             DatabaseContext.SaveChanges();
         }
 
-        protected void CleanPlacement()
+        private void CleanPlacement()
         {
             DatabaseContext.ItemsPlacement.RemoveRange(DatabaseContext.ItemsPlacement.Where(ip => ip.Item == Item));
             DatabaseContext.SaveChanges();
         }
 
+        // Destroy this item (generally called after using)
         protected void Consume()
         {
             DatabaseContext.Items.Remove(Item);
@@ -56,6 +67,7 @@ namespace ProjetoRP.Business.Item
             Item = null;
         }
 
+        // Checks if Variation exists for this ItemModel
         protected void Validate()
         {
             if(null == Item)
@@ -69,9 +81,8 @@ namespace ProjetoRP.Business.Item
             }
         }
 
-        public abstract bool Character_Equippable(Character character, Types.EquipSlot slot);
         public abstract void Character_InventoryEquip(Character character);
         public abstract void Character_PostEquipped(Character character, Types.EquipSlot slot);
-        public abstract void Character_Activate(Character character);  
+        public abstract void Character_Activate(Character character);
     }
 }

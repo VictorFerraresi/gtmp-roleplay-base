@@ -34,7 +34,7 @@ namespace ProjetoRP.Business.Item
             ims.Character_InventoryEquip(character);
         }
 
-        public List<Tuple<Types.EquipSlot, Entities.Item>> GetBareItemsFromPlayer(Entities.Character character)
+        public List<Tuple<Types.EquipSlot, Entities.Item>> GetItemsFromPlayer(Entities.Character character)
         {
             var requested = new List<Tuple<Types.EquipSlot, Entities.Item>>();
 
@@ -48,7 +48,32 @@ namespace ProjetoRP.Business.Item
             return requested;
         }
 
-        public List<Tuple<Types.EquipSlot, ItemModelService>> GetItemsFromPlayer(Entities.Character character)
+        public List<Entities.Item> GetCascadingItemsFromPlayer(Entities.Character character)
+        {
+            var requested = new List<Entities.Item>();
+
+            var player_placements = DatabaseContext.ItemsPlacement.AsNoTracking().OfType<CharacterInventoryItem>().Where(ip => ip.Character_Id == character.Id).ToList();
+
+            foreach (var placement in player_placements)
+            {
+                requested.Add(placement.Item);
+
+                var ims = GetItemModelServiceForItem(placement.Item);
+                if (ims is ContainerService)
+                {
+                    var container_placements = DatabaseContext.ItemsPlacement.AsNoTracking().OfType<ContainerItem>().Where(ip2 => ip2.ParentItem_Id == ims.Item.Id).ToList();
+
+                    foreach (var container_placement in container_placements)
+                    {
+                        requested.Add(container_placement.Item);
+                    }
+                }
+            }
+
+            return requested;
+        }
+
+        /*public List<Tuple<Types.EquipSlot, ItemModelService>> GetItemsFromPlayer(Entities.Character character)
         {
             var bare_items = GetBareItemsFromPlayer(character);
             var requested = new List<Tuple<Types.EquipSlot, ItemModelService>>();
@@ -59,7 +84,7 @@ namespace ProjetoRP.Business.Item
             }
 
             return requested;
-        }
+        }*/
 
         public ItemModelService GetItemModelServiceForItem(DatabaseContext context, Entities.Item item)
         {

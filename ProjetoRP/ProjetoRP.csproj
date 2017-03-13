@@ -104,6 +104,7 @@
     <Compile Include="Business\FactionBLL.cs" />
     <Compile Include="Business\GlobalVariables.cs" />
     <Compile Include="Business\HouseBLL.cs" />
+    <Compile Include="Business\Item\CarKeyService.cs" />
     <Compile Include="Business\Item\ItemModelService.cs" />
     <Compile Include="Business\Item\ItemService.cs" />
     <Compile Include="Business\Item\MedkitService.cs" />
@@ -339,6 +340,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Modules\Admin\Client\Admin.client.js" />
+    <Content Include="Modules\ContextMenu\Client\page.html" />
     <Content Include="Modules\Faction\Client\Faction.client.js" />
     <Content Include="Modules\Player\Client\Player.client.js" />
     <Content Include="Modules\Property\Client\Property.client.js" />

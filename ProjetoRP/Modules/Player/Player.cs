@@ -37,9 +37,16 @@ namespace ProjetoRP.Modules.Player
             var ac = ActivePlayer.GetSpawned(player);
             if (null != ac) // Means that the player was spawned (has character instantiated)
             {
+
+                try
+                {
+                    Player_Save(player);
+                }
+                finally 
+                {
+                    ac.Dispose(); // Removing from AC pool
+                }
                 
-                Player_Save(player);
-                ac.Dispose(); // Removing from AC pool
             }
         }
 
