@@ -94,6 +94,18 @@ namespace ProjetoRP.Business.Vehicle
             }
         }
 
+        public static ActiveVehicle GetSpawned(GTANetworkShared.NetHandle vehicleHandle)
+        {
+            foreach (var av in VehicleServices)
+            {
+                if (av.Status == VehicleStatus.Spawned && av.VehicleHandle.handle == vehicleHandle)
+                {
+                    return av;
+                }
+            }
+            return null;
+        }
+
         public static ActiveVehicle Get(Entities.Vehicle.Vehicle vehicle)
         {
             foreach (var av in VehicleServices)
@@ -116,7 +128,7 @@ namespace ProjetoRP.Business.Vehicle
                 }
             }
             return null;
-        }
+        }        
 
         public static ActiveVehicle GetBySQLID(int sqlID)
         {

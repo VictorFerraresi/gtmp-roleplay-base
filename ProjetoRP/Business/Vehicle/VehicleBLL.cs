@@ -54,7 +54,8 @@ namespace ProjetoRP.Business.Vehicle
             GTANetworkServer.Vehicle serverVeh = API.shared.createVehicle(API.shared.vehicleNameToModel(veh.Name), pos, rot, veh.Color1, veh.Color2, veh.Dimension);
             API.shared.setVehicleEngineStatus(serverVeh, veh.Engine);
             API.shared.setVehicleLocked(serverVeh, veh.Locked);
-            API.shared.setVehicleHealth(serverVeh, veh.Health);            
+            API.shared.setVehicleHealth(serverVeh, veh.Health);
+            API.shared.setVehicleNumberPlate(serverVeh, veh.LicensePlate);
 
             ActiveVehicle av = Business.Vehicle.ActiveVehicle.GetBySQLID(veh.Id);
             
@@ -132,6 +133,15 @@ namespace ProjetoRP.Business.Vehicle
                 context.Entry(veh).State = EntityState.Modified;
                 context.SaveChanges();
             }
+        }
+
+        public string Vehicle_GeneratePlate()
+        {
+            char[] charactersAvailable = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };          
+
+            string plate = "";
+
+            return plate;
         }
     }
 }

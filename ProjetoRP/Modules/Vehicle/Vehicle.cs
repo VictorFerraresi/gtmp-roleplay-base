@@ -20,6 +20,7 @@ namespace ProjetoRP.Modules.Vehicle
         {
             API.onResourceStart += OnResourceStart;            
             API.onClientEventTrigger += OnClientEventTrigger;
+            API.onPlayerEnterVehicle += OnPlayerEnterVehicle;
         }
 
         public void OnResourceStart()
@@ -58,7 +59,25 @@ namespace ProjetoRP.Modules.Vehicle
                     }
                     break;
             }
-        }        
+        }
+
+        private void OnPlayerEnterVehicle(Client player, NetHandle vehicle)
+        {            
+            Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(vehicle).Vehicle;
+            Entities.Character c = Business.Player.ActivePlayer.Get(player).Character;            
+                        
+            if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION) //Entered a faction vehicle
+            {                
+                if (API.getPlayerVehicleSeat(player) == -1) //Driver
+                {                    
+                    if (c.Faction_Id != veh.Owner_Id)
+                    {                        
+                        API.sendNotificationToPlayer(player, "Este veículo é restrito à uma facção!");
+                        API.warpPlayerOutOfVehicle(player, vehicle);
+                    }
+                }                               
+            }
+        }
 
         private void Vehicle_KickForInvalidTrigger(Client player)
         {
@@ -99,7 +118,7 @@ namespace ProjetoRP.Modules.Vehicle
                 return;
             }
             NetHandle serverVeh = API.getPlayerVehicle(player);
-            Entities.Vehicle.Vehicle veh = API.getEntityData(serverVeh, "VEHICLE_DATA");
+            Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(serverVeh).Vehicle;
 
             if (!VehBLL.Vehicle_IsOwner(player.getData("CHARACTER_DATA"), veh))
             {

@@ -62,7 +62,7 @@ namespace ProjetoRP.Entities.Vehicle
         [Required]
         public int Color2 { get; set; }
 
-        [NotMapped]
-        public bool Spawned { get; set; }        
+        [Required]
+        public string LicensePlate { get; set; }
     }
 }

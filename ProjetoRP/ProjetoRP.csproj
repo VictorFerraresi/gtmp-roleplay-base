@@ -226,6 +226,10 @@
     <Compile Include="Migrations\201703110749543_ChangeVehicleOwner.Designer.cs">
       <DependentUpon>201703110749543_ChangeVehicleOwner.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703112246379_AddVehicleNumberPlate.cs" />
+    <Compile Include="Migrations\201703112246379_AddVehicleNumberPlate.Designer.cs">
+      <DependentUpon>201703112246379_AddVehicleNumberPlate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
     <Compile Include="Modules\Admin\Colors.Designer.cs">
@@ -326,6 +330,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703110749543_ChangeVehicleOwner.resx">
       <DependentUpon>201703110749543_ChangeVehicleOwner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703112246379_AddVehicleNumberPlate.resx">
+      <DependentUpon>201703112246379_AddVehicleNumberPlate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
