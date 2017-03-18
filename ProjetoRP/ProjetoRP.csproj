@@ -104,6 +104,8 @@
     <Compile Include="Business\FactionBLL.cs" />
     <Compile Include="Business\GlobalVariables.cs" />
     <Compile Include="Business\HouseBLL.cs" />
+    <Compile Include="Business\Item\CarKeyService.cs" />
+    <Compile Include="Business\Item\ContainerService.cs" />
     <Compile Include="Business\Item\ItemModelService.cs" />
     <Compile Include="Business\Item\ItemService.cs" />
     <Compile Include="Business\Item\MedkitService.cs" />
@@ -124,6 +126,7 @@
     <Compile Include="Entities\Character.cs" />
     <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\ItemModel\CarKey.cs" />
+    <Compile Include="Entities\ItemModel\Container.cs" />
     <Compile Include="Entities\ItemModel\DoorKey.cs" />
     <Compile Include="Entities\ItemModel\Identification.cs" />
     <Compile Include="Entities\ItemModel\Medkit.cs" />
@@ -216,6 +219,14 @@
     <Compile Include="Migrations\201703010135188_AddItem.cs" />
     <Compile Include="Migrations\201703010135188_AddItem.Designer.cs">
       <DependentUpon>201703010135188_AddItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703152249522_UpdateItem.cs" />
+    <Compile Include="Migrations\201703152249522_UpdateItem.Designer.cs">
+      <DependentUpon>201703152249522_UpdateItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703180733114_AddSlotToContainer.cs" />
+    <Compile Include="Migrations\201703180733114_AddSlotToContainer.Designer.cs">
+      <DependentUpon>201703180733114_AddSlotToContainer.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
@@ -318,6 +329,12 @@
     <EmbeddedResource Include="Migrations\201703010135188_AddItem.resx">
       <DependentUpon>201703010135188_AddItem.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703152249522_UpdateItem.resx">
+      <DependentUpon>201703152249522_UpdateItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703180733114_AddSlotToContainer.resx">
+      <DependentUpon>201703180733114_AddSlotToContainer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Colors.Designer.cs</LastGenOutput>
@@ -339,6 +356,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Modules\Admin\Client\Admin.client.js" />
+    <Content Include="Modules\ContextMenu\Client\page.html" />
     <Content Include="Modules\Faction\Client\Faction.client.js" />
     <Content Include="Modules\Player\Client\Player.client.js" />
     <Content Include="Modules\Property\Client\Property.client.js" />

@@ -4,6 +4,7 @@
   <export class="Ui" event="onUiEventTrigger" />
   <script src="\Admin\Admin.client.js" type="client" lang="javascript" />
   <script src="\ContextMenu\ContextMenu.client.js" type="client" lang="javascript" />
+  <file src="\ContextMenu\page.html" />
   <script src="\Faction\Faction.client.js" type="client" lang="javascript" />
   <script src="\Item\Item.client.js" type="client" lang="javascript" />
   <script src="\Player\Player.client.js" type="client" lang="javascript" />

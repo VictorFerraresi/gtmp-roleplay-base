@@ -1,6 +1,8 @@
-﻿using ProjetoRP.Entities.ItemPlacement;
+﻿using GTANetworkShared;
+using ProjetoRP.Entities.ItemPlacement;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -19,22 +21,23 @@ namespace ProjetoRP.Business.Item
 
         public void AddNewItemToCharacter(Entities.Item item, Entities.Character character, Types.EquipSlot slot)
         {
-            // TODO: This wont work and possibly will spawn placement-less items on DB
-            var current_item_in_slot = DatabaseContext.ItemsPlacement.OfType<CharacterInventoryItem>().Where(ip => ip.Character_Id == character.Id && ip.Slot == slot).Count();
-
-            if(current_item_in_slot > 0)
-            {
-                throw new Exceptions.Item.InvalidItemOperationException("There is already an item in the specified slot.");
-            }
-
             DatabaseContext.Items.Add(item);
             DatabaseContext.SaveChanges();
 
             var ims = GetItemModelServiceForItem(item);
-            ims.Character_InventoryEquip(character);
+            ims.Character_InventoryEquip(character, slot);
         }
 
-        public List<Tuple<Types.EquipSlot, Entities.Item>> GetBareItemsFromPlayer(Entities.Character character)
+        public void AddNewItemToGround(Entities.Item item, Vector3 position, int dimension)
+        { 
+            DatabaseContext.Items.Add(item);
+            DatabaseContext.SaveChanges();
+
+            var ims = GetItemModelServiceForItem(item);
+            ims.World_Drop(position.X, position.Y, position.Z, dimension);
+        }
+
+        public List<Tuple<Types.EquipSlot, Entities.Item>> GetItemsFromPlayer(Entities.Character character)
         {
             var requested = new List<Tuple<Types.EquipSlot, Entities.Item>>();
 
@@ -48,7 +51,32 @@ namespace ProjetoRP.Business.Item
             return requested;
         }
 
-        public List<Tuple<Types.EquipSlot, ItemModelService>> GetItemsFromPlayer(Entities.Character character)
+        public List<Entities.Item> GetCascadingItemsFromPlayer(Entities.Character character)
+        {
+            var requested = new List<Entities.Item>();
+
+            var player_placements = DatabaseContext.ItemsPlacement.AsNoTracking().OfType<CharacterInventoryItem>().Where(ip => ip.Character_Id == character.Id).ToList();
+
+            foreach (var placement in player_placements)
+            {
+                requested.Add(placement.Item);
+
+                var ims = GetItemModelServiceForItem(placement.Item);
+                if (ims is ContainerService)
+                {
+                    var container_placements = DatabaseContext.ItemsPlacement.AsNoTracking().OfType<ContainerItem>().Where(ip2 => ip2.ParentItem_Id == ims.Item.Id).ToList();
+
+                    foreach (var container_placement in container_placements)
+                    {
+                        requested.Add(container_placement.Item);
+                    }
+                }
+            }
+
+            return requested;
+        }
+
+        /*public List<Tuple<Types.EquipSlot, ItemModelService>> GetItemsFromPlayer(Entities.Character character)
         {
             var bare_items = GetBareItemsFromPlayer(character);
             var requested = new List<Tuple<Types.EquipSlot, ItemModelService>>();
@@ -59,7 +87,7 @@ namespace ProjetoRP.Business.Item
             }
 
             return requested;
-        }
+        }*/
 
         public ItemModelService GetItemModelServiceForItem(DatabaseContext context, Entities.Item item)
         {
@@ -71,7 +99,9 @@ namespace ProjetoRP.Business.Item
             Type serviceType;
             try
             {
-                serviceType = Type.GetType("ProjetoRP.Business.Item." + itemType.ToString() + "Service");
+                var fullTypeName = "ProjetoRP.Business.Item." + itemType.Name + "Service";
+                serviceType = Type.GetType(fullTypeName);
+                
             }
             catch (Exception e)
             {
@@ -81,7 +111,7 @@ namespace ProjetoRP.Business.Item
             return (ItemModelService)Activator.CreateInstance(serviceType, new object[] { context, item });
         }
 
-        private ItemModelService GetItemModelServiceForItem(Entities.Item item)
+        public ItemModelService GetItemModelServiceForItem(Entities.Item item)
         {
             return GetItemModelServiceForItem(DatabaseContext, item);
         }

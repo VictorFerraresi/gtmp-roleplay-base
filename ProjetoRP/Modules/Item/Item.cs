@@ -19,6 +19,29 @@ namespace ProjetoRP.Modules.Item
 
         public void OnResourceStart()
         {
+
+            /*
+            using (var context = new DatabaseContext())
+            {
+                var service = new ItemService(context);
+
+                var character = context.Characters.First();
+
+                var key = new Entities.ItemModel.Container()
+                {
+                   Placement = null, // Will be assigned by service function
+                   Variation = "school-backpack"
+                };
+
+                service.AddNewItemToCharacter(key, character, Types.EquipSlot.Back);
+
+                var data = service.GetCascadingItemsFromPlayer(character);
+                foreach (var item in data)
+                {
+                    Console.WriteLine(" - " + item.Id + " - " + item.GetType().Name);
+                }
+            }
+            */
             
         }
         public void OnResourceStop()
