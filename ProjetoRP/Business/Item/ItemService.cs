@@ -1,6 +1,7 @@
 ﻿using ProjetoRP.Entities.ItemPlacement;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -28,10 +29,27 @@ namespace ProjetoRP.Business.Item
             }
 
             DatabaseContext.Items.Add(item);
-            DatabaseContext.SaveChanges();
+            try
+            {
+                DatabaseContext.SaveChanges();
+            }
+            catch (DbEntityValidationException e)
+            {
+                foreach (var eve in e.EntityValidationErrors)
+                {
+                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw;
+            }
 
             var ims = GetItemModelServiceForItem(item);
-            ims.Character_InventoryEquip(character);
+            ims.Character_InventoryEquip(character, slot);
         }
 
         public List<Tuple<Types.EquipSlot, Entities.Item>> GetItemsFromPlayer(Entities.Character character)
@@ -96,7 +114,9 @@ namespace ProjetoRP.Business.Item
             Type serviceType;
             try
             {
-                serviceType = Type.GetType("ProjetoRP.Business.Item." + itemType.ToString() + "Service");
+                var fullTypeName = "ProjetoRP.Business.Item." + itemType.Name + "Service";
+                serviceType = Type.GetType(fullTypeName);
+                
             }
             catch (Exception e)
             {

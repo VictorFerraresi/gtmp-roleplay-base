@@ -19,31 +19,19 @@ namespace ProjetoRP.Business.Item
             }
         }
 
-        public override bool IsEquippable
-        {
-            get
-            {
+        public override bool IsEquippable { get {
                 return false;
-            }
-        }
+        } }
 
-        public override bool IsActivatable
-        {
-            get
-            {
+        public override bool IsActivatable { get {
                 return false;
-            }
-        }
+        } }
 
-        public override bool IsDroppable
-        {
-            get
-            {
+        public override bool IsDroppable { get {
                 return true;
-            }
-        }
+        } }
 
-        public CarKeyService(DatabaseContext context, Medkit item) : base(context, item)
+        public CarKeyService(DatabaseContext context, CarKey item) : base(context, item)
         {
         }
 
@@ -53,11 +41,6 @@ namespace ProjetoRP.Business.Item
         }
 
         public override void Character_PostEquipped(Character character, EquipSlot slot)
-        {
-            throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
-        }
-
-        public override void Character_InventoryEquip(Character character)
         {
             throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
         }

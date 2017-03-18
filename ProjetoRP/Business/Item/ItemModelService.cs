@@ -1,4 +1,5 @@
 ﻿using ProjetoRP.Entities;
+using ProjetoRP.Entities.ItemPlacement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,14 @@ namespace ProjetoRP.Business.Item
                 return false;
         } }
 
+        public virtual int EquipSlotStack { get {
+                return 1;
+        } }
+
+        public virtual Types.EquipSlot[] AllowedEquipSlots { get {
+                return new Types.EquipSlot[] { };
+        } }
+
         public ItemModelService(DatabaseContext context, Entities.Item item)
         {
             DatabaseContext = context;
@@ -44,18 +53,51 @@ namespace ProjetoRP.Business.Item
 
         public void DropOnTheGround(double x, double y, double z, int dimension)
         {
+            if(!IsDroppable)
+            {
+                throw new Exceptions.Item.InvalidItemOperationException();
+            }
+
             CleanPlacement();
 
             DatabaseContext.ItemsPlacement.Add(new Entities.ItemPlacement.Drop()
-                { Item = Item, X = x, Y = y, Z = z, Dimension = dimension }
+                { Item_Id = Item.Id, X = x, Y = y, Z = z, Dimension = dimension }
             );
 
             DatabaseContext.SaveChanges();
         }
 
+        public void Character_InventoryEquip(Character character, Types.EquipSlot slot)
+        {
+            if (!IsEquippable)
+            {
+                throw new Exceptions.Item.InvalidItemOperationException();
+            }
+
+            if(!AllowedEquipSlots.Contains(slot))
+            {
+                throw new Exceptions.Item.InvalidItemOperationException();
+            }
+
+            var count = DatabaseContext.ItemsPlacement.OfType<CharacterInventoryItem>().Where(ip => ip.Character_Id == character.Id && ip.Slot == slot).Count();
+
+            if(count <= EquipSlotStack)
+            {
+                CleanPlacement();
+
+                DatabaseContext.ItemsPlacement.Add(new CharacterInventoryItem()
+                    { Character_Id = character.Id, Item_Id = Item.Id, Slot = slot }
+                );
+
+                DatabaseContext.SaveChanges();
+
+                Character_PostEquipped(character, slot);
+            }
+        }
+
         private void CleanPlacement()
         {
-            DatabaseContext.ItemsPlacement.RemoveRange(DatabaseContext.ItemsPlacement.Where(ip => ip.Item == Item));
+            DatabaseContext.ItemsPlacement.RemoveRange(DatabaseContext.ItemsPlacement.Where(ip => ip.Item.Id == Item.Id));
             DatabaseContext.SaveChanges();
         }
 
@@ -81,7 +123,6 @@ namespace ProjetoRP.Business.Item
             }
         }
 
-        public abstract void Character_InventoryEquip(Character character);
         public abstract void Character_PostEquipped(Character character, Types.EquipSlot slot);
         public abstract void Character_Activate(Character character);
     }

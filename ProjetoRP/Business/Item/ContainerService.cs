@@ -15,35 +15,27 @@ namespace ProjetoRP.Business.Item
         {
             get
             {
-                return new string[] { "school-backpack", "traveller-backpack", "assault-backpack" };
+                return new string[] { "school-backpack", "traveler-backpack", "assault-backpack", "snackpack-toreality" };
             }
         }
 
-        public override bool IsEquippable
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public override bool IsActivatable
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public override bool IsDroppable
-        {
-            get
-            {
+        public override bool IsEquippable { get {
                 return true;
-            }
-        }
+        } }
 
-        public ContainerService(DatabaseContext context, Medkit item) : base(context, item)
+        public override bool IsActivatable { get {
+                return false;
+        } }
+
+        public override bool IsDroppable { get {
+                return true;
+        } }
+
+        public override EquipSlot[] AllowedEquipSlots { get {
+                return new EquipSlot[] { EquipSlot.Back };
+        } }
+
+        public ContainerService(DatabaseContext context, Container item) : base(context, item)
         {
         }
 
@@ -54,12 +46,7 @@ namespace ProjetoRP.Business.Item
 
         public override void Character_PostEquipped(Character character, EquipSlot slot)
         {
-            throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
-        }
-
-        public override void Character_InventoryEquip(Character character)
-        {
-            throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
+            // throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
         }
     }
 }
