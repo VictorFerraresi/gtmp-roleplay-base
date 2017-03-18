@@ -29,12 +29,21 @@ namespace ProjetoRP.Business.Item
         }
 
         public void AddNewItemToGround(Entities.Item item, Vector3 position, int dimension)
-        { 
+        {
             DatabaseContext.Items.Add(item);
             DatabaseContext.SaveChanges();
 
             var ims = GetItemModelServiceForItem(item);
             ims.World_Drop(position.X, position.Y, position.Z, dimension);
+        }
+
+        public void AddNewItemToContainer(Entities.Item item, Entities.ItemModel.Container container, int slot)
+        {
+            DatabaseContext.Items.Add(item);
+            DatabaseContext.SaveChanges();
+
+            var ims = GetItemModelServiceForItem(item);
+            ims.Container_Place(container, slot);
         }
 
         public List<Tuple<Types.EquipSlot, Entities.Item>> GetItemsFromPlayer(Entities.Character character)
