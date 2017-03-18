@@ -1,9 +1,46 @@
-﻿API.onUpdate.connect(function () {
+﻿var mainBrowser = null;
+var menuStatus = 0;
 
-    if (API.isControlPressed(179) && !API.isControlPressed(22))// Basically middle mouse button
-    {
-        API.sendChatMessage("Test");
-        var aimPos = API.getPlayerAimingPoint(API.getLocalPlayer());     //getting aiming position in 3d world
+API.onResourceStart.connect(function () {
+    var resolution = API.getScreenResolution();
+    mainBrowser = API.createCefBrowser(resolution.Width / 2, resolution.Height / 2, true);
+    API.waitUntilCefBrowserInit(mainBrowser);
+    API.setCefBrowserPosition(mainBrowser, resolution.Width / 2, resolution.Height / 2);
+    API.loadPageCefBrowser(mainBrowser, "ContextMenu/page.html");
+});
+
+API.onResourceStop.connect(function (e, ev) {
+    if (mainBrowser != null) {
+        API.destroyCefBrowser(mainBrowser);
+    }
+});
+
+// API.onUpdate.connect(function(s,e) {
+// 	if (API.isControlPressed(19)) {
+// 		API.showCursor(true);
+// 	} else {
+// 		API.showCursor(false);
+// 	}
+// });
+
+function isPressed() {
+    return API.isControlPressed(179) && !API.isControlPressed(22);
+}
+
+API.onUpdate.connect(function () {
+    var pressed = isPressed();
+    if (pressed && menuStatus == 0) {
+        menuStatus = 1;
+        mainBrowser.call("show");
+        API.showCursor(true);
+    }
+
+    if (!pressed && menuStatus == 1) {
+        menuStatus = 0;
+        mainBrowser.call("hide");
+        API.showCursor(false);
+    }
+        /*var aimPos = API.getPlayerAimingPoint(API.getLocalPlayer());     //getting aiming position in 3d world
         var camPos = API.getGameplayCamPos();                            //getting camera position in 3d world
 
         aimPos = new Vector3(
@@ -18,6 +55,5 @@
         {
             // var hitPlayer = rayCast.hitEntity; //extract the player object
             // API.sendChatMessage("You are aiming at " + API.getPlayerName(hitPlayer) + " right now!");
-        }
-    }
+        }*/
 });

@@ -70,6 +70,15 @@ namespace ProjetoRP.Business.Item {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Você não pode usar este item!.
+        /// </summary>
+        internal static string cant_use {
+            get {
+                return ResourceManager.GetString("cant_use", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A variação do item não é suportada pelo modelo instanciado..
         /// </summary>
         internal static string invalid_variation {

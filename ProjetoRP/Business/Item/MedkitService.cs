@@ -19,6 +19,18 @@ namespace ProjetoRP.Business.Item
             }
         }
 
+        public override bool IsEquippable { get {
+                return false;
+        } }
+
+        public override bool IsActivatable { get {
+                return true;
+        } }
+
+        public override bool IsDroppable { get {
+                return true;
+        } }
+
         public MedkitService(DatabaseContext context, Medkit item) : base(context, item)
         {
         }
@@ -36,12 +48,12 @@ namespace ProjetoRP.Business.Item
             return false;
         }
 
-        public override void Character_PostEquipped(Entities.Character character, EquipSlot slot)
+        public override void Character_InventoryEquip(Entities.Character character)
         {
             throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
         }
 
-        public override void Character_InventoryEquip(Entities.Character character)
+        public override void Character_PostEquipped(Character character, EquipSlot slot)
         {
             throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
         }

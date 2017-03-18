@@ -16,5 +16,10 @@ namespace ProjetoRP.Entities
         [MaxLength(32), Required]
         public string Variation { get; set; }
         public virtual ItemPlacement.Placement Placement { get; set; }
+
+        public Item()
+        {
+            Variation = "default";
+        }
     }
 }
