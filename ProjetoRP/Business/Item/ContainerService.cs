@@ -35,6 +35,22 @@ namespace ProjetoRP.Business.Item
                 return new EquipSlot[] { EquipSlot.Back };
         } }
 
+        public int MaxSlots { get {
+                switch(Item.Variation)
+                {
+                    case "school-backpack":
+                        return 10;
+                    case "traveler-backpack":
+                        return 15;
+                    case "assault-backpack":
+                        return 20;
+                    case "snackpack-toreality":
+                        return 50;
+                    default:
+                        return 0;
+                }
+        } }
+
         public ContainerService(DatabaseContext context, Container item) : base(context, item)
         {
         }

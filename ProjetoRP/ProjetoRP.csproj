@@ -224,6 +224,10 @@
     <Compile Include="Migrations\201703152249522_UpdateItem.Designer.cs">
       <DependentUpon>201703152249522_UpdateItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703180733114_AddSlotToContainer.cs" />
+    <Compile Include="Migrations\201703180733114_AddSlotToContainer.Designer.cs">
+      <DependentUpon>201703180733114_AddSlotToContainer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
     <Compile Include="Modules\Admin\Colors.Designer.cs">
@@ -327,6 +331,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703152249522_UpdateItem.resx">
       <DependentUpon>201703152249522_UpdateItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703180733114_AddSlotToContainer.resx">
+      <DependentUpon>201703180733114_AddSlotToContainer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>

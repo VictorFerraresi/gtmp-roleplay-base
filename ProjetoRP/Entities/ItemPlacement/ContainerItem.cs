@@ -15,5 +15,8 @@ namespace ProjetoRP.Entities.ItemPlacement
         public int? ParentItem_Id { get; set; }
         [ForeignKey("ParentItem_Id")]
         public Item ParentItem { get; set; }
+
+        [Required]
+        public int Slot { get; set; }
     }
 }

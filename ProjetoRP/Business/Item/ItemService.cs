@@ -1,4 +1,5 @@
-﻿using ProjetoRP.Entities.ItemPlacement;
+﻿using GTANetworkShared;
+using ProjetoRP.Entities.ItemPlacement;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -20,36 +21,20 @@ namespace ProjetoRP.Business.Item
 
         public void AddNewItemToCharacter(Entities.Item item, Entities.Character character, Types.EquipSlot slot)
         {
-            // TODO: This wont work and possibly will spawn placement-less items on DB
-            var current_item_in_slot = DatabaseContext.ItemsPlacement.OfType<CharacterInventoryItem>().Where(ip => ip.Character_Id == character.Id && ip.Slot == slot).Count();
-
-            if(current_item_in_slot > 0)
-            {
-                throw new Exceptions.Item.InvalidItemOperationException("There is already an item in the specified slot.");
-            }
-
             DatabaseContext.Items.Add(item);
-            try
-            {
-                DatabaseContext.SaveChanges();
-            }
-            catch (DbEntityValidationException e)
-            {
-                foreach (var eve in e.EntityValidationErrors)
-                {
-                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                            ve.PropertyName, ve.ErrorMessage);
-                    }
-                }
-                throw;
-            }
+            DatabaseContext.SaveChanges();
 
             var ims = GetItemModelServiceForItem(item);
             ims.Character_InventoryEquip(character, slot);
+        }
+
+        public void AddNewItemToGround(Entities.Item item, Vector3 position, int dimension)
+        { 
+            DatabaseContext.Items.Add(item);
+            DatabaseContext.SaveChanges();
+
+            var ims = GetItemModelServiceForItem(item);
+            ims.World_Drop(position.X, position.Y, position.Z, dimension);
         }
 
         public List<Tuple<Types.EquipSlot, Entities.Item>> GetItemsFromPlayer(Entities.Character character)
@@ -126,7 +111,7 @@ namespace ProjetoRP.Business.Item
             return (ItemModelService)Activator.CreateInstance(serviceType, new object[] { context, item });
         }
 
-        private ItemModelService GetItemModelServiceForItem(Entities.Item item)
+        public ItemModelService GetItemModelServiceForItem(Entities.Item item)
         {
             return GetItemModelServiceForItem(DatabaseContext, item);
         }

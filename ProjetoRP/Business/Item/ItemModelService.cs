@@ -45,13 +45,17 @@ namespace ProjetoRP.Business.Item
                 return new Types.EquipSlot[] { };
         } }
 
+        public virtual int ContainerSlotStack { get {
+                return 1;
+        } }
+
         public ItemModelService(DatabaseContext context, Entities.Item item)
         {
             DatabaseContext = context;
             Item = item;
         }
 
-        public void DropOnTheGround(double x, double y, double z, int dimension)
+        public void World_Drop(double x, double y, double z, int dimension)
         {
             if(!IsDroppable)
             {
@@ -74,24 +78,59 @@ namespace ProjetoRP.Business.Item
                 throw new Exceptions.Item.InvalidItemOperationException();
             }
 
-            if(!AllowedEquipSlots.Contains(slot))
+            if (!AllowedEquipSlots.Contains(slot))
             {
                 throw new Exceptions.Item.InvalidItemOperationException();
             }
 
             var count = DatabaseContext.ItemsPlacement.OfType<CharacterInventoryItem>().Where(ip => ip.Character_Id == character.Id && ip.Slot == slot).Count();
 
-            if(count <= EquipSlotStack)
+            if (count <= EquipSlotStack)
             {
                 CleanPlacement();
 
                 DatabaseContext.ItemsPlacement.Add(new CharacterInventoryItem()
-                    { Character_Id = character.Id, Item_Id = Item.Id, Slot = slot }
+                { Character_Id = character.Id, Item_Id = Item.Id, Slot = slot }
                 );
 
                 DatabaseContext.SaveChanges();
 
                 Character_PostEquipped(character, slot);
+            }
+        }
+
+        public void Container_Place(Entities.ItemModel.Container container, int slot)
+        {
+            var inception_service = new ItemService(DatabaseContext);
+            var container_service = (ContainerService) inception_service.GetItemModelServiceForItem(container);
+
+            if (0 <= slot && slot < container_service.MaxSlots) {
+                var current_items = DatabaseContext.ItemsPlacement.OfType<ContainerItem>().Where(ci => ci.ParentItem_Id == container.Id && ci.Slot == slot).ToList();
+                if (current_items.Count <= container_service.ContainerSlotStack) {
+                    var original_type = GetType().Name; // Get this service's name;
+                    var dirty = false;
+
+                    foreach (var current_items_instance in current_items)
+                    {
+                        var this_type = inception_service.GetItemModelServiceForItem(current_items_instance.Item).GetType().Name;
+                        if (!this_type.Equals(original_type))
+                        {
+                            dirty = true;
+                            break;
+                        }
+                    }
+
+                    if (false == dirty) // Only if the items in a certain slot is homogenus 
+                    {
+                        CleanPlacement();
+
+                        DatabaseContext.ItemsPlacement.Add(new ContainerItem()
+                        { ParentItem_Id = container.Id, Item_Id = Item.Id, Slot = slot }
+                        );
+
+                        DatabaseContext.SaveChanges();
+                    }
+                } // If there are more items than allowed for that one for a single container 
             }
         }
 
