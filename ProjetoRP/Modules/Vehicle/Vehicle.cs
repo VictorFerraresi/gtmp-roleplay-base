@@ -117,57 +117,30 @@ namespace ProjetoRP.Modules.Vehicle
                 API.sendChatMessageToPlayer(player, Messages.vehicle_not_driving);
                 return;
             }
-            NetHandle serverVeh = API.getPlayerVehicle(player);
+            NetHandle serverVeh = API.getPlayerVehicle(player);            
             Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(serverVeh).Vehicle;
+            Character c = Business.Player.ActivePlayer.Get(player).Character;
 
-            if (!VehBLL.Vehicle_IsOwner(player.getData("CHARACTER_DATA"), veh))
+            if (VehBLL.Vehicle_HasKey(veh, c) || (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION && (veh.Owner_Id == c.Faction_Id)))
             {
-                API.sendChatMessageToPlayer(player, Messages.vehicle_no_keys);
-                return;
-            }
-
-            if (veh.Engine == true)
-            {
-                API.setVehicleEngineStatus(serverVeh, false);
-                veh.Engine = false;
+                if (veh.Engine == true)
+                {
+                    API.setVehicleEngineStatus(serverVeh, false);
+                    veh.Engine = false;
+                    API.sendNotificationToPlayer(player, "Motor desligado");
+                }
+                else
+                {
+                    API.setVehicleEngineStatus(serverVeh, true);
+                    veh.Engine = true;
+                    API.sendNotificationToPlayer(player, "Motor ligado");
+                }                
             }
             else
             {
-                API.setVehicleEngineStatus(serverVeh, true);
-                veh.Engine = true;
-            }
+                API.sendChatMessageToPlayer(player, Messages.vehicle_no_keys);
+            }        
         }
-
-        //[Command("trancar")]
-        //public void LockCommand(Client player)
-        //{
-        //    GTANetworkServer.Vehicle serverVeh = Vehicle_GetNearestInRange(player, 4.0);
-
-        //    if (serverVeh == null)
-        //    {
-        //        API.sendChatMessageToPlayer(player, Messages.vehicle_not_near_any);
-        //        return;
-        //    }
-
-        //    Entities.Vehicle veh = API.getEntityData(serverVeh, "VEHICLE_DATA");
-
-        //    if (!Vehicle_IsOwner(player.getData("CHARACTER_DATA"), veh)) //GETCHARID
-        //    {
-        //        API.sendChatMessageToPlayer(player, Messages.vehicle_no_keys);
-        //        return;
-        //    }
-
-        //    if (veh.Locked == true)
-        //    {
-        //        API.setVehicleLocked(serverVeh, false);
-        //        veh.Locked = false;
-        //    }
-        //    else
-        //    {
-        //        API.setVehicleLocked(serverVeh, true);
-        //        veh.Locked = true;
-        //    }
-        //}
 
         [Command("veh")]
         public void VehCommand(Client player, string name, int color1, int color2)
@@ -194,7 +167,7 @@ namespace ProjetoRP.Modules.Vehicle
                 return;
             }
 
-            Entities.Vehicle.Vehicle veh = API.getEntityData(serverVeh, "VEHICLE_DATA");
+            Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(serverVeh).Vehicle;
 
             switch (action)
             {
@@ -212,6 +185,7 @@ namespace ProjetoRP.Modules.Vehicle
                     else
                     {
                         serverVeh.openDoor(5);
+                        API.sendNotificationToPlayer(player, "Portamalas aberto");
                     }
                     break;
                 case "fechar":
@@ -223,6 +197,7 @@ namespace ProjetoRP.Modules.Vehicle
                     else
                     {
                         serverVeh.closeDoor(5);
+                        API.sendNotificationToPlayer(player, "Portamalas fechado");
                     }
                     break;
                 case "ver":

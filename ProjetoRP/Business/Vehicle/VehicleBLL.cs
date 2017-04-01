@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using GTANetworkServer;
 using GTANetworkShared;
 using System.Data.Entity;
+using ProjetoRP.Business.Player;
 
 namespace ProjetoRP.Business.Vehicle
 {
     public class VehicleBLL
     {
+        Business.Item.ItemService iService = new Business.Item.ItemService(new DatabaseContext());
+
         public void LoadVehicles()
         {
             List<Entities.Vehicle.Vehicle> vehicles = new List<Entities.Vehicle.Vehicle>();
@@ -25,7 +28,7 @@ namespace ProjetoRP.Business.Vehicle
                 var av = new ActiveVehicle(v);
                 av.Status = Types.VehicleStatus.NotSpawned;
                 if (Vehicle_IsFactionOwned(v))
-                {
+                {                    
                     Vehicle_Spawn(v);
                 }
             }
@@ -55,9 +58,15 @@ namespace ProjetoRP.Business.Vehicle
             API.shared.setVehicleEngineStatus(serverVeh, veh.Engine);
             API.shared.setVehicleLocked(serverVeh, veh.Locked);
             API.shared.setVehicleHealth(serverVeh, veh.Health);
-            API.shared.setVehicleNumberPlate(serverVeh, veh.LicensePlate);
+            API.shared.setVehicleNumberPlate(serverVeh, veh.LicensePlate);            
 
             ActiveVehicle av = Business.Vehicle.ActiveVehicle.GetBySQLID(veh.Id);
+
+            if(veh.Name == "Sheriff")
+            {
+                API.shared.setVehicleExtra(serverVeh, 1, true); //Lightbar
+                API.shared.setVehicleExtra(serverVeh, 2, false); //Rotating Lightbar
+            }
             
             av.VehicleHandle = serverVeh;
             av.Status = Types.VehicleStatus.Spawned;            
@@ -76,9 +85,9 @@ namespace ProjetoRP.Business.Vehicle
 
             double nearestDistance = range;
 
-            foreach (Business.Vehicle.ActiveVehicle av in Business.Vehicle.ActiveVehicle.GetAll())
+            foreach (Business.Vehicle.ActiveVehicle av in Business.Vehicle.ActiveVehicle.GetAllSpawned())
             {
-                GTANetworkServer.Vehicle veh = av.VehicleHandle;
+                GTANetworkServer.Vehicle veh = av.VehicleHandle;                
 
                 Vector3 vehPos = API.shared.getEntityPosition(veh);
                 float distance = playerPos.DistanceTo(vehPos);
@@ -97,6 +106,62 @@ namespace ProjetoRP.Business.Vehicle
             return veh.Locked;
         }
 
+        public void Vehicle_LockCommand(Client player, Entities.Vehicle.Vehicle veh)
+        {
+            var ac = ActivePlayer.GetSpawned(player);
+            if (ac == null) return;
+
+            var av = ActiveVehicle.GetSpawned(veh);
+            if (av == null) return;
+
+            Entities.Character c = ac.Character;
+
+            if (Vehicle_HasKey(veh, c) || (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION && (veh.Owner_Id == c.Faction_Id)))
+            {            
+                if (Vehicle_IsLocked(veh))
+                {
+                    API.shared.setVehicleLocked(av.VehicleHandle, false);
+                    veh.Locked = false;
+                    API.shared.sendNotificationToPlayer(player, "Veículo destrancado");
+                }
+                else
+                {
+                    API.shared.setVehicleLocked(av.VehicleHandle, true);
+                    veh.Locked = true;
+                    API.shared.sendNotificationToPlayer(player, "Veículo trancado");
+                }
+            }
+            else
+            {
+                API.shared.sendChatMessageToPlayer(player, "Você não possui as chaves deste veículo!");
+            }
+        }
+
+        public bool Vehicle_HasKey(Entities.Vehicle.Vehicle veh, Entities.Character c)
+        {
+            var data = iService.GetCascadingItemsFromPlayer(c);
+            foreach (var item in data)
+            {
+                if (item is Entities.ItemModel.CarKey)
+                {
+                    Entities.ItemModel.CarKey key = (Entities.ItemModel.CarKey)item;
+                    if (key.Vehicle_Id == veh.Id)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public string Vehicle_GeneratePlate()
+        {
+            char[] charactersAvailable = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+
+            string plate = "";
+
+            return plate;
+        }
 
         // SQL Functions
         public Entities.Vehicle.Vehicle SQL_FetchVehicleData(int vehicle_id)
@@ -133,15 +198,6 @@ namespace ProjetoRP.Business.Vehicle
                 context.Entry(veh).State = EntityState.Modified;
                 context.SaveChanges();
             }
-        }
-
-        public string Vehicle_GeneratePlate()
-        {
-            char[] charactersAvailable = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };          
-
-            string plate = "";
-
-            return plate;
         }
     }
 }

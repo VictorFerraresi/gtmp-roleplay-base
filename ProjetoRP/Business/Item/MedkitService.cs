@@ -43,16 +43,6 @@ namespace ProjetoRP.Business.Item
             // Give player health based on variation
         }
 
-        public override bool Character_Equippable(Entities.Character character, EquipSlot slot)
-        {
-            return false;
-        }
-
-        public override void Character_InventoryEquip(Entities.Character character)
-        {
-            throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
-        }
-
         public override void Character_PostEquipped(Character character, EquipSlot slot)
         {
             throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);

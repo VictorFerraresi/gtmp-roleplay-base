@@ -59,7 +59,7 @@ namespace ProjetoRP.Business.Player
         public static ActivePlayer GetSpawned(int id)
         {
             var ac = Get(id);
-            if (ac.Status == PlayerStatus.Spawned)
+            if (null != ac && ac.Status == PlayerStatus.Spawned)
             {
                 return ac;
             }

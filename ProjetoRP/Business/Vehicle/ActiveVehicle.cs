@@ -147,6 +147,20 @@ namespace ProjetoRP.Business.Vehicle
             return VehicleServices;
         }
 
+        public static List<ActiveVehicle> GetAllSpawned()
+        {
+            List<ActiveVehicle> SpawnedVehicles = new List<ActiveVehicle>();
+
+            foreach(var v in VehicleServices)
+            {
+                if (v.Status == VehicleStatus.Spawned)
+                {
+                    SpawnedVehicles.Add(v);
+                }
+            }
+            return SpawnedVehicles;
+        }
+
         private void PushAndAssignId()
         {
             if (Id == null)

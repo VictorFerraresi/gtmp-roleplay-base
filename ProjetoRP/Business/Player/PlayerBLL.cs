@@ -21,6 +21,11 @@ namespace ProjetoRP.Business.Player
             c.Cash -= amount;
         }
 
+        public bool Player_IsInRangeOfPlayer(Client p1, Client p2, float range = 5.0f)
+        {
+            return API.shared.getEntityPosition(p1).DistanceTo(API.shared.getEntityPosition(p2)) <= range;
+        }
+
         /*public int? Player_GetNextFreeId()
         {
             int? a = null;

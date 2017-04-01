@@ -64,14 +64,5 @@ namespace ProjetoRP.Business.Item
         {
             // throw new Exceptions.Item.InvalidItemOperationException(Messages.cant_equip);
         }
-
-        public override bool Character_Equippable(Entities.Character character, Types.EquipSlot slot) //recheck
-        {
-            return false;
-        }
-
-        public override void Character_InventoryEquip(Entities.Character character) //recheck
-        {
-        }
     }
 }

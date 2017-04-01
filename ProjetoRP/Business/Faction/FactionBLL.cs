@@ -246,6 +246,19 @@ namespace ProjetoRP.Business.Faction
             }
         }
 
+        public void Faction_SendMessage(Entities.Faction.Faction fac, string color, string msg)
+        {
+            foreach (var player in API.shared.getAllPlayers())
+            {
+                Entities.Character playerChar = Business.Player.ActivePlayer.GetSpawned(player).Character;
+
+                if (playerChar.Faction_Id == fac.Id)
+                {                    
+                    API.shared.sendChatMessageToPlayer(player, color, msg);
+                }
+            }
+        }
+
         public int Faction_GetOnlineMemberCount(Entities.Faction.Faction fac)
         {
             int count = 0;
@@ -275,6 +288,23 @@ namespace ProjetoRP.Business.Faction
             }
 
             return count;
+        }
+
+        public Entities.Faction.Rank Faction_GetRankByLevel(Entities.Faction.Faction fac, int level)
+        {
+            Entities.Faction.Rank rank = fac.Ranks.FirstOrDefault(r => r.Level == level);
+            return rank;
+        }
+
+        public void Faction_SendDepartmentMessage(string msg)
+        {
+            foreach(var fac in Business.GlobalVariables.Instance.ServerFactions)
+            {
+                if(fac.Type == Entities.Faction.FactionType.FACTION_TYPE_POLICE || fac.Type == Entities.Faction.FactionType.FACTION_TYPE_EMS)
+                {
+                    Faction_SendMessage(fac, "~#FF8282~", msg);
+                }
+            }
         }
     }
 }

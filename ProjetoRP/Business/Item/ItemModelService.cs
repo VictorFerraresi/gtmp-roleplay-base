@@ -161,9 +161,7 @@ namespace ProjetoRP.Business.Item
                 throw new Exceptions.Item.InvalidItemModelServiceException(Messages.invalid_variation);
             }
         }
-
-        public abstract bool Character_Equippable(Entities.Character character, Types.EquipSlot slot);
-        public abstract void Character_InventoryEquip(Entities.Character character);
+                
         public abstract void Character_PostEquipped(Character character, Types.EquipSlot slot);
         public abstract void Character_Activate(Character character);
 
