@@ -1,5 +1,9 @@
-﻿using GTANetworkServer;
-using GTANetworkShared;
+﻿using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Constant;
+using GrandTheftMultiplayer.Server.Managers;
+using GrandTheftMultiplayer.Shared;
+using GrandTheftMultiplayer.Shared.Math;
 using ProjetoRP.Entities;
 using System;
 using System.Collections.Generic;
@@ -73,7 +77,7 @@ namespace ProjetoRP.Modules.Vehicle
                     if (c.Faction_Id != veh.Owner_Id)
                     {                        
                         API.sendNotificationToPlayer(player, "Este veículo é restrito à uma facção!");
-                        API.warpPlayerOutOfVehicle(player, vehicle);
+                        API.warpPlayerOutOfVehicle(player);
                     }
                 }                               
             }
@@ -159,7 +163,7 @@ namespace ProjetoRP.Modules.Vehicle
         [Command("portamalas")]
         public void TrunkCommand(Client player, string action)
         {
-            GTANetworkServer.Vehicle serverVeh = VehBLL.Vehicle_GetNearestInRange(player, 2.0);
+            GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = VehBLL.Vehicle_GetNearestInRange(player, 2.0);
 
             if (serverVeh == null)
             {

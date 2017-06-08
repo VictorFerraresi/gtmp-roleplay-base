@@ -23,6 +23,8 @@ namespace ProjetoRP.Entities
 
             Xp = Double.Parse(Configurations.Character.Default_Xp);
             Level = Int32.Parse(Configurations.Character.Default_Level);
+
+            LogoutArea = Configurations.Character.Default_Area;
         }
 
         [Key]
@@ -62,6 +64,10 @@ namespace ProjetoRP.Entities
         public double Xp { get; set; }
         [Required]
         public int Level { get; set; }
+
+        [Required]
+        [MaxLength(128)]
+        public string LogoutArea { get; set; }
 
         public int? Faction_Id { get; set; }
         [ForeignKey("Faction_Id")]        

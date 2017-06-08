@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GTANetworkServer;
-using GTANetworkShared;
+using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Shared.Math;
 using System.Data.Entity;
 using ProjetoRP.Business.Player;
 
@@ -54,7 +55,7 @@ namespace ProjetoRP.Business.Vehicle
             Vector3 pos = new Vector3(veh.X, veh.Y, veh.Z);
             Vector3 rot = new Vector3(veh.rX, veh.rY, veh.rZ);
 
-            GTANetworkServer.Vehicle serverVeh = API.shared.createVehicle(API.shared.vehicleNameToModel(veh.Name), pos, rot, veh.Color1, veh.Color2, veh.Dimension);
+            GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = API.shared.createVehicle(API.shared.vehicleNameToModel(veh.Name), pos, rot, veh.Color1, veh.Color2, veh.Dimension);
             API.shared.setVehicleEngineStatus(serverVeh, veh.Engine);
             API.shared.setVehicleLocked(serverVeh, veh.Locked);
             API.shared.setVehicleHealth(serverVeh, veh.Health);
@@ -77,17 +78,17 @@ namespace ProjetoRP.Business.Vehicle
             return (Vehicle_IsCharacterOwned(veh) && veh.Owner_Id == character.Id);
         }
 
-        public GTANetworkServer.Vehicle Vehicle_GetNearestInRange(Client player, double range)
+        public GrandTheftMultiplayer.Server.Elements.Vehicle Vehicle_GetNearestInRange(Client player, double range)
         {
             Vector3 playerPos = API.shared.getEntityPosition(player);
 
-            GTANetworkServer.Vehicle nearestVeh = null;
+            GrandTheftMultiplayer.Server.Elements.Vehicle nearestVeh = null;
 
             double nearestDistance = range;
 
             foreach (Business.Vehicle.ActiveVehicle av in Business.Vehicle.ActiveVehicle.GetAllSpawned())
             {
-                GTANetworkServer.Vehicle veh = av.VehicleHandle;                
+                GrandTheftMultiplayer.Server.Elements.Vehicle veh = av.VehicleHandle;                
 
                 Vector3 vehPos = API.shared.getEntityPosition(veh);
                 float distance = playerPos.DistanceTo(vehPos);

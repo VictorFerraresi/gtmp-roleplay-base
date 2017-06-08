@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
-using GTANetworkServer;
-using GTANetworkShared;
+using GrandTheftMultiplayer.Server;
+using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Shared.Math;
 using ProjetoRP.Business.Player;
 
 namespace ProjetoRP.Business.Property

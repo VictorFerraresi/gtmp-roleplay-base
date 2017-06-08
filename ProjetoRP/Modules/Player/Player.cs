@@ -1,5 +1,8 @@
-﻿using GTANetworkServer;
-using GTANetworkShared;
+﻿using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Constant;
+using GrandTheftMultiplayer.Server.Managers;
+using GrandTheftMultiplayer.Shared.Math;
 using ProjetoRP.Business.Player;
 using ProjetoRP.Entities;
 using ProjetoRP.Types;
@@ -14,6 +17,8 @@ using ProjetoRP.Business.Property;
 using ProjetoRP.Business.Vehicle;
 using ProjetoRP.Business.Faction;
 using ProjetoRP.Business;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 
 
 namespace ProjetoRP.Modules.Player
@@ -158,6 +163,14 @@ namespace ProjetoRP.Modules.Player
 
                     Player_Spawn(player, cid);
                     break;
+
+                case "CS_RETURN_LOGOUT_AREA":                    
+                    var street = args[0];
+                    var area = args[1];
+
+                    string areaFormat = String.Format("{0}, {1}", street, area);
+                    ac.Character.LogoutArea = areaFormat;                    
+                    break;
             }
         }
 
@@ -294,7 +307,7 @@ namespace ProjetoRP.Modules.Player
                         dyn.xp = c.Xp;
                         dyn.maxxp = GetXpNeededToLevelUp(c.Level);
                         dyn.level = c.Level;
-                        dyn.location = "San Andreas";
+                        dyn.location = c.LogoutArea;
                         dyn.health = "100%";
                         dyn.armour = "100%";
                         dyn.cash = c.Cash;
@@ -371,6 +384,8 @@ namespace ProjetoRP.Modules.Player
                 Enum.TryParse(cd.Skin, out pedHash);
                 player.setSkin(pedHash);
 
+                API.consoleOutput(cd.Rank.ToString());
+
                 player.position = new Vector3(cd.X, cd.Y, cd.Z);
                 player.dimension = cd.Dimension;
                 player.freeze(false);
@@ -400,7 +415,7 @@ namespace ProjetoRP.Modules.Player
                     context.Entry(p).State = EntityState.Modified;
                     context.SaveChanges();
 
-                    context.Entry(p).State = EntityState.Detached;
+                    //context.Entry(p).State = EntityState.Detached;
 
                     if (ac.Status == PlayerStatus.Spawned)
                     {
@@ -412,11 +427,30 @@ namespace ProjetoRP.Modules.Player
                         c.X = pos.X;
                         c.Y = pos.Y;
                         c.Z = pos.Z;
-                        c.Dimension = dimension;
+                        c.Dimension = dimension;                        
 
-                        context.Characters.Attach(c);
+                        c.Rank = c.Faction.Ranks.FirstOrDefault(r => r.Id == c.Rank_Id);
+
+                        API.triggerClientEvent(player, "SC_GET_LOGOUT_AREA");                        
+
+                        context.Characters.Attach(c);                        
                         context.Entry(c).State = EntityState.Modified;
-                        context.SaveChanges();
+                        try
+                        {
+                            context.SaveChanges();
+                        }
+                        catch (DbEntityValidationException dbEx)
+                        {
+                            foreach (var validationErrors in dbEx.EntityValidationErrors)
+                            {
+                                foreach (var validationError in validationErrors.ValidationErrors)
+                                {
+                                    API.consoleOutput("Property: {0} Error: {1}",
+                                                            validationError.PropertyName,
+                                                            validationError.ErrorMessage);
+                                }
+                            }
+                        }                        
 
                         context.Entry(c).State = EntityState.Detached;
                     }
@@ -460,7 +494,7 @@ namespace ProjetoRP.Modules.Player
             {
                 player.sendChatMessage(Messages.player_character_idx_not_exists);
             }
-        }
+        }     
 
         private void Player_KickForInvalidTrigger(Client player)
         {
@@ -498,7 +532,7 @@ namespace ProjetoRP.Modules.Player
             if (ActivePlayer.GetSpawned(player) == null) return;
 
             Entities.Property.Door door = DoorBLL.Door_GetNearestInRangeBothSides(player, 4.0);
-            GTANetworkServer.Vehicle serverVeh = VehBLL.Vehicle_GetNearestInRange(player, 4.0);            
+            GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = VehBLL.Vehicle_GetNearestInRange(player, 4.0);            
 
             if (door != null)
             {

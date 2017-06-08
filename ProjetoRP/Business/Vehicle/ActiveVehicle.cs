@@ -1,5 +1,4 @@
-﻿using GTANetworkServer;
-using ProjetoRP.Entities;
+﻿using ProjetoRP.Entities;
 using ProjetoRP.Types;
 using ProjetoRP.Exceptions;
 using System;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GrandTheftMultiplayer.Shared;
 
 namespace ProjetoRP.Business.Vehicle
 {
@@ -16,7 +16,7 @@ namespace ProjetoRP.Business.Vehicle
         private static List<ActiveVehicle> VehicleServices = new List<ActiveVehicle>();
 
         public Entities.Vehicle.Vehicle Vehicle { get; set; }
-        public GTANetworkServer.Vehicle VehicleHandle { get; set; }        
+        public GrandTheftMultiplayer.Server.Elements.Vehicle VehicleHandle { get; set; }        
         public VehicleStatus Status { get; set; }
         public int? Id { get; private set; }
 
@@ -68,7 +68,7 @@ namespace ProjetoRP.Business.Vehicle
             }
         }
 
-        public static ActiveVehicle GetSpawned(GTANetworkServer.Vehicle vehicleHandle)
+        public static ActiveVehicle GetSpawned(GrandTheftMultiplayer.Server.Elements.Vehicle vehicleHandle)
         {
             var av = Get(vehicleHandle);
             if (av.Status == VehicleStatus.Spawned)
@@ -94,7 +94,7 @@ namespace ProjetoRP.Business.Vehicle
             }
         }
 
-        public static ActiveVehicle GetSpawned(GTANetworkShared.NetHandle vehicleHandle)
+        public static ActiveVehicle GetSpawned(NetHandle vehicleHandle)
         {
             foreach (var av in VehicleServices)
             {
@@ -118,7 +118,7 @@ namespace ProjetoRP.Business.Vehicle
             return null;
         }
 
-        public static ActiveVehicle Get(GTANetworkServer.Vehicle vehicleHandle)
+        public static ActiveVehicle Get(GrandTheftMultiplayer.Server.Elements.Vehicle vehicleHandle)
         {
             foreach (var av in VehicleServices)
             {

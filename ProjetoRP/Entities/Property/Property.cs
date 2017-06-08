@@ -5,8 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GTANetworkServer;
-using GTANetworkShared;
+using GrandTheftMultiplayer.Server.Elements;
 
 namespace ProjetoRP.Entities.Property
 {

@@ -1,5 +1,8 @@
-﻿using GTANetworkServer;
-using GTANetworkShared;
+﻿using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Constant;
+using GrandTheftMultiplayer.Server.Managers;
+using GrandTheftMultiplayer.Shared;
 using ProjetoRP.Business.Player;
 using ProjetoRP.Entities;
 using System;
@@ -44,7 +47,7 @@ namespace ProjetoRP.Modules.Faction
 
                     bool siren = API.fetchNativeFromPlayer<bool>(player, Hash._IS_VEHICLE_SIREN_SOUND_ON, vehHandle);
 
-                    GTANetworkServer.Vehicle v = Business.Vehicle.ActiveVehicle.GetSpawned(vehHandle).VehicleHandle;
+                    GrandTheftMultiplayer.Server.Elements.Vehicle v = Business.Vehicle.ActiveVehicle.GetSpawned(vehHandle).VehicleHandle;
 
                     v.setSyncedData("SIREN_SOUND_STATUS", !siren);
 
@@ -460,8 +463,8 @@ namespace ProjetoRP.Modules.Faction
         [Command("arma")]
         public void GunCommand(Client sender)
         {
-            API.givePlayerWeapon(sender, GTANetworkShared.WeaponHash.AssaultRifle, 10000, true, true);
-            API.givePlayerWeapon(sender, GTANetworkShared.WeaponHash.CombatPistol, 10000, true, true);
+            API.givePlayerWeapon(sender, WeaponHash.AssaultRifle, 10000, true, true);
+            API.givePlayerWeapon(sender, WeaponHash.CombatPistol, 10000, true, true);
         }
     }
 }

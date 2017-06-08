@@ -1,5 +1,7 @@
-﻿using GTANetworkServer;
-using GTANetworkShared;
+﻿using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Managers;
+using GrandTheftMultiplayer.Shared.Math;
 using ProjetoRP.Business.Player;
 using ProjetoRP.Entities;
 using System;

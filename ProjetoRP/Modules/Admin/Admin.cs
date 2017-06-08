@@ -1,6 +1,8 @@
 ﻿using System;
-using GTANetworkServer;
-using GTANetworkShared;
+using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Managers;
+using GrandTheftMultiplayer.Shared.Math;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

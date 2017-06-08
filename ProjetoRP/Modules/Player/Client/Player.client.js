@@ -45,5 +45,9 @@ API.onServerEventTrigger.connect(function (eventName, args) {
     } else if (eventName == "SC_DO_SPAWN") {
         API.setActiveCamera(null);
         API.setHudVisible(true);
+    } else if (eventName == "SC_GET_LOGOUT_AREA") {
+        var player = API.getLocalPlayer();
+        var pos = API.getEntityPosition(player);
+        API.triggerServerEvent("CS_RETURN_LOGOUT_AREA", API.getStreetName(pos), API.getZoneName(pos));
     }
 });
