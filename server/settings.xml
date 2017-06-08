@@ -19,7 +19,7 @@
   <refresh_rate>120</refresh_rate>
   <resource src="projetorp" />
   <announce_lan>true</announce_lan>
-  <upnp>false</upnp>
+  <upnp>true</upnp>
   <fqdn></fqdn>
   <conntimeout>false</conntimeout>
   <allowcefdevtool>false</allowcefdevtool>

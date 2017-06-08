@@ -33,7 +33,7 @@ namespace ProjetoRP.Business.Property
         public bool TryToBuy(Client player, Entities.Property.Property house, bool confirmed)
         {
             Entities.Property.House h = (Entities.Property.House)house;
-            Entities.Character c = player.getData("CHARACTER_DATA");
+            Entities.Character c = ActivePlayer.GetSpawned(player).Character;            
 
             if (h.Owner != null)
             {

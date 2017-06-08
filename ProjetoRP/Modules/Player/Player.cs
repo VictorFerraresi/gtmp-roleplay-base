@@ -158,17 +158,6 @@ namespace ProjetoRP.Modules.Player
 
                     Player_Spawn(player, cid);
                     break;
-                case "CS_DELETE_AME":
-                    if(ac == null)
-                    {
-                        Player_KickForInvalidTrigger(player);
-                        return;
-                    }                    
-                    
-                    TextLabel label = player.getData("AME_LABEL");
-                    API.deleteEntity(label);
-                    player.resetData("AME_LABEL");
-                    break;
             }
         }
 
@@ -370,10 +359,10 @@ namespace ProjetoRP.Modules.Player
 
             using (var context = new DatabaseContext())
             {
-                Character cd = (from c in context.Characters where c.Id == character_id && c.Player.Id == id select c).Include(c => c.Faction).Include(c => c.Rank).AsNoTracking().Single();
+                Character cd = (from c in context.Characters where c.Id == character_id && c.Player.Id == id select c).Include(c => c.Faction).Include(c => c.Faction.Ranks).Include(c => c.Rank).AsNoTracking().Single();
 
                 var ac = ActivePlayer.Get(player);
-                ac.Character = cd;                
+                ac.Character = cd;
                 
                 // player.setData("CHARACTER_DATA", cd);
                 // player.setData("CHARACTER_ID", cd.Id);                                
@@ -584,8 +573,8 @@ namespace ProjetoRP.Modules.Player
             {
                 TextLabel previousLabel = sender.getData("AME_LABEL");
                 API.setTextLabelText(previousLabel, action);                                
-            }                        
-        }
+            }          
+        }        
 
         [Command("do", GreedyArg = true)]
         public void DoCommand(Client sender, string text)

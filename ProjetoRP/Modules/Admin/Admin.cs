@@ -103,6 +103,7 @@ namespace ProjetoRP.Modules.Admin
                                 prop.Y = player.position.Y;
                                 prop.Z = player.position.Z;
                                 prop.Price = priceVal;
+                                prop.Dimension = player.dimension;
                                 break;
 
                             case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
@@ -113,6 +114,7 @@ namespace ProjetoRP.Modules.Admin
                                 prop.Y = player.position.Y;
                                 prop.Z = player.position.Z;
                                 prop.Price = priceVal;
+                                prop.Dimension = player.dimension;
                                 break;
 
                             case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:

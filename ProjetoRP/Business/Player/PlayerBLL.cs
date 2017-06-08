@@ -26,6 +26,13 @@ namespace ProjetoRP.Business.Player
             return API.shared.getEntityPosition(p1).DistanceTo(API.shared.getEntityPosition(p2)) <= range;
         }
 
+        public void Player_DeleteAme(Client player)
+        {            
+            TextLabel label = player.getData("AME_LABEL");
+            API.shared.deleteEntity(label);
+            player.resetData("AME_LABEL");
+        }
+
         /*public int? Player_GetNextFreeId()
         {
             int? a = null;

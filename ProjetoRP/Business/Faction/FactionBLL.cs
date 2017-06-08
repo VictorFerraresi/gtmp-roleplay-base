@@ -201,7 +201,7 @@ namespace ProjetoRP.Business.Faction
 
             using (var context = new DatabaseContext())
             {
-                faction = (from f in context.Factions where f.Id == faction_id select f).AsNoTracking().Single();
+                faction = (from f in context.Factions where f.Id == faction_id select f).Include(f => f.Ranks).AsNoTracking().Single();
             }
 
             return faction;
@@ -213,7 +213,7 @@ namespace ProjetoRP.Business.Faction
 
             using (var context = new DatabaseContext())
             {
-                factions = (from f in context.Factions select f).Include(f => f.Ranks).AsNoTracking().ToList();
+                factions = (from f in context.Factions select f).Include(f => f.Ranks).AsNoTracking().ToList();              
             }
             return factions;
         }        

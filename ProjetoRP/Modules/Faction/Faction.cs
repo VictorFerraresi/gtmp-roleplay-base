@@ -42,9 +42,13 @@ namespace ProjetoRP.Modules.Faction
                         return;
                     }
 
-                    bool siren = API.fetchNativeFromPlayer<bool>(player, Hash._IS_VEHICLE_SIREN_SOUND_ON, vehHandle);                    
-                    
-                    API.sendNativeToAllPlayers(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, vehHandle, siren);
+                    bool siren = API.fetchNativeFromPlayer<bool>(player, Hash._IS_VEHICLE_SIREN_SOUND_ON, vehHandle);
+
+                    GTANetworkServer.Vehicle v = Business.Vehicle.ActiveVehicle.GetSpawned(vehHandle).VehicleHandle;
+
+                    v.setSyncedData("SIREN_SOUND_STATUS", !siren);
+
+                    API.sendNativeToAllPlayers(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, vehHandle, siren);                    
 
                     break;
                 case "CS_EDIT_RANKS_SUBMIT":
@@ -129,7 +133,7 @@ namespace ProjetoRP.Modules.Faction
             }
             else
             {
-                dynamic ranks = new List<System.Dynamic.ExpandoObject>();
+                dynamic ranks = new List<System.Dynamic.ExpandoObject>();                
 
                 List<Entities.Faction.Rank> orderedByLevelDesc = c.Faction.Ranks.OrderByDescending(r => r.Level).ToList();
 
@@ -451,6 +455,13 @@ namespace ProjetoRP.Modules.Faction
                 finalmsg = String.Format("(Rádio) {0} diz: {1}", c.Name, msg);
                 Business.Utils.ExclusiveProxDetector(30.0f, sender, finalmsg, "~#FFFFFF~", "~#C8C8C8~", "~#AAAAAA~", "~#8C8C8C~", "~#6E6E6E~");
             }
+        }
+
+        [Command("arma")]
+        public void GunCommand(Client sender)
+        {
+            API.givePlayerWeapon(sender, GTANetworkShared.WeaponHash.AssaultRifle, 10000, true, true);
+            API.givePlayerWeapon(sender, GTANetworkShared.WeaponHash.CombatPistol, 10000, true, true);
         }
     }
 }
