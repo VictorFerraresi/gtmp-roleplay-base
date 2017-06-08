@@ -95,5 +95,14 @@ namespace ProjetoRP.Business.Item {
                 return ResourceManager.GetString("null_item", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item Sem Nome.
+        /// </summary>
+        internal static string unnamed_item {
+            get {
+                return ResourceManager.GetString("unnamed_item", resourceCulture);
+            }
+        }
     }
 }
