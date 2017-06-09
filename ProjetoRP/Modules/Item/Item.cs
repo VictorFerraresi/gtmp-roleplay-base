@@ -1,12 +1,8 @@
 ﻿using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Managers;
 using ProjetoRP.Business.Item;
 using ProjetoRP.Business.Player;
-using ProjetoRP.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjetoRP.Modules.Item
 {
