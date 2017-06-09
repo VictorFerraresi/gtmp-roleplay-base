@@ -1,11 +1,7 @@
-﻿using System;
-using GTANetworkServer;
-using GTANetworkShared;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Discord;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.API;
 
 namespace ProjetoRP.Modules.Admin
 {    

@@ -1,11 +1,10 @@
 ﻿using System;
-using GTANetworkServer;
-using GTANetworkShared;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ProjetoRP.Business.Player;
+using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Managers;
+using GrandTheftMultiplayer.Shared.Math;
 
 namespace ProjetoRP.Modules.Admin
 {

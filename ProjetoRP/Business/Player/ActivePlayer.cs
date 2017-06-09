@@ -1,5 +1,4 @@
-﻿using GTANetworkServer;
-using ProjetoRP.Entities;
+﻿using ProjetoRP.Entities;
 using ProjetoRP.Types;
 using ProjetoRP.Exceptions;
 using System;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GrandTheftMultiplayer.Server.Elements;
 
 namespace ProjetoRP.Business.Player
 {

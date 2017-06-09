@@ -1,6 +1,6 @@
-using System;
-using GTANetworkServer;
-using GTANetworkShared;
+using GrandTheftMultiplayer.Server;
+using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
 
 public class Ui : Script
 {
