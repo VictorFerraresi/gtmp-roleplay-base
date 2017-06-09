@@ -121,6 +121,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Career\CareerBLL.cs" />
+    <Compile Include="Business\Career\TruckerCareerBLL.cs" />
     <Compile Include="Business\Item\CarKeyService.cs" />
     <Compile Include="Business\Item\ContainerService.cs" />
     <Compile Include="Business\Property\BusinessBLL.cs" />
@@ -148,6 +150,32 @@
       <DependentUpon>Character.resx</DependentUpon>
     </Compile>
     <Compile Include="DatabaseContext.cs" />
+    <Compile Include="Entities\Career\Career.cs" />
+    <Compile Include="Entities\Career\TruckRestrictions.cs" />
+    <Compile Include="Migrations\201706082238227_AddCareers.cs" />
+    <Compile Include="Migrations\201706082238227_AddCareers.Designer.cs">
+      <DependentUpon>201706082238227_AddCareers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706090416577_AddCharacterCareer.cs" />
+    <Compile Include="Migrations\201706090416577_AddCharacterCareer.Designer.cs">
+      <DependentUpon>201706090416577_AddCharacterCareer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706090542458_AddCharacterCareerInfo.cs" />
+    <Compile Include="Migrations\201706090542458_AddCharacterCareerInfo.Designer.cs">
+      <DependentUpon>201706090542458_AddCharacterCareerInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Career\Career.cs" />
+    <Compile Include="Modules\Career\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\TruckerCareer\TruckerCareer.cs" />
+    <Compile Include="Modules\TruckerCareer\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Character.cs" />
     <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\ItemModel\CarKey.cs" />
@@ -305,6 +333,7 @@
     <Compile Include="Types\Gender.cs" />
     <Compile Include="Types\HairColor.cs" />
     <Compile Include="Types\PlayerStatus.cs" />
+    <Compile Include="Types\TruckerRank.cs" />
     <Compile Include="Types\VehicleStatus.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -395,11 +424,28 @@
     <EmbeddedResource Include="Migrations\201706081952571_AddCharacterLogoutFix.resx">
       <DependentUpon>201706081952571_AddCharacterLogoutFix.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706082238227_AddCareers.resx">
+      <DependentUpon>201706082238227_AddCareers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706090416577_AddCharacterCareer.resx">
+      <DependentUpon>201706090416577_AddCharacterCareer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706090542458_AddCharacterCareerInfo.resx">
+      <DependentUpon>201706090542458_AddCharacterCareerInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Colors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Messages.resx" />
+    <EmbeddedResource Include="Modules\Career\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modules\TruckerCareer\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modules\Faction\Messages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
@@ -439,6 +485,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Modules\Admin\Client\Admin.client.js" />
+    <Content Include="Modules\Career\Client\Career.client.js" />
+    <Content Include="Modules\TruckerCareer\Client\TruckerCareer.client.js" />
     <Content Include="Modules\ContextMenu\Client\ContextMenu.client.js" />
     <Content Include="Modules\Faction\Client\Faction.client.js" />
     <Content Include="Modules\Item\Client\Item.client.js" />
@@ -448,6 +496,7 @@
     <Content Include="Modules\Vehicle\Client\Vehicle.js" />
     <Content Include="Modules\Vehicle\Client\Vehicle.client.js" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y "$(ProjectDir)$(OutDir)ProjetoRP.dll" "$(SolutionDir)server\resources\projetorp"

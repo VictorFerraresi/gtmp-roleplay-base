@@ -13,12 +13,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ProjetoRP.Business.Vehicle;
+using ProjetoRP.Business.Career;
+using ProjetoRP.Types;
 
 namespace ProjetoRP.Modules.Vehicle
 {
     public class Vehicle : Script
     {
         private VehicleBLL VehBLL = new VehicleBLL();
+        private TruckerCareerBLL TruckerBLL = new TruckerCareerBLL();
 
         public Vehicle()
         {
@@ -62,6 +65,10 @@ namespace ProjetoRP.Modules.Vehicle
                         Vehicle_KickForInvalidTrigger(player);
                     }
                     break;
+
+                case "CS_VEHICLE_TURN_ENGINE":                    
+                    EngineCommand(player);
+                    break;
             }
         }
 
@@ -80,6 +87,45 @@ namespace ProjetoRP.Modules.Vehicle
                         API.warpPlayerOutOfVehicle(player);
                     }
                 }                               
+            }
+            else if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER)
+            {
+                if (API.getPlayerVehicleSeat(player) == -1) //Driver
+                {
+                    if (c.Career_Id != veh.Owner_Id)
+                    {
+                        string career_name = Business.GlobalVariables.Instance.ServerCareers.FirstOrDefault(x => x.Id == veh.Owner_Id).Name;
+
+                        API.sendNotificationToPlayer(player, "Este veículo é restrito a um emprego! (" + career_name + ")");
+                        API.warpPlayerOutOfVehicle(player);
+                    }
+                    else
+                    {
+                        Entities.Career.CareerType type = Business.GlobalVariables.Instance.ServerCareers.FirstOrDefault(x => x.Id == veh.Owner_Id).Type;
+                        switch (type)
+                        {
+                            case Entities.Career.CareerType.Trucker:
+                                if(TruckerBLL.CanDriveTruck(c, veh))
+                                {
+                                    API.sendNotificationToPlayer(player, "Para começar a trabalhar, digite ~b~/caminhoneiro");                                    
+                                }
+                                else
+                                {
+                                    TruckerRank rank;
+                                    string needed_rank;
+                                    TruckRestrictionsDictionary.TruckMinRank.TryGetValue(veh.Name, out rank);
+
+                                    TruckerRankDictionary.TruckerRankNames.TryGetValue(rank, out needed_rank);
+
+                                    API.sendNotificationToPlayer(player, "Este veículo é restrito a um cargo! (" + needed_rank + ")");
+                                    API.warpPlayerOutOfVehicle(player);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
             }
         }
 
@@ -125,7 +171,8 @@ namespace ProjetoRP.Modules.Vehicle
             Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(serverVeh).Vehicle;
             Character c = Business.Player.ActivePlayer.Get(player).Character;
 
-            if (VehBLL.Vehicle_HasKey(veh, c) || (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION && (veh.Owner_Id == c.Faction_Id)))
+            if (VehBLL.Vehicle_HasKey(veh, c) || (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION && (veh.Owner_Id == c.Faction_Id)) ||
+                (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER && (veh.Owner_Id == c.Career_Id)))
             {
                 if (veh.Engine == true)
                 {

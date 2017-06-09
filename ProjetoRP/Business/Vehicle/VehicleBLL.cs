@@ -28,7 +28,7 @@ namespace ProjetoRP.Business.Vehicle
             {
                 var av = new ActiveVehicle(v);
                 av.Status = Types.VehicleStatus.NotSpawned;
-                if (Vehicle_IsFactionOwned(v))
+                if (Vehicle_IsFactionOwned(v) || Vehicle_IsCareerOwned(v))
                 {                    
                     Vehicle_Spawn(v);
                 }
@@ -43,6 +43,11 @@ namespace ProjetoRP.Business.Vehicle
         public bool Vehicle_IsCharacterOwned(Entities.Vehicle.Vehicle veh)
         {
             return veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_CHARACTER;
+        }
+
+        public bool Vehicle_IsCareerOwned(Entities.Vehicle.Vehicle veh)
+        {
+            return veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER;
         }
 
         public bool Vehicle_IsSpawned(Entities.Vehicle.Vehicle veh)

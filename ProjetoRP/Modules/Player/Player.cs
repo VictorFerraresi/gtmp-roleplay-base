@@ -372,7 +372,7 @@ namespace ProjetoRP.Modules.Player
 
             using (var context = new DatabaseContext())
             {
-                Character cd = (from c in context.Characters where c.Id == character_id && c.Player.Id == id select c).Include(c => c.Faction).Include(c => c.Faction.Ranks).Include(c => c.Rank).AsNoTracking().Single();
+                Character cd = (from c in context.Characters where c.Id == character_id && c.Player.Id == id select c).Include(c => c.Faction).Include(c => c.Faction.Ranks).Include(c => c.Rank).Include(c => c.Career).AsNoTracking().Single();
 
                 var ac = ActivePlayer.Get(player);
                 ac.Character = cd;

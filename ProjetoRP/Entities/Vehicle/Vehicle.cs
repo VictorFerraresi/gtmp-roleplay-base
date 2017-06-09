@@ -12,7 +12,8 @@ namespace ProjetoRP.Entities.Vehicle
     {
         OWNER_TYPE_NULL = 0,
         OWNER_TYPE_CHARACTER = 1,
-        OWNER_TYPE_FACTION = 2
+        OWNER_TYPE_FACTION = 2,
+        OWNER_TYPE_CAREER = 3
     }
 
     public class Vehicle

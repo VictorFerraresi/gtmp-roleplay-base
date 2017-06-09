@@ -76,5 +76,12 @@ namespace ProjetoRP.Entities
         public int? Rank_Id { get; set; }
         [ForeignKey("Rank_Id")]
         public Faction.Rank Rank { get; set; }
+
+        public int? Career_Id { get; set; }
+        [ForeignKey("Career_Id")]
+        public Career.Career Career { get; set; }
+
+        public int? CareerRank { get; set; }
+        public int? CareerExperience { get; set; }
     }
 }

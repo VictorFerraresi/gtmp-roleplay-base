@@ -29,5 +29,7 @@ namespace ProjetoRP
         public DbSet<Entities.Property.Door> Doors { get; set; }
         public DbSet<Entities.Faction.Faction> Factions { get; set; }
         public DbSet<Entities.Faction.Rank> Ranks { get; set; }
+
+        public DbSet<Entities.Career.Career> Careers { get; set; }
     }
 }
