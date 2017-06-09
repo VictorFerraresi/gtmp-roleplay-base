@@ -39,6 +39,11 @@ namespace ProjetoRP.Business.Player
             PlayerServices.Remove(this);
         }
 
+        public PlayerService GetPlayerService()
+        {
+            return new PlayerService(this);
+        }
+
         public static ActivePlayer Create(Client client)
         {
             return new ActivePlayer(client);

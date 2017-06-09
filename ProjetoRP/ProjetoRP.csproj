@@ -117,6 +117,7 @@
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
     <Compile Include="Business\PlayerBLL.cs" />
+    <Compile Include="Business\Player\PlayerService.cs" />
     <Compile Include="Business\PropertyBLL.cs" />
     <Compile Include="Business\Player\ActivePlayer.cs" />
     <Compile Include="Configurations\Character.Designer.cs">
@@ -142,6 +143,7 @@
     <Compile Include="Entities\Faction\Faction.cs" />
     <Compile Include="Entities\Faction\Rank.cs" />
     <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\PlayerAttribute.cs" />
     <Compile Include="Entities\Property\Business.cs" />
     <Compile Include="Entities\Property\Door.cs" />
     <Compile Include="Entities\Property\House.cs" />
@@ -229,6 +231,14 @@
     <Compile Include="Migrations\201703180733114_AddSlotToContainer.cs" />
     <Compile Include="Migrations\201703180733114_AddSlotToContainer.Designer.cs">
       <DependentUpon>201703180733114_AddSlotToContainer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706090538226_AddPlayerAttribute.cs" />
+    <Compile Include="Migrations\201706090538226_AddPlayerAttribute.Designer.cs">
+      <DependentUpon>201706090538226_AddPlayerAttribute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706090724359_ChangePlayerAttributeExpiresAt.cs" />
+    <Compile Include="Migrations\201706090724359_ChangePlayerAttributeExpiresAt.Designer.cs">
+      <DependentUpon>201706090724359_ChangePlayerAttributeExpiresAt.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Admin\Admin.cs" />
@@ -337,6 +347,12 @@
     <EmbeddedResource Include="Migrations\201703180733114_AddSlotToContainer.resx">
       <DependentUpon>201703180733114_AddSlotToContainer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706090538226_AddPlayerAttribute.resx">
+      <DependentUpon>201706090538226_AddPlayerAttribute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706090724359_ChangePlayerAttributeExpiresAt.resx">
+      <DependentUpon>201706090724359_ChangePlayerAttributeExpiresAt.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Colors.Designer.cs</LastGenOutput>
@@ -374,8 +390,6 @@
     <PostBuildEvent>xcopy /y "$(ProjectDir)$(OutDir)ProjetoRP.dll" "$(SolutionDir)server\resources\projetorp"
 xcopy /y "$(ProjectDir)$(OutDir)ProjetoRP.dll.config"  "$(SolutionDir)server\resources\projetorp"
 xcopy /y "$(ProjectDir)$(OutDir)ProjetoRP.pdb"  "$(SolutionDir)server\resources\projetorp"
-
-PowerShell -ExecutionPolicy Unrestricted -File "$(SolutionDir)CreateServerResource.ps1" -SolutionDir "$(SolutionDir)"
 </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

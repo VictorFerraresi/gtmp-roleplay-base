@@ -9,6 +9,7 @@ using ProjetoRP.Types;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 
 namespace ProjetoRP.Modules.Player
@@ -33,7 +34,7 @@ namespace ProjetoRP.Modules.Player
 
         private void OnPlayerDisconnected(Client player, string reason)
         {
-            var ac = ActivePlayer.GetSpawned(player);
+            var ac = ActivePlayer.Get(player);
             if (null != ac) // Means that the player was spawned (has character instantiated)
             {
 
@@ -194,6 +195,40 @@ namespace ProjetoRP.Modules.Player
                             catch (System.InvalidOperationException) { }
                             catch (System.ArgumentNullException) { }
 
+                            Player_LoadData(sender);
+                            
+                            var cafl = ac.GetPlayerService().GetConflictingAttributesForLogin();
+
+                            if (cafl.Count > 0)
+                            {
+                                foreach(var reason in cafl)
+                                {
+                                    if(reason.Attribute == PlayerAttribute.AttributeType.Activated)
+                                    {
+                                        sender.sendChatMessage(Messages.player_account_not_activated);
+                                    }
+                                    else if(reason.Attribute == PlayerAttribute.AttributeType.Banned)
+                                    {
+                                        sender.sendChatMessage(String.Format(Messages.player_you_are_banned_until, reason.ExpiresAt));
+                                    }
+                                }
+
+                                Entities.Session ss = new Entities.Session
+                                {
+                                    Player = player,
+                                    Failed = true,
+                                    Ip = sender.address,
+                                    LoginAt = DateTime.UtcNow,
+                                    Rgsc = sender.socialClubName
+                                };
+
+                                context.Sessions.Add(ss);
+                                context.SaveChanges();
+
+                                ac.Client.kick(Messages.player_login_blocked);
+                                return;
+                            }
+
                             Entities.Session s = new Entities.Session
                             {
                                 Player = player,
@@ -208,7 +243,6 @@ namespace ProjetoRP.Modules.Player
 
                             sender.setData("PLAYER_SESSION", s.Id);
 
-                            Player_LoadData(sender);
                             Player_SetCharacterSelection(sender);
                             return;
                         }
@@ -335,7 +369,7 @@ namespace ProjetoRP.Modules.Player
 
             using (var context = new DatabaseContext())
             {
-                var player_data = (from p in context.Players where p.Id == id select p).AsNoTracking().Single();
+                var player_data = (from p in context.Players where p.Id == id select p).Include(t => t.PlayerAttributes).AsNoTracking().Single();
                 // AsNoTracking "detaches" the entity from the Context, allowing it to be kept in memory and used as please up until reattached again @Player_Save
                 var ac = ActivePlayer.Get(player);
                 ac.Player = player_data;
@@ -388,6 +422,7 @@ namespace ProjetoRP.Modules.Player
 
                 using (var context = new DatabaseContext())
                 {
+                    p.PlayerAttributes.Clear();
                     context.Players.Attach(p);
                     context.Entry(p).State = EntityState.Modified;
                     context.SaveChanges();
@@ -401,6 +436,7 @@ namespace ProjetoRP.Modules.Player
                         Vector3 pos = player.position;
                         int dimension = player.dimension;
 
+                        c.Player = p;
                         c.X = pos.X;
                         c.Y = pos.Y;
                         c.Z = pos.Z;
@@ -408,8 +444,9 @@ namespace ProjetoRP.Modules.Player
 
                         context.Characters.Attach(c);
                         context.Entry(c).State = EntityState.Modified;
-                        context.SaveChanges();
 
+                        context.SaveChanges();
+                        
                         context.Entry(c).State = EntityState.Detached;
                     }
                 }
