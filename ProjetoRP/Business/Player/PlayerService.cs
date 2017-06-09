@@ -44,5 +44,29 @@ namespace ProjetoRP.Business.Player
 
             return conflicts;
         }
+
+        public bool IsAdmin()
+        {
+            foreach (var attribute in ActivePlayer.Player.PlayerAttributes)
+            {
+                if (attribute.Attribute == Entities.PlayerAttribute.AttributeType.Admin || attribute.Attribute == Entities.PlayerAttribute.AttributeType.Owner)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool Is1337()
+        {
+            foreach (var attribute in ActivePlayer.Player.PlayerAttributes)
+            {
+                if (attribute.Attribute == Entities.PlayerAttribute.AttributeType.Owner)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
