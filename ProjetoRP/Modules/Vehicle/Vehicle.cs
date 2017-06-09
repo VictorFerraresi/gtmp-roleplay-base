@@ -1,20 +1,18 @@
-﻿using GTANetworkServer;
-using GTANetworkShared;
-using ProjetoRP.Entities;
-using System;
+﻿using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Constant;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Managers;
+using GrandTheftMultiplayer.Shared;
+using GrandTheftMultiplayer.Shared.Math;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace ProjetoRP.Modules.Vehicle
 {
     public class Vehicle : Script
     {
-        public List<GTANetworkServer.Vehicle> ServerVehicles = new List<GTANetworkServer.Vehicle>();
+        public List<GrandTheftMultiplayer.Server.Elements.Vehicle> ServerVehicles = new List<GrandTheftMultiplayer.Server.Elements.Vehicle>();
 
         public Vehicle()
         {
@@ -79,7 +77,7 @@ namespace ProjetoRP.Modules.Vehicle
             Vector3 pos = new Vector3(veh.X, veh.Y, veh.Z);
             Vector3 rot = new Vector3(veh.rX, veh.rY, veh.rZ);
 
-            GTANetworkServer.Vehicle serverVeh = API.createVehicle(API.vehicleNameToModel(veh.Name), pos, rot, veh.Color1, veh.Color2, veh.Dimension);
+            GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = API.createVehicle(API.vehicleNameToModel(veh.Name), pos, rot, veh.Color1, veh.Color2, veh.Dimension);
             API.setVehicleEngineStatus(serverVeh, veh.Engine);
             API.setVehicleLocked(serverVeh, veh.Locked);
             API.setVehicleHealth(serverVeh, veh.Health);
@@ -96,15 +94,15 @@ namespace ProjetoRP.Modules.Vehicle
             return veh.Character == character;
         }
 
-        private GTANetworkServer.Vehicle Vehicle_GetNearestInRange(Client player, double range)
+        private GrandTheftMultiplayer.Server.Elements.Vehicle Vehicle_GetNearestInRange(Client player, double range)
         {
             Vector3 playerPos = API.getEntityPosition(player);
 
-            GTANetworkServer.Vehicle nearestVeh = null;
+            GrandTheftMultiplayer.Server.Elements.Vehicle nearestVeh = null;
 
             double nearestDistance = range;
 
-            foreach (GTANetworkServer.Vehicle veh in ServerVehicles)
+            foreach (GrandTheftMultiplayer.Server.Elements.Vehicle veh in ServerVehicles)
             {
                 Vector3 vehPos = API.getEntityPosition(veh);
                 float distance = playerPos.DistanceTo(vehPos);
@@ -208,7 +206,7 @@ namespace ProjetoRP.Modules.Vehicle
         //[Command("trancar")]
         //public void LockCommand(Client player)
         //{
-        //    GTANetworkServer.Vehicle serverVeh = Vehicle_GetNearestInRange(player, 4.0);
+        //    GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = Vehicle_GetNearestInRange(player, 4.0);
 
         //    if (serverVeh == null)
         //    {
@@ -253,7 +251,7 @@ namespace ProjetoRP.Modules.Vehicle
         [Command("portamalas")]
         public void TrunkCommand(Client player, string action)
         {
-            GTANetworkServer.Vehicle serverVeh = Vehicle_GetNearestInRange(player, 2.0);
+            GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = Vehicle_GetNearestInRange(player, 2.0);
 
             if (serverVeh == null)
             {

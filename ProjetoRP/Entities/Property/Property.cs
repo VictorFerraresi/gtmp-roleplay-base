@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GrandTheftMultiplayer.Server.Elements;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GTANetworkServer;
-using GTANetworkShared;
 
 namespace ProjetoRP.Entities.Property
 {

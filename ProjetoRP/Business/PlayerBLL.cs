@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity;
-using GTANetworkServer;
-using GTANetworkShared;
-
-namespace ProjetoRP.Business
+﻿namespace ProjetoRP.Business
 {
     public class PlayerBLL
     {               
