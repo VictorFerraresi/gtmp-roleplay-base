@@ -4,13 +4,9 @@ using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared.Math;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ProjetoRP.Business.Player;
 using ProjetoRP.Business.Faction;
 using ProjetoRP.Business.Property;
-using ProjetoRP.Business.Vehicle;
 
 namespace ProjetoRP.Modules.Admin
 {

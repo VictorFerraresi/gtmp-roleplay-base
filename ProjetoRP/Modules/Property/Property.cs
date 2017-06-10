@@ -4,15 +4,7 @@ using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared.Math;
 using ProjetoRP.Business.Player;
 using ProjetoRP.Entities;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ProjetoRP.Business.Property;
-
 
 namespace ProjetoRP.Modules.Property
 {

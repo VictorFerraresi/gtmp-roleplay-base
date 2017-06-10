@@ -79,6 +79,15 @@ namespace ProjetoRP.Modules.Player {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ~r~Sua conta não está ativada. Verifique seu email ou contate um administrador..
+        /// </summary>
+        public static string player_account_not_activated {
+            get {
+                return ResourceManager.GetString("player_account_not_activated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Você está com o CEF desabilitado e sua experiência de jogo será afetada. Habilite-o nas opções.
         /// </summary>
         public static string player_cef_disabled {
@@ -129,6 +138,15 @@ namespace ProjetoRP.Modules.Player {
         public static string player_last_logins {
             get {
                 return ResourceManager.GetString("player_last_logins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seu login foi bloqueado..
+        /// </summary>
+        public static string player_login_blocked {
+            get {
+                return ResourceManager.GetString("player_login_blocked", resourceCulture);
             }
         }
         
@@ -201,6 +219,15 @@ namespace ProjetoRP.Modules.Player {
         public static string player_wrong_password {
             get {
                 return ResourceManager.GetString("player_wrong_password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ~r~Você está banido até {0}.
+        /// </summary>
+        public static string player_you_are_banned_until {
+            get {
+                return ResourceManager.GetString("player_you_are_banned_until", resourceCulture);
             }
         }
         

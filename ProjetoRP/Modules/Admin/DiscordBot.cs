@@ -1,10 +1,6 @@
-﻿using System;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Discord;
 
 namespace ProjetoRP.Modules.Admin

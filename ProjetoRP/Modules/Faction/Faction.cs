@@ -4,14 +4,9 @@ using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using ProjetoRP.Business.Player;
-using ProjetoRP.Entities;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using ProjetoRP.Business.Faction;
 

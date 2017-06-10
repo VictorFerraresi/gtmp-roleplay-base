@@ -125,6 +125,7 @@
     <Compile Include="Business\Career\TruckerCareerBLL.cs" />
     <Compile Include="Business\Item\CarKeyService.cs" />
     <Compile Include="Business\Item\ContainerService.cs" />
+    <Compile Include="Business\Player\PlayerService.cs" />
     <Compile Include="Business\Property\BusinessBLL.cs" />
     <Compile Include="Business\Property\DoorBLL.cs" />
     <Compile Include="Business\Faction\FactionBLL.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="DatabaseContext.cs" />
     <Compile Include="Entities\Career\Career.cs" />
     <Compile Include="Entities\Career\TruckRestrictions.cs" />
+    <Compile Include="Entities\PlayerAttribute.cs" />
     <Compile Include="Migrations\201706082238227_AddCareers.cs" />
     <Compile Include="Migrations\201706082238227_AddCareers.Designer.cs">
       <DependentUpon>201706082238227_AddCareers.cs</DependentUpon>

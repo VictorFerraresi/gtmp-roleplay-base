@@ -1,12 +1,6 @@
 ﻿using GrandTheftMultiplayer.Server.Elements;
-using ProjetoRP.Entities;
 using ProjetoRP.Types;
-using ProjetoRP.Exceptions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjetoRP.Business.Player
 {
@@ -37,6 +31,11 @@ namespace ProjetoRP.Business.Player
         public void Dispose()
         {
             PlayerServices.Remove(this);
+        }
+
+        public PlayerService GetPlayerService()
+        {
+            return new PlayerService(this);
         }
 
         public static ActivePlayer Create(Client client)

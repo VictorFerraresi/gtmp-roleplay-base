@@ -5,13 +5,8 @@ using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 using ProjetoRP.Entities;
-using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ProjetoRP.Business.Vehicle;
 using ProjetoRP.Business.Career;
 using ProjetoRP.Types;
@@ -25,7 +20,7 @@ namespace ProjetoRP.Modules.Vehicle
 
         public Vehicle()
         {
-            API.onResourceStart += OnResourceStart;            
+            API.onResourceStart += OnResourceStart;
             API.onClientEventTrigger += OnClientEventTrigger;
             API.onPlayerEnterVehicle += OnPlayerEnterVehicle;
         }
@@ -34,7 +29,7 @@ namespace ProjetoRP.Modules.Vehicle
         {
             API.consoleOutput(Messages.console_startup);
             VehBLL.LoadVehicles();
-        }        
+        }
 
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
         {
@@ -45,8 +40,8 @@ namespace ProjetoRP.Modules.Vehicle
 
                     Character c = Business.Player.ActivePlayer.Get(player).Character;
 
-                    Entities.Vehicle.Vehicle veh = Business.Vehicle.ActiveVehicle.GetBySQLID((int)data.Id).Vehicle;                                       
-                    
+                    Entities.Vehicle.Vehicle veh = Business.Vehicle.ActiveVehicle.GetBySQLID((int)data.Id).Vehicle;
+
                     if (VehBLL.Vehicle_IsOwner(c, veh))
                     {
                         if (!VehBLL.Vehicle_IsSpawned(veh))
@@ -66,27 +61,27 @@ namespace ProjetoRP.Modules.Vehicle
                     }
                     break;
 
-                case "CS_VEHICLE_TURN_ENGINE":                    
+                case "CS_VEHICLE_TURN_ENGINE":
                     EngineCommand(player);
                     break;
             }
         }
 
         private void OnPlayerEnterVehicle(Client player, NetHandle vehicle)
-        {            
+        {
             Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(vehicle).Vehicle;
-            Entities.Character c = Business.Player.ActivePlayer.Get(player).Character;            
-                        
+            Entities.Character c = Business.Player.ActivePlayer.Get(player).Character;
+
             if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION) //Entered a faction vehicle
-            {                
+            {
                 if (API.getPlayerVehicleSeat(player) == -1) //Driver
-                {                    
+                {
                     if (c.Faction_Id != veh.Owner_Id)
-                    {                        
+                    {
                         API.sendNotificationToPlayer(player, "Este veículo é restrito à uma facção!");
                         API.warpPlayerOutOfVehicle(player);
                     }
-                }                               
+                }
             }
             else if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER)
             {
@@ -105,9 +100,9 @@ namespace ProjetoRP.Modules.Vehicle
                         switch (type)
                         {
                             case Entities.Career.CareerType.Trucker:
-                                if(TruckerBLL.CanDriveTruck(c, veh))
+                                if (TruckerBLL.CanDriveTruck(c, veh))
                                 {
-                                    API.sendNotificationToPlayer(player, "Para começar a trabalhar, digite ~b~/caminhoneiro");                                    
+                                    API.sendNotificationToPlayer(player, "Para começar a trabalhar, digite ~b~/caminhoneiro");
                                 }
                                 else
                                 {
@@ -151,12 +146,12 @@ namespace ProjetoRP.Modules.Vehicle
                     else
                     {
                         API.triggerClientEvent(player, "SC_SHOW_VEHICLEMENU", API.toJson(vehs));
-                    }                    
+                    }
                     break;
 
                 case "estacionar":
                     break;
-            }            
+            }
         }
 
         [Command("motor")]
@@ -167,7 +162,7 @@ namespace ProjetoRP.Modules.Vehicle
                 API.sendChatMessageToPlayer(player, Messages.vehicle_not_driving);
                 return;
             }
-            NetHandle serverVeh = API.getPlayerVehicle(player);            
+            NetHandle serverVeh = API.getPlayerVehicle(player);
             Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(serverVeh).Vehicle;
             Character c = Business.Player.ActivePlayer.Get(player).Character;
 
@@ -185,12 +180,12 @@ namespace ProjetoRP.Modules.Vehicle
                     API.setVehicleEngineStatus(serverVeh, true);
                     veh.Engine = true;
                     API.sendNotificationToPlayer(player, "Motor ligado");
-                }                
+                }
             }
             else
             {
                 API.sendChatMessageToPlayer(player, Messages.vehicle_no_keys);
-            }        
+            }
         }
 
         [Command("veh")]
@@ -205,7 +200,7 @@ namespace ProjetoRP.Modules.Vehicle
         public void SkinCommand(Client player, long hash)
         {
             API.setPlayerSkin(player, (PedHash)hash);
-        }    
+        }
 
         [Command("portamalas")]
         public void TrunkCommand(Client player, string action)

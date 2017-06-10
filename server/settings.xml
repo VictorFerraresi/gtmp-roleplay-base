@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <config xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <servername>Simple GTA Network Server</servername>
+  <servername>Simple Grand Theft Multiplayer Server</servername>
   <serverport>4499</serverport>
   <maxplayers>50</maxplayers>
   <minclientversion>0.0.0.0</minclientversion>
   <minclientversion_auto_update>true</minclientversion_auto_update>
   <announce>true</announce>
   <password></password>
-  <masterserver>http://master.gtanet.work/</masterserver>
+  <masterserver>http://master.mta-v.net/api/</masterserver>
   <acl_enabled>true</acl_enabled>
   <loglevel>0</loglevel>
   <log>true</log>
@@ -22,5 +22,5 @@
   <upnp>true</upnp>
   <fqdn></fqdn>
   <conntimeout>false</conntimeout>
-  <allowcefdevtool>false</allowcefdevtool>
+  <allow_client_devtools>false</allow_client_devtools>
 </config>

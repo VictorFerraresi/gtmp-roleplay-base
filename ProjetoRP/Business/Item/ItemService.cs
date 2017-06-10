@@ -2,11 +2,7 @@
 using ProjetoRP.Entities.ItemPlacement;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Validation;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjetoRP.Business.Item
 {
@@ -112,7 +108,7 @@ namespace ProjetoRP.Business.Item
                 serviceType = Type.GetType(fullTypeName);
                 
             }
-            catch (Exception e)
+            catch 
             {
                 throw new Exceptions.Item.InvalidItemModelServiceException();
             }
