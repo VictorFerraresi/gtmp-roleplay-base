@@ -1,29 +1,35 @@
 ﻿using GrandTheftMultiplayer.Server.API;
-using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
+using ProjetoRP.Entities;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using ProjetoRP.Business.Vehicle;
+using ProjetoRP.Business.Career;
+using ProjetoRP.Types;
 
 namespace ProjetoRP.Modules.Vehicle
 {
     public class Vehicle : Script
     {
-        public List<GrandTheftMultiplayer.Server.Elements.Vehicle> ServerVehicles = new List<GrandTheftMultiplayer.Server.Elements.Vehicle>();
+        private VehicleBLL VehBLL = new VehicleBLL();
+        private TruckerCareerBLL TruckerBLL = new TruckerCareerBLL();
 
         public Vehicle()
         {
-            API.onResourceStart += OnResourceStart;            
+            API.onResourceStart += OnResourceStart;
             API.onClientEventTrigger += OnClientEventTrigger;
+            API.onPlayerEnterVehicle += OnPlayerEnterVehicle;
         }
 
         public void OnResourceStart()
         {
             API.consoleOutput(Messages.console_startup);
-        }        
+            VehBLL.LoadVehicles();
+        }
 
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
         {
@@ -32,17 +38,16 @@ namespace ProjetoRP.Modules.Vehicle
                 case "CS_VEHICLE_SPAWN":
                     var data = API.fromJson((string)args[0]);
 
-                    Entities.Vehicle veh = new Entities.Vehicle();
-                    veh.Id = (int)data.Id;                    
-                    veh.Character = player.getData("CHARACTER_DATA");
-                    veh.Name = (string)data.Name;
-                    
-                    if (Vehicle_IsOwner(veh.Character, veh))
+                    Character c = Business.Player.ActivePlayer.Get(player).Character;
+
+                    Entities.Vehicle.Vehicle veh = Business.Vehicle.ActiveVehicle.GetBySQLID((int)data.Id).Vehicle;
+
+                    if (VehBLL.Vehicle_IsOwner(c, veh))
                     {
-                        if (!Vehicle_IsSpawned(veh))
+                        if (!VehBLL.Vehicle_IsSpawned(veh))
                         {
-                            veh = SQL_FetchVehicleData(veh.Id);
-                            Vehicle_Spawn(veh);
+                            veh = VehBLL.SQL_FetchVehicleData(veh.Id);
+                            VehBLL.Vehicle_Spawn(veh);
                             API.triggerClientEvent(player, "SC_CLOSE_VEHICLEMENU");
                         }
                         else
@@ -55,108 +60,67 @@ namespace ProjetoRP.Modules.Vehicle
                         Vehicle_KickForInvalidTrigger(player);
                     }
                     break;
+
+                case "CS_VEHICLE_TURN_ENGINE":
+                    EngineCommand(player);
+                    break;
             }
         }
 
-        private bool Vehicle_IsSpawned(Entities.Vehicle veh)
+        private void OnPlayerEnterVehicle(Client player, NetHandle vehicle)
         {
-            List<NetHandle> vehicles = API.getAllVehicles();
-            foreach (NetHandle loopveh in vehicles)
+            Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(vehicle).Vehicle;
+            Entities.Character c = Business.Player.ActivePlayer.Get(player).Character;
+
+            if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION) //Entered a faction vehicle
             {
-                Entities.Vehicle toCheck = API.getEntityData(loopveh, "VEHICLE_DATA");
-                if (toCheck.Id == veh.Id && toCheck.Spawned)
+                if (API.getPlayerVehicleSeat(player) == -1) //Driver
                 {
-                    return true;
+                    if (c.Faction_Id != veh.Owner_Id)
+                    {
+                        API.sendNotificationToPlayer(player, "Este veículo é restrito à uma facção!");
+                        API.warpPlayerOutOfVehicle(player);
+                    }
                 }
             }
-            return false;
-        }
-
-        private void Vehicle_Spawn(Entities.Vehicle veh)
-        {
-            Vector3 pos = new Vector3(veh.X, veh.Y, veh.Z);
-            Vector3 rot = new Vector3(veh.rX, veh.rY, veh.rZ);
-
-            GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = API.createVehicle(API.vehicleNameToModel(veh.Name), pos, rot, veh.Color1, veh.Color2, veh.Dimension);
-            API.setVehicleEngineStatus(serverVeh, veh.Engine);
-            API.setVehicleLocked(serverVeh, veh.Locked);
-            API.setVehicleHealth(serverVeh, veh.Health);
-
-            veh.Spawned = true;
-
-            serverVeh.setData("VEHICLE_DATA", veh);
-
-            ServerVehicles.Add(serverVeh);
-        }
-
-        private bool Vehicle_IsOwner(Entities.Character character, Entities.Vehicle veh)
-        {
-            return veh.Character == character;
-        }
-
-        private GrandTheftMultiplayer.Server.Elements.Vehicle Vehicle_GetNearestInRange(Client player, double range)
-        {
-            Vector3 playerPos = API.getEntityPosition(player);
-
-            GrandTheftMultiplayer.Server.Elements.Vehicle nearestVeh = null;
-
-            double nearestDistance = range;
-
-            foreach (GrandTheftMultiplayer.Server.Elements.Vehicle veh in ServerVehicles)
+            else if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER)
             {
-                Vector3 vehPos = API.getEntityPosition(veh);
-                float distance = playerPos.DistanceTo(vehPos);
-
-                if (distance <= range && distance <= nearestDistance)
+                if (API.getPlayerVehicleSeat(player) == -1) //Driver
                 {
-                    nearestDistance = distance;
-                    nearestVeh = veh;
+                    if (c.Career_Id != veh.Owner_Id)
+                    {
+                        string career_name = Business.GlobalVariables.Instance.ServerCareers.FirstOrDefault(x => x.Id == veh.Owner_Id).Name;
+
+                        API.sendNotificationToPlayer(player, "Este veículo é restrito a um emprego! (" + career_name + ")");
+                        API.warpPlayerOutOfVehicle(player);
+                    }
+                    else
+                    {
+                        Entities.Career.CareerType type = Business.GlobalVariables.Instance.ServerCareers.FirstOrDefault(x => x.Id == veh.Owner_Id).Type;
+                        switch (type)
+                        {
+                            case Entities.Career.CareerType.Trucker:
+                                if (TruckerBLL.CanDriveTruck(c, veh))
+                                {
+                                    API.sendNotificationToPlayer(player, "Para começar a trabalhar, digite ~b~/caminhoneiro");
+                                }
+                                else
+                                {
+                                    TruckerRank rank;
+                                    string needed_rank;
+                                    TruckRestrictionsDictionary.TruckMinRank.TryGetValue(veh.Name, out rank);
+
+                                    TruckerRankDictionary.TruckerRankNames.TryGetValue(rank, out needed_rank);
+
+                                    API.sendNotificationToPlayer(player, "Este veículo é restrito a um cargo! (" + needed_rank + ")");
+                                    API.warpPlayerOutOfVehicle(player);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
-            }
-            return nearestVeh;
-        }      
-
-        private bool Vehicle_IsLocked(Entities.Vehicle veh)
-        {
-            return veh.Locked;
-        }
-
-
-        // SQL Functions
-        private Entities.Vehicle SQL_FetchVehicleData(int vehicle_id)
-        {
-            Entities.Vehicle veh = null;
-
-            using (var context = new DatabaseContext())
-            {
-                veh = (from v in context.Vehicles where v.Id == vehicle_id select v).AsNoTracking().Single();
-                // AsNoTracking "detaches" the entity from the Context, allowing it to be kept in memory and used as please up until reattached again @Player_Save                                
-            }
-
-            return veh;
-        }
-
-        private List<Entities.Vehicle> SQL_FetchVehiclesFromCharacter(Entities.Character character)
-        {
-            List<Entities.Vehicle> vehs = new List<Entities.Vehicle>();
-
-            using (var context = new DatabaseContext())
-            {
-                vehs = (from v in context.Vehicles where v.Character.Id == character.Id select v).Include(v => v.Character).AsNoTracking().ToList();
-                // AsNoTracking "detaches" the entity from the Context, allowing it to be kept in memory and used as please up until reattached again @Player_Save                                
-            }            
-            return vehs;
-        }
-
-        public void Vehicle_Save(Entities.Vehicle veh)
-        {
-            using (var context = new DatabaseContext())
-            {
-                context.Database.Log = s => API.shared.consoleOutput(s);
-
-                context.Vehicles.Attach(veh);
-                context.Entry(veh).State = EntityState.Modified;
-                context.SaveChanges();
             }
         }
 
@@ -168,10 +132,26 @@ namespace ProjetoRP.Modules.Vehicle
 
         //Commands
         [Command("v")]
-        public void VCommand(Client player)
-        {            
-            List<Entities.Vehicle> vehs = SQL_FetchVehiclesFromCharacter(player.getData("CHARACTER_DATA"));            
-            API.triggerClientEvent(player, "SC_SHOW_VEHICLEMENU", API.toJson(vehs));
+        public void VCommand(Client player, string option)
+        {
+            switch (option)
+            {
+                case "lista":
+                    Character c = Business.Player.ActivePlayer.Get(player).Character;
+                    List<Entities.Vehicle.Vehicle> vehs = VehBLL.SQL_FetchVehiclesFromCharacter(c);
+                    if (!vehs.Any())
+                    {
+                        API.sendChatMessageToPlayer(player, "Você não possui nenhum veículo!");
+                    }
+                    else
+                    {
+                        API.triggerClientEvent(player, "SC_SHOW_VEHICLEMENU", API.toJson(vehs));
+                    }
+                    break;
+
+                case "estacionar":
+                    break;
+            }
         }
 
         [Command("motor")]
@@ -183,56 +163,30 @@ namespace ProjetoRP.Modules.Vehicle
                 return;
             }
             NetHandle serverVeh = API.getPlayerVehicle(player);
-            Entities.Vehicle veh = API.getEntityData(serverVeh, "VEHICLE_DATA");
+            Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(serverVeh).Vehicle;
+            Character c = Business.Player.ActivePlayer.Get(player).Character;
 
-            if (!Vehicle_IsOwner(player.getData("CHARACTER_DATA"), veh))
+            if (VehBLL.Vehicle_HasKey(veh, c) || (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION && (veh.Owner_Id == c.Faction_Id)) ||
+                (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER && (veh.Owner_Id == c.Career_Id)))
             {
-                API.sendChatMessageToPlayer(player, Messages.vehicle_no_keys);
-                return;
-            }
-
-            if (veh.Engine == true)
-            {
-                API.setVehicleEngineStatus(serverVeh, false);
-                veh.Engine = false;
+                if (veh.Engine == true)
+                {
+                    API.setVehicleEngineStatus(serverVeh, false);
+                    veh.Engine = false;
+                    API.sendNotificationToPlayer(player, "Motor desligado");
+                }
+                else
+                {
+                    API.setVehicleEngineStatus(serverVeh, true);
+                    veh.Engine = true;
+                    API.sendNotificationToPlayer(player, "Motor ligado");
+                }
             }
             else
             {
-                API.setVehicleEngineStatus(serverVeh, true);
-                veh.Engine = true;
+                API.sendChatMessageToPlayer(player, Messages.vehicle_no_keys);
             }
         }
-
-        //[Command("trancar")]
-        //public void LockCommand(Client player)
-        //{
-        //    GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = Vehicle_GetNearestInRange(player, 4.0);
-
-        //    if (serverVeh == null)
-        //    {
-        //        API.sendChatMessageToPlayer(player, Messages.vehicle_not_near_any);
-        //        return;
-        //    }
-
-        //    Entities.Vehicle veh = API.getEntityData(serverVeh, "VEHICLE_DATA");
-
-        //    if (!Vehicle_IsOwner(player.getData("CHARACTER_DATA"), veh)) //GETCHARID
-        //    {
-        //        API.sendChatMessageToPlayer(player, Messages.vehicle_no_keys);
-        //        return;
-        //    }
-
-        //    if (veh.Locked == true)
-        //    {
-        //        API.setVehicleLocked(serverVeh, false);
-        //        veh.Locked = false;
-        //    }
-        //    else
-        //    {
-        //        API.setVehicleLocked(serverVeh, true);
-        //        veh.Locked = true;
-        //    }
-        //}
 
         [Command("veh")]
         public void VehCommand(Client player, string name, int color1, int color2)
@@ -246,12 +200,12 @@ namespace ProjetoRP.Modules.Vehicle
         public void SkinCommand(Client player, long hash)
         {
             API.setPlayerSkin(player, (PedHash)hash);
-        }    
+        }
 
         [Command("portamalas")]
         public void TrunkCommand(Client player, string action)
         {
-            GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = Vehicle_GetNearestInRange(player, 2.0);
+            GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = VehBLL.Vehicle_GetNearestInRange(player, 2.0);
 
             if (serverVeh == null)
             {
@@ -259,12 +213,12 @@ namespace ProjetoRP.Modules.Vehicle
                 return;
             }
 
-            Entities.Vehicle veh = API.getEntityData(serverVeh, "VEHICLE_DATA");
+            Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(serverVeh).Vehicle;
 
             switch (action)
             {
                 case "abrir":
-                    if (Vehicle_IsLocked(veh))
+                    if (VehBLL.Vehicle_IsLocked(veh))
                     {
                         API.sendChatMessageToPlayer(player, Messages.vehicle_locked);
                         return;
@@ -277,6 +231,7 @@ namespace ProjetoRP.Modules.Vehicle
                     else
                     {
                         serverVeh.openDoor(5);
+                        API.sendNotificationToPlayer(player, "Portamalas aberto");
                     }
                     break;
                 case "fechar":
@@ -288,6 +243,7 @@ namespace ProjetoRP.Modules.Vehicle
                     else
                     {
                         serverVeh.closeDoor(5);
+                        API.sendNotificationToPlayer(player, "Portamalas fechado");
                     }
                     break;
                 case "ver":

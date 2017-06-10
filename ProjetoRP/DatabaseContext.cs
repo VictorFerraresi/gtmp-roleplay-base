@@ -19,15 +19,18 @@ namespace ProjetoRP
         public DbSet<Player> Players { get; set; }
         public DbSet<Character> Characters { get; set; }
         public DbSet<Session> Sessions { get; set; }
+        public DbSet<PlayerAttribute> Attributes { get; set; }
 
         public DbSet<Item> Items { get; set; }
         public DbSet<Placement> ItemsPlacement { get; set; }
 
-        public DbSet<Vehicle> Vehicles { get; set; }        
+        public DbSet<Entities.Vehicle.Vehicle> Vehicles { get; set; }        
 
         public DbSet<Entities.Property.Property> Properties { get; set; }
         public DbSet<Entities.Property.Door> Doors { get; set; }
         public DbSet<Entities.Faction.Faction> Factions { get; set; }
         public DbSet<Entities.Faction.Rank> Ranks { get; set; }
+
+        public DbSet<Entities.Career.Career> Careers { get; set; }
     }
 }

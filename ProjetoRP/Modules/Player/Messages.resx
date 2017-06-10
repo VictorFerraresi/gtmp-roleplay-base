@@ -123,6 +123,9 @@
   <data name="console_startup" xml:space="preserve">
     <value>Módulo Player carregado!</value>
   </data>
+  <data name="player_account_not_activated" xml:space="preserve">
+    <value>~r~Sua conta não está ativada. Verifique seu email ou contate um administrador.</value>
+  </data>
   <data name="player_cef_disabled" xml:space="preserve">
     <value>Você está com o CEF desabilitado e sua experiência de jogo será afetada. Habilite-o nas opções</value>
   </data>
@@ -140,6 +143,9 @@
   </data>
   <data name="player_last_logins" xml:space="preserve">
     <value>Seu último login foi {0} pelo IP {1}. Desde então, você teve {2} tentativas de login falhas.</value>
+  </data>
+  <data name="player_login_blocked" xml:space="preserve">
+    <value>Seu login foi bloqueado.</value>
   </data>
   <data name="player_login_success" xml:space="preserve">
     <value>Você fez o login com sucesso!</value>
@@ -170,5 +176,8 @@
   </data>
   <data name="player_your_id_is" xml:space="preserve">
     <value>Você está logado como ID {0}</value>
+  </data>
+  <data name="player_you_are_banned_until" xml:space="preserve">
+    <value>~r~Você está banido até {0}</value>
   </data>
 </root>

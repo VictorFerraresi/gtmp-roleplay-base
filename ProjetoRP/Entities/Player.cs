@@ -28,5 +28,6 @@ namespace ProjetoRP.Entities
         public string Email { get; set; }
 
         virtual public ICollection<Character> Characters { get; set; }
+        virtual public ICollection<PlayerAttribute> PlayerAttributes { get; set; }
     }
 }

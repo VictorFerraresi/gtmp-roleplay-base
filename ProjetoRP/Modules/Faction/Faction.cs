@@ -1,22 +1,21 @@
 ﻿using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Managers;
+using GrandTheftMultiplayer.Shared;
 using ProjetoRP.Business.Player;
-using ProjetoRP.Entities;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using ProjetoRP.Business.Faction;
 
 
 namespace ProjetoRP.Modules.Faction
 {
     public class Faction : Script
     {
-        private Business.FactionBLL FacBLL = new Business.FactionBLL();
+        private FactionBLL FacBLL = new FactionBLL();
 
         public Faction()
         {
@@ -34,19 +33,80 @@ namespace ProjetoRP.Modules.Faction
         {
             switch (eventName)
             {
+                case "CS_SIREN_TOGGLE":
+                    NetHandle vehHandle = API.getPlayerVehicle(player);                                                           
+                    if (!API.isPlayerInAnyVehicle(player) || API.getPlayerVehicleSeat(player) != -1 || !API.getVehicleSirenState(vehHandle))
+                    {
+                        return;
+                    }
+
+                    bool siren = API.fetchNativeFromPlayer<bool>(player, Hash._IS_VEHICLE_SIREN_SOUND_ON, vehHandle);
+
+                    GrandTheftMultiplayer.Server.Elements.Vehicle v = Business.Vehicle.ActiveVehicle.GetSpawned(vehHandle).VehicleHandle;
+
+                    v.setSyncedData("SIREN_SOUND_STATUS", !siren);
+
+                    API.sendNativeToAllPlayers(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, vehHandle, siren);                    
+
+                    break;
                 case "CS_EDIT_RANKS_SUBMIT":
+                    List<Entities.Faction.Rank> ranks = JArray.Parse((string)args[0]).ToObject<List<Entities.Faction.Rank>>();
+                                        
                     var ac = ActivePlayer.GetSpawned(player);
                     if (ac == null) return;
 
-                    API.sendChatMessageToPlayer(player, (string)args[0]);
-                    var dataer = API.fromJson((string)args[0]);
+                    Entities.Character c = ac.Character;
 
-                    foreach(var rank in dataer.ranks)
+                    foreach(var rank in ranks)
                     {
-                        string name = rank.name;
-                        API.sendChatMessageToPlayer(player, name);
-                    }                                        
+                        Entities.Faction.Rank oldRank = c.Faction.Ranks.FirstOrDefault(r => r.Id == rank.Id);
 
+                        if (oldRank == null)
+                        {
+                            rank.Faction = c.Faction;
+                            rank.Faction_Id = (int)c.Faction_Id;
+                            c.Faction.Ranks.Add(rank);
+                            FacBLL.Rank_Create(rank);
+                        }
+                        else
+                        {
+                            oldRank.Level = rank.Level;
+                            oldRank.Name = rank.Name;
+                            FacBLL.Rank_Save(oldRank);
+                        }
+                    }
+                                        
+                    foreach (var scriptRank in c.Faction.Ranks.Reverse())
+                    {
+                        Entities.Faction.Rank vueRank = ranks.FirstOrDefault(r => r.Id == scriptRank.Id);
+
+                        if (vueRank == null)
+                        {
+                            c.Faction.Ranks.Remove(scriptRank);
+                            FacBLL.Rank_Delete(scriptRank);
+                            //Need to deal with players that had a deleted rank
+                        }
+                    }
+
+                    API.call("Ui", "evalUi", player, "rankedit_app.display=false;rankedit_app.blocked=false");
+                    API.call("Ui", "fixCursor", player, false);
+                    API.sendChatMessageToPlayer(player, "Você editou os ranks com sucesso!");
+                    break;
+
+                case "CS_EDIT_RANKS_CANCEL":
+                    API.call("Ui", "evalUi", player, "rankedit_app.display=false;rankedit_app.blocked=false");
+                    API.call("Ui", "fixCursor", player, false);
+                    API.sendChatMessageToPlayer(player, "Você cancelou a edição dos ranks e nenhuma alteração foi salva!");
+                    break;
+
+                case "CS_SHOW_FACTION_MEMBERS_CLOSE":
+                    API.call("Ui", "evalUi", player, "factionmembers_app.display=false;factionmembers_app.blocked=false");
+                    API.call("Ui", "fixCursor", player, false);
+                    break;
+
+                case "CS_SHOW_FACTIONS_CLOSE":
+                    API.call("Ui", "evalUi", player, "showfactions_app.display=false;showfactions_app.blocked=false");
+                    API.call("Ui", "fixCursor", player, false);
                     break;
             }
         }
@@ -56,39 +116,350 @@ namespace ProjetoRP.Modules.Faction
             player.kick(Messages.player_kicked_inconsistency);
         }
 
-        //Commands
+        //Faction Leader Commands
         [Command("editarrank", GreedyArg = true)]
-        public void CreateFactionCommand(Client sender)
+        public void EditRankCommand(Client sender)
         {
             var ac = ActivePlayer.GetSpawned(sender);
             if (ac == null) return;
 
             Entities.Character c = ac.Character;
 
-            if(c.Faction == null || !FacBLL.Faction_IsLeader(c, c.Faction))
+            if (c.Faction == null || !FacBLL.Faction_IsLeader(c, c.Faction))
             {
                 API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
             }
             else
-            {              
-                dynamic ranks = new List<System.Dynamic.ExpandoObject>();
+            {
+                dynamic ranks = new List<System.Dynamic.ExpandoObject>();                
 
-                foreach(Entities.Faction.Rank r in c.Faction.Ranks)
-                {                    
+                List<Entities.Faction.Rank> orderedByLevelDesc = c.Faction.Ranks.OrderByDescending(r => r.Level).ToList();
+
+                foreach (Entities.Faction.Rank r in orderedByLevelDesc)
+                {
                     dynamic dyn = new System.Dynamic.ExpandoObject();
 
-                    dyn.id = r.Id;                    
+                    dyn.id = r.Id;
                     dyn.name = r.Name;
                     dyn.level = r.Level;
                     dyn.leader = r.Leader;
 
-                    ranks.Add(dyn);                    
+                    ranks.Add(dyn);
                 }
 
-                string _in = API.toJson(ranks);                
+                string _in = API.toJson(ranks);
                 API.call("Ui", "fixCursor", sender, true);
                 API.call("Ui", "evalUi", sender, "rankedit_app.ranks = " + _in + ";rankedit_app.display=true;");
             }
+        }
+
+        [Command("demitir")]
+        public void FireCommand(Client sender, int targetid)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
+
+            if (c.Faction == null || !FacBLL.Faction_IsLeader(c, c.Faction))
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {
+                var targetAc = ActivePlayer.GetSpawned(targetid);
+
+                if (null == targetAc)
+                {
+                    API.sendChatMessageToPlayer(sender, "Escolha um playerid válido!");
+                }
+                else
+                {
+                    if(targetAc.Character.Faction_Id != c.Faction_Id)
+                    {
+                        API.sendChatMessageToPlayer(sender, "Este jogador não é da sua facção!");
+                    }
+                    else
+                    {
+                        if(targetAc.Character.Rank.Level >= c.Rank.Level)
+                        {
+                            API.sendChatMessageToPlayer(sender, "Este jogador possui um rank maior que o seu!");
+                        }
+                        else
+                        {
+                            Client targetC = targetAc.Client;
+
+                            targetAc.Character.Rank = null;
+                            targetAc.Character.Rank_Id = null;
+                            targetAc.Character.Faction = null;
+                            targetAc.Character.Faction_Id = null;
+                            API.sendChatMessageToPlayer(sender, "Você demitiu o jogador " + targetAc.Character.Name + " da sua facção!");
+                            API.sendChatMessageToPlayer(targetC, "Você foi demitido da facção pelo líder " + c.Name);
+                        }
+                    }
+                }
+            }
+        }
+
+        [Command("rank")]
+        public void SetRankCommand(Client sender, int targetid, int rankid)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
+
+            if (c.Faction == null || !FacBLL.Faction_IsLeader(c, c.Faction))
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {
+                var targetAc = ActivePlayer.GetSpawned(targetid);
+
+                if (null == targetAc)
+                {
+                    API.sendChatMessageToPlayer(sender, "Escolha um playerid válido!");
+                }
+                else
+                {
+                    if (targetAc.Character.Faction_Id != c.Faction_Id)
+                    {
+                        API.sendChatMessageToPlayer(sender, "Este jogador não é da sua facção!");
+                    }
+                    else
+                    {
+                        if (targetAc.Character.Rank.Level >= c.Rank.Level)
+                        {
+                            API.sendChatMessageToPlayer(sender, "Este jogador possui um rank maior que o seu!");
+                        }
+                        else
+                        {
+                            Entities.Faction.Rank rank = FacBLL.Faction_GetRankByLevel(c.Faction, rankid);
+
+                            if(null == rank)
+                            {
+                                API.sendChatMessageToPlayer(sender, "Este rank não existe!");
+                            }
+                            else if(rank.Level > c.Rank.Level)
+                            {
+                                API.sendChatMessageToPlayer(sender, "Você não pode promover a um rank maior do que o seu!");
+                            }
+                            else
+                            {
+                                Client targetC = targetAc.Client;
+
+                                targetAc.Character.Rank = rank;
+                                targetAc.Character.Rank_Id = rank.Id;
+                                                                
+                                API.sendChatMessageToPlayer(sender, "Você setou o rank do jogador " + targetAc.Character.Name + " para " + rank.Name);
+                                API.sendChatMessageToPlayer(targetC, "O líder " + c.Name + " setou o seu rank para " + rank.Name);
+                            }                            
+                        }
+                    }
+                }
+            }
+        }
+
+        [Command("convidar")]
+        public void InviteCommand(Client sender, int targetid)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
+
+            if (c.Faction == null || !FacBLL.Faction_IsLeader(c, c.Faction))
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {
+                var targetAc = ActivePlayer.GetSpawned(targetid);
+
+                if (null == targetAc)
+                {
+                    API.sendChatMessageToPlayer(sender, "Escolha um playerid válido!");
+                }
+                else
+                {
+                    if (targetAc.Character.Faction_Id != null)
+                    {
+                        API.sendChatMessageToPlayer(sender, "Este jogador já está em uma facção!");
+                    }
+                    else
+                    {
+                        Entities.Faction.Rank rank = FacBLL.Faction_GetRankByLevel(c.Faction, 1);
+
+                        if (null == rank)
+                        {
+                            API.sendChatMessageToPlayer(sender, "Configure um rank para a facção antes de convidar membros!");
+                        }
+                        else
+                        {
+                            Client targetC = targetAc.Client;
+
+                            targetC.setData("FACTION_INVITE", c.Faction);
+
+                            API.sendChatMessageToPlayer(sender, "Você convidou o jogador " + targetAc.Character.Name + " para a facção!");
+                            API.sendChatMessageToPlayer(targetC, "O líder " + c.Name + " te convidou para a facção " + c.Faction.Name);
+                            API.sendChatMessageToPlayer(targetC, "Digite \"/aceitar faccao\" para aceitar o convite");
+                        }
+                    }
+                }
+            }
+        }
+
+        //General Faction Commands
+        [Command("f", GreedyArg = true)]
+        public void FactionChatCommand(Client sender, string msg)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;            
+
+            Entities.Character c = ac.Character;
+
+            if (c.Faction == null)
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {
+                FacBLL.Faction_SendChatMessage(c, msg);
+            }
+        }
+
+        [Command("membros")]
+        public void SeeMembersCommand(Client sender)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
+
+            if (c.Faction == null)
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {
+                dynamic data = new System.Dynamic.ExpandoObject();
+
+                dynamic characters = new List<System.Dynamic.ExpandoObject>();
+
+                List<Entities.Character> orderedByRankDesc = new List<Entities.Character>();
+
+                foreach (var player in API.shared.getAllPlayers())
+                {
+                    Business.Player.ActivePlayer ac2 = Business.Player.ActivePlayer.Get(player);
+
+                    Entities.Character c2 = ac2.Character;
+
+                    if (c2.Faction_Id == c.Faction.Id)
+                    {
+                        orderedByRankDesc.Add(c2);
+                    }
+                }
+
+                orderedByRankDesc.Sort((x, y) => y.Rank.Level.CompareTo(x.Rank.Level));
+
+                foreach (Entities.Character c2 in orderedByRankDesc)
+                {
+                    dynamic dyn = new System.Dynamic.ExpandoObject();
+
+                    dyn.id = c2.Id;
+                    dyn.activeId = Business.Player.ActivePlayer.Get(c2).Id;
+                    dyn.name = c2.Name;
+                    dyn.rank = c2.Rank.Name;
+
+                    characters.Add(dyn);
+                }
+
+                data.characters = characters;
+                data.faction = c.Faction.Name;
+
+                string _in = API.shared.toJson(data);
+                API.call("Ui", "fixCursor", sender, true);
+                API.call("Ui", "evalUi", sender, "factionmembers_app.in = " + _in + ";factionmembers_app.display=true;");
+            }
+        }
+
+        [Command("faccoes")]
+        public void SeeFactionsCommand(Client sender)
+        {
+            if (ActivePlayer.GetSpawned(sender) == null) return;
+
+            dynamic data = new System.Dynamic.ExpandoObject();
+
+            dynamic factions = new List<System.Dynamic.ExpandoObject>();            
+
+            foreach (Entities.Faction.Faction fac in Business.GlobalVariables.Instance.ServerFactions)
+            {
+                dynamic dyn = new System.Dynamic.ExpandoObject();
+                                
+                dyn.name = fac.Name;
+                dyn.onlineMembers = FacBLL.Faction_GetOnlineMemberCount(fac);
+                dyn.totalMembers = FacBLL.Faction_GetMemberCount(fac);
+
+                factions.Add(dyn);
+            }
+
+            data.factions = factions;            
+
+            string _in = API.shared.toJson(data);
+            API.call("Ui", "fixCursor", sender, true);
+            API.call("Ui", "evalUi", sender, "showfactions_app.in = " + _in + ";showfactions_app.display=true;");
+        }
+
+        //Police Faction Commands
+        [Command("m", GreedyArg = true)]
+        public void MegaphoneCommand(Client sender, string msg)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
+
+            if (c.Faction == null || (c.Faction.Type != Entities.Faction.FactionType.FACTION_TYPE_POLICE && c.Faction.Type != Entities.Faction.FactionType.FACTION_TYPE_EMS))
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {
+                string finalmsg = String.Format("[{0} {1}:o< {2}]", c.Rank.Name, c.Name, msg);
+
+                Business.Utils.ProxDetector(30.0f, sender, finalmsg, "~#FFFF00~", "~#FFFF00~", "~#FFFF00~", "~#FFFF00~", "~#FFFF00~");
+            }
+        }
+
+        [Command("dep", GreedyArg = true)]
+        public void DepartmentRadioCommand(Client sender, string msg)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
+
+            if (c.Faction == null || (c.Faction.Type != Entities.Faction.FactionType.FACTION_TYPE_POLICE && c.Faction.Type != Entities.Faction.FactionType.FACTION_TYPE_EMS))
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {
+                string finalmsg = String.Format("*[{0}] {1} {2}: {3}", c.Faction.Acro, c.Rank.Name, c.Name, msg);
+
+                FacBLL.Faction_SendDepartmentMessage(finalmsg);
+
+                finalmsg = String.Format("(Rádio) {0} diz: {1}", c.Name, msg);
+                Business.Utils.ExclusiveProxDetector(30.0f, sender, finalmsg, "~#FFFFFF~", "~#C8C8C8~", "~#AAAAAA~", "~#8C8C8C~", "~#6E6E6E~");
+            }
+        }
+
+        [Command("arma")]
+        public void GunCommand(Client sender)
+        {
+            API.givePlayerWeapon(sender, WeaponHash.AssaultRifle, 10000, true, true);
+            API.givePlayerWeapon(sender, WeaponHash.CombatPistol, 10000, true, true);
         }
     }
 }

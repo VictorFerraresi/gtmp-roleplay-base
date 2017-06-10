@@ -173,5 +173,6 @@ namespace ProjetoRP.Business.Item
 
         public abstract void Character_PostEquipped(Character character, Types.EquipSlot slot);
         public abstract void Character_Activate(Character character);
+
     }
 }

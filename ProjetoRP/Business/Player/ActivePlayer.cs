@@ -1,12 +1,6 @@
-﻿using ProjetoRP.Entities;
+﻿using GrandTheftMultiplayer.Server.Elements;
 using ProjetoRP.Types;
-using ProjetoRP.Exceptions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GrandTheftMultiplayer.Server.Elements;
 
 namespace ProjetoRP.Business.Player
 {
@@ -39,6 +33,11 @@ namespace ProjetoRP.Business.Player
             PlayerServices.Remove(this);
         }
 
+        public PlayerService GetPlayerService()
+        {
+            return new PlayerService(this);
+        }
+
         public static ActivePlayer Create(Client client)
         {
             return new ActivePlayer(client);
@@ -59,7 +58,7 @@ namespace ProjetoRP.Business.Player
         public static ActivePlayer GetSpawned(int id)
         {
             var ac = Get(id);
-            if (ac.Status == PlayerStatus.Spawned)
+            if (null != ac && ac.Status == PlayerStatus.Spawned)
             {
                 return ac;
             }
