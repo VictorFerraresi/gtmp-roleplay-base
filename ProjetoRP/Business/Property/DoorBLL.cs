@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.Entity;
-using ProjetoRP.Business.Player;
-using GrandTheftMultiplayer.Shared.Math;
-using GrandTheftMultiplayer.Server.Elements;
-using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server;
+using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Shared.Math;
+using ProjetoRP.Business.Player;
 
-namespace ProjetoRP.Business
+namespace ProjetoRP.Business.Property
 {
     public class DoorBLL
     {

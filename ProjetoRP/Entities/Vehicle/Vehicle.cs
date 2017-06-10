@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ProjetoRP.Entities
+namespace ProjetoRP.Entities.Vehicle
 {
+    public enum OwnerType
+    {
+        OWNER_TYPE_NULL = 0,
+        OWNER_TYPE_CHARACTER = 1,
+        OWNER_TYPE_FACTION = 2,
+        OWNER_TYPE_CAREER = 3
+    }
+
     public class Vehicle
     {
         public Vehicle()
@@ -20,9 +28,11 @@ namespace ProjetoRP.Entities
         [Required]
         [MinLength(5), MaxLength(32)]        
         public string Name { get; set; }
+        
+        public int? Owner_Id { get; set; }
 
         [Required]
-        public virtual Character Character { get; set; }
+        public OwnerType Owner_Type { get; set; }
 
         [Required]
         public double X { get; set; }    
@@ -53,7 +63,7 @@ namespace ProjetoRP.Entities
         [Required]
         public int Color2 { get; set; }
 
-        [NotMapped]
-        public bool Spawned { get; set; }        
+        [Required]
+        public string LicensePlate { get; set; }
     }
 }

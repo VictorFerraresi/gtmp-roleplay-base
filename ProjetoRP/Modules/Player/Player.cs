@@ -1,6 +1,6 @@
 ﻿using GrandTheftMultiplayer.Server.API;
-using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared.Math;
 using ProjetoRP.Business.Player;
@@ -11,14 +11,21 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
+using ProjetoRP.Business.Property;
+using ProjetoRP.Business.Vehicle;
+using ProjetoRP.Business.Faction;
+using ProjetoRP.Business;
+using System.Diagnostics;
 
 namespace ProjetoRP.Modules.Player
 {
     public class Player : Script
     {
-        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
-        private Business.DoorBLL DoorBLL = new Business.DoorBLL();
-        private Business.PlayerBLL PlayerBLL = new Business.PlayerBLL();
+        private PropertyBLL PropBLL = new PropertyBLL();
+        private DoorBLL DoorBLL = new DoorBLL();
+        private PlayerBLL PlayerBLL = new PlayerBLL();
+        private VehicleBLL VehBLL = new VehicleBLL();
+        private FactionBLL FacBLL = new FactionBLL();
 
         const int NULL_DIMENSION = int.MaxValue;
         const int MAX_LOGIN_TRIES = 3;
@@ -30,6 +37,7 @@ namespace ProjetoRP.Modules.Player
             API.onPlayerConnected += OnPlayerConnected;
             API.onPlayerDisconnected += OnPlayerDisconnected;
             API.onClientEventTrigger += OnClientEventTrigger;
+            API.onChatMessage += OnChatMessage;
         }
 
         private void OnPlayerDisconnected(Client player, string reason)
@@ -150,6 +158,14 @@ namespace ProjetoRP.Modules.Player
                     API.call("Ui", "evalUi", player, "charsel_app.display=false;");
 
                     Player_Spawn(player, cid);
+                    break;
+
+                case "CS_RETURN_LOGOUT_AREA":                    
+                    var street = args[0];
+                    var area = args[1];
+
+                    string areaFormat = String.Format("{0}, {1}", street, area);
+                    ac.Character.LogoutArea = areaFormat;                    
                     break;
             }
         }
@@ -320,7 +336,7 @@ namespace ProjetoRP.Modules.Player
                         dyn.xp = c.Xp;
                         dyn.maxxp = GetXpNeededToLevelUp(c.Level);
                         dyn.level = c.Level;
-                        dyn.location = "San Andreas";
+                        dyn.location = c.LogoutArea;
                         dyn.health = "100%";
                         dyn.armour = "100%";
                         dyn.cash = c.Cash;
@@ -385,10 +401,10 @@ namespace ProjetoRP.Modules.Player
 
             using (var context = new DatabaseContext())
             {
-                Character cd = (from c in context.Characters where c.Id == character_id && c.Player.Id == id select c).AsNoTracking().Single();
+                Character cd = (from c in context.Characters where c.Id == character_id && c.Player.Id == id select c).Include(c => c.Faction).Include(c => c.Faction.Ranks).Include(c => c.Rank).Include(c => c.Career).AsNoTracking().Single();
 
                 var ac = ActivePlayer.Get(player);
-                ac.Character = cd;                
+                ac.Character = cd;
                 
                 // player.setData("CHARACTER_DATA", cd);
                 // player.setData("CHARACTER_ID", cd.Id);                                
@@ -396,6 +412,8 @@ namespace ProjetoRP.Modules.Player
                 PedHash pedHash;
                 Enum.TryParse(cd.Skin, out pedHash);
                 player.setSkin(pedHash);
+
+                API.consoleOutput(cd.Rank.ToString());
 
                 player.position = new Vector3(cd.X, cd.Y, cd.Z);
                 player.dimension = cd.Dimension;
@@ -427,7 +445,7 @@ namespace ProjetoRP.Modules.Player
                     context.Entry(p).State = EntityState.Modified;
                     context.SaveChanges();
 
-                    context.Entry(p).State = EntityState.Detached;
+                    //context.Entry(p).State = EntityState.Detached;
 
                     if (ac.Status == PlayerStatus.Spawned)
                     {
@@ -440,17 +458,43 @@ namespace ProjetoRP.Modules.Player
                         c.X = pos.X;
                         c.Y = pos.Y;
                         c.Z = pos.Z;
-                        c.Dimension = dimension;
+                        c.Dimension = dimension;                        
 
-                        context.Characters.Attach(c);
+                        c.Rank = c.Faction.Ranks.FirstOrDefault(r => r.Id == c.Rank_Id);
+
+                        API.triggerClientEvent(player, "SC_GET_LOGOUT_AREA");                        
+
+                        context.Characters.Attach(c);                        
                         context.Entry(c).State = EntityState.Modified;
 
-                        context.SaveChanges();
-                        
+                        try
+                        {
+                            context.SaveChanges();
+                        }
+                        catch (DbEntityValidationException dbEx)
+                        {
+                            foreach (var validationErrors in dbEx.EntityValidationErrors)
+                            {
+                                foreach (var validationError in validationErrors.ValidationErrors)
+                                {
+                                    API.consoleOutput("Property: {0} Error: {1}",
+                                                            validationError.PropertyName,
+                                                            validationError.ErrorMessage);
+                                }
+                            }
+                        }                                                
                         context.Entry(c).State = EntityState.Detached;
                     }
                 }
             }
+        }
+
+        public void OnChatMessage(Client player, string message, CancelEventArgs e)
+        {
+            Character c = ActivePlayer.Get(player).Character;            
+            Utils.ProxDetector(30.0f, player, c.Name + " diz: " + message, "~#FFFFFF~", "~#C8C8C8~", "~#AAAAAA~", "~#8C8C8C~", "~#6E6E6E~");
+            e.Cancel = true;
+            return;
         }
 
         [Command("login", GreedyArg = true)]
@@ -481,7 +525,7 @@ namespace ProjetoRP.Modules.Player
             {
                 player.sendChatMessage(Messages.player_character_idx_not_exists);
             }
-        }
+        }     
 
         private void Player_KickForInvalidTrigger(Client player)
         {
@@ -517,11 +561,18 @@ namespace ProjetoRP.Modules.Player
         public void LockCommand(Client player)
         {
             if (ActivePlayer.GetSpawned(player) == null) return;
+
             Entities.Property.Door door = DoorBLL.Door_GetNearestInRangeBothSides(player, 4.0);
+            GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = VehBLL.Vehicle_GetNearestInRange(player, 4.0);            
 
             if (door != null)
             {
                 DoorBLL.Door_LockCommand(player, door);
+            }
+            else if(serverVeh != null)
+            {
+                Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(serverVeh).Vehicle;
+                VehBLL.Vehicle_LockCommand(player, veh);
             }
             //else if otherlockcases
             else
@@ -533,7 +584,9 @@ namespace ProjetoRP.Modules.Player
         [Command("players")]
         public void PlayersCommand(Client player)
         {
-            foreach(var p in API.getAllPlayers())
+            if (ActivePlayer.GetSpawned(player) == null) return;
+
+            foreach (var p in API.getAllPlayers())
             {
                 ActivePlayer ac = ActivePlayer.Get(p);
                 if(null != ac)
@@ -545,6 +598,190 @@ namespace ProjetoRP.Modules.Player
                     API.sendChatMessageToPlayer(player, "(NOT_LOGGED_IN) " + p.socialClubName);
                 }
             }
+        }
+
+        //Chat Commands
+
+        [Command("me", GreedyArg = true)]
+        public void MeCommand(Client sender, string text)
+        {
+            ActivePlayer ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Character c = ac.Character;
+            Utils.ProxDetector(30.0f, sender, "* " + c.Name + " " + text, "~#C2A2DA~", "~#C2A2DA~", "~#C2A2DA~", "~#C2A2DA~", "~#C2A2DA~");
+        }
+
+        [Command("ame", GreedyArg = true)]
+        public void AmeCommand(Client sender, string text)
+        {
+            ActivePlayer ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Character c = ac.Character;
+
+            string action;
+
+            action = String.Format("> {0} {1}", c.Name, text);
+            API.sendChatMessageToPlayer(sender, "~#C2A2DA~", action);
+            action = String.Format("* {0} {1}", c.Name, text);
+
+            if(sender.getData("AME_LABEL") == null)
+            {
+                TextLabel label = API.createTextLabel(action, new Vector3(), 20.0f, 0.5f, false);
+                API.attachEntityToEntity(label, sender, "31086", new Vector3(0.0, 0.0, 1.0), new Vector3());
+                API.setTextLabelColor(label, 194, 162, 218, 255);                
+
+                sender.setData("AME_LABEL", label);                
+            }
+            else
+            {
+                TextLabel previousLabel = sender.getData("AME_LABEL");
+                API.setTextLabelText(previousLabel, action);                                
+            }          
+        }        
+
+        [Command("do", GreedyArg = true)]
+        public void DoCommand(Client sender, string text)
+        {
+            ActivePlayer ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Character c = ac.Character;
+            Utils.ProxDetector(30.0f, sender, "* " + text + " (( " + c.Name + " ))", "~#C2A2DA~", "~#C2A2DA~", "~#C2A2DA~", "~#C2A2DA~", "~#C2A2DA~");
+        }
+
+        [Command("g", Alias = "gritar", GreedyArg = true)]
+        public void ScreamCommand(Client sender, string text)
+        {
+            ActivePlayer ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Character c = ac.Character;
+            Utils.ProxDetector(60.0f, sender, "~h~" + c.Name + " grita: " + text, "~#FFFFFF~", "~#C8C8C8~", "~#AAAAAA~", "~#8C8C8C~", "~#6E6E6E~");
+        }
+
+        [Command("baixo", GreedyArg = true)]
+        public void LowSayCommand(Client sender, string text)
+        {
+            ActivePlayer ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Character c = ac.Character;
+            Utils.ProxDetector(10.0f, sender, c.Name + " diz baixo: " + text, "~#FFFFFF~", "~#C8C8C8~", "~#AAAAAA~", "~#8C8C8C~", "~#6E6E6E~");
+        }
+
+        [Command("b", GreedyArg = true)]
+        public void OocSayCommand(Client sender, string text)
+        {
+            ActivePlayer ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Character c = ac.Character;
+            Utils.ProxDetector(30.0f, sender, "(( " + c.Name + ": " + text + " ))", "~#939393~", "~#939393~", "~#939393~", "~#939393~", "~#939393~");
+        }
+
+        [Command("s", Alias = "sussurrar", GreedyArg = true)]
+        public void WhisperCommand(Client sender, int targetid, string text)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (null == ac) return;
+
+            var targetAc = ActivePlayer.GetSpawned(targetid);
+
+            if (null == targetAc)
+            {
+                API.sendChatMessageToPlayer(sender, "Escolha um playerid válido!");
+            }
+            else
+            {
+                if(!PlayerBLL.Player_IsInRangeOfPlayer(sender, targetAc.Client)){
+                    API.sendChatMessageToPlayer(sender, "Você não está próximo a este jogador!");
+                }
+                else
+                {
+                    string msg;
+
+                    msg = String.Format("Sussurro para {0}: {1}", targetAc.Character.Name, text);
+                    API.sendChatMessageToPlayer(sender, "~#FFDC18~", msg);
+                    msg = String.Format("Sussurro de {0}: {1}", ac.Character.Name, text);
+                    API.sendChatMessageToPlayer(targetAc.Client, "~#D8B713~", msg);
+                }                
+            }
+        }
+
+        [Command("pm", GreedyArg = true)]
+        public void PmCommand(Client sender, int targetid, string text)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (null == ac) return;
+
+            var targetAc = ActivePlayer.GetSpawned(targetid);
+
+            if(null == targetAc)
+            {
+                API.sendChatMessageToPlayer(sender, "Escolha um playerid válido!");
+            }
+            else if(targetAc.Id == ac.Id)
+            {
+                API.sendChatMessageToPlayer(sender, "Você não pode enviar PMs para si mesmo!");
+            }
+            else
+            {
+                string msg;
+
+                msg = String.Format("(( PM para {0}({1}): {2} ))", targetAc.Character.Name, targetAc.Id, text);                     
+                API.sendChatMessageToPlayer(sender, "~#FFDC18~", msg);
+                msg = String.Format("(( PM de {0}({1}): {2} ))", ac.Character.Name, ac.Id, text);
+                API.sendChatMessageToPlayer(targetAc.Client, "~#D8B713~", msg);
+            }
+        }
+
+        [Command("aceitar", GreedyArg = true)]
+        public void AcceptCommand(Client sender, string option)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
+
+            switch (option)
+            {
+                case "faccao":
+                    if (!sender.hasData("FACTION_INVITE")){
+                        API.sendChatMessageToPlayer(sender, "Você não possui nenhum convite de facção ativo!");
+                    }
+                    else
+                    {
+                        Entities.Faction.Faction fac = sender.getData("FACTION_INVITE");
+                        Entities.Faction.Rank rank = fac.Ranks.FirstOrDefault(r => r.Level == 1);
+
+                        sender.resetData("FACTION_INVITE");
+                        c.Faction = fac;
+                        c.Faction_Id = fac.Id;
+                        c.Rank = rank;
+                        c.Rank_Id = rank.Id;
+
+                        API.sendChatMessageToPlayer(sender, "Você aceitou o convite para entrar na facção " + fac.Name);
+                        FacBLL.Faction_SendMessage(c.Faction, "~w~", "O jogador " + c.Name + " entrou na facção!");
+                    }
+                    break;
+                default:
+                    API.sendChatMessageToPlayer(sender, "Escolha uma ação válida!");
+                    API.sendChatMessageToPlayer(sender, "~y~[OPÇÕES] ~w~faccao.");
+                    break;
+            }
+        }
+
+        [Command("anim", GreedyArg = true)]
+        public void AnimCommand(Client sender, string a1, string a2)
+        {
+            API.playPlayerAnimation(sender, (int)(AnimationFlags.Loop | AnimationFlags.AllowPlayerControl), a1, a2);
+            //API.playPlayerAnimation(player, (int)(AnimationFlags.Loop | AnimationFlags.OnlyAnimateUpperBody | AnimationFlags.AllowPlayerControl), "mp_arresting", "idle");
+            //mp_arresting arrested_spin_l_0
+            //mp_am_hold_up	handsup_base
+            //get_up@cuffed	back_to_default
+            API.sendChatMessageToPlayer(sender, "Reproduzindo " + a1 + " " + a2);
         }
     }
 }

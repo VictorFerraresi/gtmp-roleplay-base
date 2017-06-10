@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Discord;
-using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using System.Collections.Generic;
+using Discord;
 
 namespace ProjetoRP.Modules.Admin
 {    

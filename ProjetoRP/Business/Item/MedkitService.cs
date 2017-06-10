@@ -35,7 +35,7 @@ namespace ProjetoRP.Business.Item
         {
         }
 
-        public override void Character_Activate(Character character)
+        public override void Character_Activate(Entities.Character character)
         {
             Validate();
             Consume();

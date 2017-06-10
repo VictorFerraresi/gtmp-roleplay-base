@@ -25,7 +25,7 @@ namespace ProjetoRP.Migrations
             //      new Person { FullName = "Brice Lambson" },
             //      new Person { FullName = "Rowan Miller" }
             //    );
-            //
+            //                   
 
             context.Players.AddOrUpdate(
                 p => p.Name,
@@ -52,18 +52,19 @@ namespace ProjetoRP.Migrations
             context.Ranks.AddOrUpdate(
                 p => p.Name,
                 new Entities.Faction.Rank { Name = "Líder", Level = 5, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(),Leader = true },
-                new Entities.Faction.Rank { Name = "Sub-Líder", Level = 4, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = true },
-                new Entities.Faction.Rank { Name = "Comandante", Level = 3, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = true },
-                new Entities.Faction.Rank { Name = "Sargento", Level = 2, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = true },
-                new Entities.Faction.Rank { Name = "Recruta", Level = 1, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = true },
+                new Entities.Faction.Rank { Name = "Sub-Líder", Level = 4, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = false },
+                new Entities.Faction.Rank { Name = "Comandante", Level = 3, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = false },
+                new Entities.Faction.Rank { Name = "Sargento", Level = 2, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = false },
+                new Entities.Faction.Rank { Name = "Recruta", Level = 1, Faction = context.Factions.Where(f => f.Acro == "LSPD").Single(), Leader = false },
 
                 new Entities.Faction.Rank { Name = "Líder", Level = 5, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = true },
-                new Entities.Faction.Rank { Name = "Sub-Líder", Level = 4, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = true },
-                new Entities.Faction.Rank { Name = "Comandante", Level = 3, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = true },
-                new Entities.Faction.Rank { Name = "Doutor", Level = 2, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = true },
-                new Entities.Faction.Rank { Name = "Paramédico", Level = 1, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = true }
+                new Entities.Faction.Rank { Name = "Sub-Líder", Level = 4, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = false },
+                new Entities.Faction.Rank { Name = "Comandante", Level = 3, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = false },
+                new Entities.Faction.Rank { Name = "Doutor", Level = 2, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = false },
+                new Entities.Faction.Rank { Name = "Paramédico", Level = 1, Faction = context.Factions.Where(f => f.Acro == "LSFD").Single(), Leader = false }
             );
             context.SaveChanges();
+
         }
     }
 }

@@ -1,19 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using ProjetoRP.Business.Player;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared.Math;
+using System.Collections.Generic;
+using ProjetoRP.Business.Player;
+using ProjetoRP.Business.Faction;
+using ProjetoRP.Business.Property;
 
 namespace ProjetoRP.Modules.Admin
 {
     class Admin : Script
     {
         private DiscordBot _discordBot = new DiscordBot();
-        private Business.PropertyBLL PropBLL = new Business.PropertyBLL();
-        private Business.DoorBLL DoorBLL = new Business.DoorBLL();
-        private Business.FactionBLL FacBLL = new Business.FactionBLL();
+        private PropertyBLL PropBLL = new PropertyBLL();
+        private DoorBLL DoorBLL = new DoorBLL();
+        private FactionBLL FacBLL = new FactionBLL();
 
         public Admin()
         {
@@ -99,6 +101,7 @@ namespace ProjetoRP.Modules.Admin
                                 prop.Y = player.position.Y;
                                 prop.Z = player.position.Z;
                                 prop.Price = priceVal;
+                                prop.Dimension = player.dimension;
                                 break;
 
                             case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
@@ -109,6 +112,7 @@ namespace ProjetoRP.Modules.Admin
                                 prop.Y = player.position.Y;
                                 prop.Z = player.position.Z;
                                 prop.Price = priceVal;
+                                prop.Dimension = player.dimension;
                                 break;
 
                             case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
@@ -150,7 +154,7 @@ namespace ProjetoRP.Modules.Admin
         [Command("a", GreedyArg = true)]
         public void AdminChatCommand(Client sender, string text)
         {
-            var ac = ActivePlayer.Get(sender);
+            var ac = ActivePlayer.GetSpawned(sender);
             if (ac == null) return;
 
             var player = ac.Player;
@@ -160,61 +164,12 @@ namespace ProjetoRP.Modules.Admin
             //}
         }
 
-        //[Command("criarpropriedade", GreedyArg = true)]
-        //public void CreatePropertyCommand(Client sender, int type, int price, string address)
-        //{
-        //    //if (sender.IsAdmin()){
-        //    if (!Enum.IsDefined(typeof(Entities.Property.PropertyType), type))
-        //    {
-        //        API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
-        //    }
-        //    else if (price < 1)
-        //    {
-        //        API.sendChatMessageToPlayer(sender, "Escolha um preço maior do que 0!");
-        //    }
-        //    else
-        //    {
-        //        Entities.Property.Property prop = null;
-
-        //        switch (type)
-        //        {
-        //            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE:
-        //                prop = new Entities.Property.House();
-        //                prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_HOUSE;
-        //                prop.Address = address;
-        //                prop.X = sender.position.X;
-        //                prop.Y = sender.position.Y;
-        //                prop.Z = sender.position.Z;
-        //                prop.Price = price;
-        //                break;
-
-        //            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS:
-        //                prop = new Entities.Property.Business();
-        //                prop.Type = Entities.Property.PropertyType.PROPERTY_TYPE_BUSINESS;
-        //                prop.Address = address;
-        //                prop.X = sender.position.X;
-        //                prop.Y = sender.position.Y;
-        //                prop.Z = sender.position.Z;
-        //                prop.Price = price;
-        //                break;
-
-        //            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
-        //                ///TODO                        
-        //                break;
-
-        //            case (int)Entities.Property.PropertyType.PROPERTY_TYPE_OFFICE:
-        //                //TODO
-        //                break;
-        //        }
-        //        PropBLL.Property_Create(prop, sender.dimension);
-        //        API.sendChatMessageToPlayer(sender, "Você criou uma propriedade com sucesso!");
-        //    }
-        //    //}
-        //}
-
         [Command("criarpropriedade", GreedyArg = true)]
         public void CreatePropertyCommand(Client sender)
         {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
             //if (sender.IsAdmin()){
             API.call("Ui", "fixCursor", sender, true);
             API.call("Ui", "evalUi", sender, "propertycreate_app.display=true;");
@@ -224,6 +179,9 @@ namespace ProjetoRP.Modules.Admin
         [Command("deletarpropriedade")]
         public void DeletePropertyCommand(Client sender, int id)
         {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
             //if (sender.IsAdmin()){
             if (id < 1)
             {
@@ -249,6 +207,9 @@ namespace ProjetoRP.Modules.Admin
         [Command("editarpropriedade", GreedyArg = true)]
         public void EditPropertyCommand(Client sender, int id, string option, string value = "default")
         {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
             //if (sender.IsAdmin()){
             if (id < 1)
             {
@@ -343,6 +304,9 @@ namespace ProjetoRP.Modules.Admin
         [Command("criarporta")]
         public void CreateDoorCommand(Client sender, int propid, long model)
         {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
             //if (sender.IsAdmin()){
             if (propid < 1)
             {
@@ -372,6 +336,9 @@ namespace ProjetoRP.Modules.Admin
         [Command("deletarporta")]
         public void DeleteDoorCommand(Client sender, int doorid)
         {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
             //if (sender.IsAdmin()){
             if (doorid < 1)
             {
@@ -397,6 +364,9 @@ namespace ProjetoRP.Modules.Admin
         [Command("editarporta", GreedyArg = true)]
         public void EditDoorCommand(Client sender, int id, string option, string value = "default")
         {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
             //if (sender.IsAdmin()){
             if (id < 1)
             {
@@ -568,37 +538,12 @@ namespace ProjetoRP.Modules.Admin
             //}
         }
 
-        //[Command("criarfaccao", GreedyArg = true)]
-        //public void CreateFactionCommand(Client sender, string acro, int type, int bank, string name)
-        //{
-        //    //if (sender.IsAdmin()){            
-        //    if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Name == name) != null)
-        //    {
-        //        API.sendChatMessageToPlayer(sender, "Já existe uma facção com este nome!");
-        //    }
-        //    else if (Business.GlobalVariables.Instance.ServerFactions.Find(x => x.Acro == acro) != null)
-        //    {
-        //        API.sendChatMessageToPlayer(sender, "Já existe uma facção com este acrônimo!");
-        //    }
-        //    else if (!Enum.IsDefined(typeof(Entities.Faction.FactionType), type))
-        //    {
-        //        API.sendChatMessageToPlayer(sender, "Este tipo é inválido!");
-        //    }
-        //    else if (bank < 1)
-        //    {
-        //        API.sendChatMessageToPlayer(sender, "Escolha um valor para o cofre maior do que 0!");
-        //    }
-        //    else
-        //    {
-        //        FacBLL.Faction_Create(name, acro, (Entities.Faction.FactionType)type, bank);
-        //        API.sendChatMessageToPlayer(sender, "Você criou uma facção com sucesso!");
-        //    }
-        //    //}
-        //}
-
         [Command("criarfaccao", GreedyArg = true)]
         public void CreateFactionCommand(Client sender)
         {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
             //if (sender.IsAdmin()){            
             API.call("Ui", "fixCursor", sender, true);
             API.call("Ui", "evalUi", sender, "factioncreate_app.display=true;");
@@ -608,6 +553,9 @@ namespace ProjetoRP.Modules.Admin
         [Command("deletarfaccao")]
         public void DeleteFactionCommand(Client sender, int factionid)
         {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
             //if (sender.IsAdmin()){
             if (factionid < 1)
             {
@@ -633,6 +581,9 @@ namespace ProjetoRP.Modules.Admin
         [Command("editarfaccao", GreedyArg = true)]
         public void EditFactionCommand(Client sender, int id, string option, string value)
         {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
             //if (sender.IsAdmin()){
             if (id < 1)
             {
@@ -745,18 +696,33 @@ namespace ProjetoRP.Modules.Admin
         [Command("darlider")]
         public void GiveFactionleaderCommand(Client sender, int playerid, int factionid)
         {
-            var ac = ActivePlayer.GetSpawned(playerid);
-            if (null == ac)
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            var targetAc = ActivePlayer.GetSpawned(playerid);
+            if (null == targetAc)
             {
                 API.sendChatMessageToPlayer(sender, "Escolha um playerid válido!");
             }
             else if (factionid < 0)
             {
-                API.sendChatMessageToPlayer(sender, "Não existem facções com o ID menor que 1!");
+                API.sendChatMessageToPlayer(sender, "Não existem facções com o ID menor que 0!");
+            }
+            else if(factionid == 0)
+            {
+                Client target = targetAc.Client;
+
+                Entities.Character c = targetAc.Character;
+                c.Faction = null;
+                c.Faction_Id = null;                
+                c.Rank = null;
+                c.Rank_Id = null;
+
+                API.sendChatMessageToPlayer(sender, "Você retirou o líder de facção do jogador " + c.Name);
             }
             else
-            {
-                Client target = ac.Client;
+            {                
+                Client target = targetAc.Client;
                 Entities.Faction.Faction faction = FacBLL.FindFactionById(factionid);
                 if(faction == null)
                 {
@@ -764,14 +730,15 @@ namespace ProjetoRP.Modules.Admin
                 }
                 else //Player is Connected and Faction Exists
                 {
-                    Entities.Character c = ac.Character;
+                    Entities.Character c = targetAc.Character;
                     c.Faction = faction;
                     c.Faction_Id = faction.Id;
                     Entities.Faction.Rank rank = FacBLL.Faction_GetLeaderRank(faction);
                     c.Rank = rank;
-                    c.Rank_Id = rank.Id;
+                    c.Rank_Id = rank.Id;                    
 
                     API.sendChatMessageToPlayer(sender, "Você setou o jogador " + c.Name + " como líder da facção " + faction.Name);
+                    API.sendChatMessageToPlayer(target, "Você foi setado como líder da facção " + faction.Name + " pelo administrador " + ac.Character.Name);
                 }
             }
         }

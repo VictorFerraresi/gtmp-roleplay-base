@@ -1,13 +1,13 @@
-﻿using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Shared.Math;
 using ProjetoRP.Business.Player;
-using GrandTheftMultiplayer.Server.Elements;
 
-namespace ProjetoRP.Business
+namespace ProjetoRP.Business.Property
 {
     public class BusinessBLL : Entities.Property.IProperty<Entities.Property.Property>
     {        
-        Business.PlayerBLL PlayerBLL = new Business.PlayerBLL();
+        PlayerBLL PlayerBLL = new PlayerBLL();
 
         public void DrawPickup(Entities.Property.Property business)
         {
@@ -29,8 +29,7 @@ namespace ProjetoRP.Business
         public bool TryToBuy(Client player, Entities.Property.Property business, bool confirmed)
         {
             Entities.Property.Business b = (Entities.Property.Business)business;
-            var ac = ActivePlayer.GetSpawned(player);
-            var c = ac.Character;
+            Entities.Character c = ActivePlayer.GetSpawned(player).Character;
 
             if (b.Owner != null)
             {

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.Entity;
+using GrandTheftMultiplayer.Server.API;
 
-namespace ProjetoRP.Business
+namespace ProjetoRP.Business.Faction
 {
     public class FactionBLL
     {
@@ -24,7 +23,7 @@ namespace ProjetoRP.Business
                 }
             }
         }
-
+        
         public void Faction_Save(Entities.Faction.Faction faction)
         {
             using (var context = new DatabaseContext())
@@ -88,6 +87,36 @@ namespace ProjetoRP.Business
             }
 
             Faction_Save(faction);
+        }
+
+        public void Rank_Save(Entities.Faction.Rank rank)
+        {
+            using (var context = new DatabaseContext())
+            {
+                context.Ranks.Attach(rank);
+                context.Entry(rank).State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
+        public void Rank_Create(Entities.Faction.Rank rank)
+        {
+            using (var context = new DatabaseContext())
+            {
+                context.Ranks.Attach(rank);
+                context.Ranks.Add(rank);
+                context.SaveChanges();
+            }            
+        }
+
+        public void Rank_Delete(Entities.Faction.Rank rank)
+        {
+            using (var context = new DatabaseContext())
+            {
+                context.Ranks.Attach(rank);
+                context.Ranks.Remove(rank);
+                context.SaveChanges();
+            }
         }
 
         public Entities.Faction.Faction FindFactionById(int id) //Should we be using C#'s predicate List find?
@@ -169,7 +198,7 @@ namespace ProjetoRP.Business
 
             using (var context = new DatabaseContext())
             {
-                faction = (from f in context.Factions where f.Id == faction_id select f).AsNoTracking().Single();
+                faction = (from f in context.Factions where f.Id == faction_id select f).Include(f => f.Ranks).AsNoTracking().Single();
             }
 
             return faction;
@@ -181,7 +210,7 @@ namespace ProjetoRP.Business
 
             using (var context = new DatabaseContext())
             {
-                factions = (from f in context.Factions select f).Include(f => f.Ranks).AsNoTracking().ToList();
+                factions = (from f in context.Factions select f).Include(f => f.Ranks).AsNoTracking().ToList();              
             }
             return factions;
         }        
@@ -198,6 +227,81 @@ namespace ProjetoRP.Business
             }            
 
             return character;
+        }
+
+        public void Faction_SendChatMessage(Entities.Character c, string msg) //Discord bot integration soon
+        {
+            foreach(var player in API.shared.getAllPlayers())
+            {
+                Entities.Character playerChar = Business.Player.ActivePlayer.GetSpawned(player).Character;
+
+                if(playerChar.Faction_Id == c.Faction_Id)
+                {
+                    string finalMsg = string.Format("(( {0} {1}: {2} ))", c.Rank.Name, c.Name, msg);
+                    API.shared.sendChatMessageToPlayer(player, "~#AAA7FF~", finalMsg);
+                }
+            }
+        }
+
+        public void Faction_SendMessage(Entities.Faction.Faction fac, string color, string msg)
+        {
+            foreach (var player in API.shared.getAllPlayers())
+            {
+                Entities.Character playerChar = Business.Player.ActivePlayer.GetSpawned(player).Character;
+
+                if (playerChar.Faction_Id == fac.Id)
+                {                    
+                    API.shared.sendChatMessageToPlayer(player, color, msg);
+                }
+            }
+        }
+
+        public int Faction_GetOnlineMemberCount(Entities.Faction.Faction fac)
+        {
+            int count = 0;
+
+            foreach(var player in API.shared.getAllPlayers())
+            {
+                Entities.Character c = Business.Player.ActivePlayer.Get(player).Character;
+
+                if(c.Faction_Id == fac.Id)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        public int Faction_GetMemberCount(Entities.Faction.Faction fac)
+        {
+            int count = 0;
+
+            using (var context = new DatabaseContext())
+            {
+                count = (from c in context.Characters
+                             where c.Faction_Id == fac.Id                             
+                             select c).Count();
+            }
+
+            return count;
+        }
+
+        public Entities.Faction.Rank Faction_GetRankByLevel(Entities.Faction.Faction fac, int level)
+        {
+            Entities.Faction.Rank rank = fac.Ranks.FirstOrDefault(r => r.Level == level);
+            return rank;
+        }
+
+        public void Faction_SendDepartmentMessage(string msg)
+        {
+            foreach(var fac in Business.GlobalVariables.Instance.ServerFactions)
+            {
+                if(fac.Type == Entities.Faction.FactionType.FACTION_TYPE_POLICE || fac.Type == Entities.Faction.FactionType.FACTION_TYPE_EMS)
+                {
+                    Faction_SendMessage(fac, "~#FF8282~", msg);
+                }
+            }
         }
     }
 }

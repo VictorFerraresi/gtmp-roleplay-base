@@ -15,6 +15,6 @@ namespace ProjetoRP.Entities.ItemModel
         public int Vehicle_Id { get; set; }
 
         [ForeignKey("Vehicle_Id")]
-        public Vehicle Vehicle { get; set; }
+        public Vehicle.Vehicle Vehicle { get; set; }
     }
 }

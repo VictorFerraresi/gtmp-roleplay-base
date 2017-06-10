@@ -61,6 +61,15 @@ namespace ProjetoRP.Configurations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to San Andreas.
+        /// </summary>
+        internal static string Default_Area {
+            get {
+                return ResourceManager.GetString("Default_Area", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 0.
         /// </summary>
         internal static string Default_Bank {
