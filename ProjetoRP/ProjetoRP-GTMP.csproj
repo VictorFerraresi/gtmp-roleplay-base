@@ -123,6 +123,7 @@
   <ItemGroup>
     <Compile Include="Business\Career\CareerBLL.cs" />
     <Compile Include="Business\Career\TruckerCareerBLL.cs" />
+    <Compile Include="Business\Industry\IndustryBLL.cs" />
     <Compile Include="Business\Item\CarKeyService.cs" />
     <Compile Include="Business\Item\ContainerService.cs" />
     <Compile Include="Business\Player\PlayerService.cs" />
@@ -153,6 +154,8 @@
     <Compile Include="DatabaseContext.cs" />
     <Compile Include="Entities\Career\Career.cs" />
     <Compile Include="Entities\Career\TruckRestrictions.cs" />
+    <Compile Include="Entities\Industry\Industry.cs" />
+    <Compile Include="Entities\Industry\LoadPoint.cs" />
     <Compile Include="Entities\PlayerAttribute.cs" />
     <Compile Include="Migrations\201706082238227_AddCareers.cs" />
     <Compile Include="Migrations\201706082238227_AddCareers.Designer.cs">
@@ -166,8 +169,22 @@
     <Compile Include="Migrations\201706090542458_AddCharacterCareerInfo.Designer.cs">
       <DependentUpon>201706090542458_AddCharacterCareerInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706100125124_UpdateDatabaseFromMerge.cs" />
+    <Compile Include="Migrations\201706100125124_UpdateDatabaseFromMerge.Designer.cs">
+      <DependentUpon>201706100125124_UpdateDatabaseFromMerge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706110059352_AddIndustryAndLoadPoint.cs" />
+    <Compile Include="Migrations\201706110059352_AddIndustryAndLoadPoint.Designer.cs">
+      <DependentUpon>201706110059352_AddIndustryAndLoadPoint.cs</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Career\Career.cs" />
     <Compile Include="Modules\Career\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Industry\Industry.cs" />
+    <Compile Include="Modules\Industry\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Messages.resx</DependentUpon>
@@ -335,6 +352,7 @@
     <Compile Include="Types\Gender.cs" />
     <Compile Include="Types\HairColor.cs" />
     <Compile Include="Types\PlayerStatus.cs" />
+    <Compile Include="Types\ProductType.cs" />
     <Compile Include="Types\TruckerRank.cs" />
     <Compile Include="Types\VehicleStatus.cs" />
   </ItemGroup>
@@ -435,12 +453,22 @@
     <EmbeddedResource Include="Migrations\201706090542458_AddCharacterCareerInfo.resx">
       <DependentUpon>201706090542458_AddCharacterCareerInfo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706100125124_UpdateDatabaseFromMerge.resx">
+      <DependentUpon>201706100125124_UpdateDatabaseFromMerge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706110059352_AddIndustryAndLoadPoint.resx">
+      <DependentUpon>201706110059352_AddIndustryAndLoadPoint.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Colors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Messages.resx" />
     <EmbeddedResource Include="Modules\Career\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modules\Industry\Messages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -488,6 +516,7 @@
   <ItemGroup>
     <Content Include="Modules\Admin\Client\Admin.client.js" />
     <Content Include="Modules\Career\Client\Career.client.js" />
+    <Content Include="Modules\Industry\Client\Industry.client.js" />
     <Content Include="Modules\TruckerCareer\Client\TruckerCareer.client.js" />
     <Content Include="Modules\ContextMenu\Client\ContextMenu.client.js" />
     <Content Include="Modules\Faction\Client\Faction.client.js" />

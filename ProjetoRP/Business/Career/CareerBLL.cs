@@ -104,8 +104,8 @@ namespace ProjetoRP.Business.Career
         public void DrawPickup(Entities.Career.Career career)
         {
             string careerText = string.Format("~w~Emprego de ~y~{0}~w~\n\nDigite ~b~/emprego ~w~para aplicar.", career.Name);
-            career.Pickup = API.shared.createMarker(0, new Vector3(career.X, career.Y, career.Z - 0.25), new Vector3(), new Vector3(), new Vector3(0.5, 0.5, 0.5), 125, 255, 255, 0, 1);
-            career.TextLabel = API.shared.createTextLabel(careerText, new Vector3(career.X, career.Y, career.Z + 1.0), 20.0f, 1.0f, false);            
+            career.Pickup = API.shared.createMarker(0, new Vector3(career.X, career.Y, career.Z - 0.25), new Vector3(), new Vector3(), new Vector3(0.5, 0.5, 0.5), 125, 255, 255, 0, career.Dimension);
+            career.TextLabel = API.shared.createTextLabel(careerText, new Vector3(career.X, career.Y, career.Z + 1.0), 20.0f, 1.0f, false, career.Dimension);            
         }
 
         public void DeletePickup(Entities.Career.Career career)

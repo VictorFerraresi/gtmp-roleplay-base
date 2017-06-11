@@ -18,7 +18,7 @@
   <onfoot_lagcomp>true</onfoot_lagcomp>
   <refresh_rate>120</refresh_rate>
   <resource src="projetorp" />
-  <announce_lan>false</announce_lan>
+  <announce_lan>true</announce_lan>
   <upnp>true</upnp>
   <fqdn></fqdn>
   <conntimeout>false</conntimeout>

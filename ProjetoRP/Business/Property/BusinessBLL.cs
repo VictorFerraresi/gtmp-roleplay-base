@@ -13,15 +13,15 @@ namespace ProjetoRP.Business.Property
         {
             Entities.Property.Business b = (Entities.Property.Business)business;
 
-            business.Pickup = API.shared.createMarker(0, new Vector3(business.X, business.Y, business.Z - 0.25), new Vector3(), new Vector3(), new Vector3(0.5, 0.5, 0.5), 125, 0, 0, 255, 1);            
+            business.Pickup = API.shared.createMarker(0, new Vector3(business.X, business.Y, business.Z - 0.25), new Vector3(), new Vector3(), new Vector3(0.5, 0.5, 0.5), 125, 0, 0, 255, b.Dimension);            
             if(b.Owner == null)
             {
-                business.TextLabel = API.shared.createTextLabel(business.Address + "\n$" + business.Price.ToString("N0"), new Vector3(business.X, business.Y, business.Z + 0.5), 20.0f, 0.5f, false);
+                business.TextLabel = API.shared.createTextLabel(business.Address + "\n$" + business.Price.ToString("N0"), new Vector3(business.X, business.Y, business.Z + 0.5), 20.0f, 0.5f, false, b.Dimension);
                 API.shared.setTextLabelColor(business.TextLabel, 46, 184, 0, 255);
             }
             else
             {
-                business.TextLabel = API.shared.createTextLabel(business.Address, new Vector3(business.X, business.Y, business.Z + 0.5), 20.0f, 0.5f, false);
+                business.TextLabel = API.shared.createTextLabel(business.Address, new Vector3(business.X, business.Y, business.Z + 0.5), 20.0f, 0.5f, false, b.Dimension);
                 API.shared.setTextLabelColor(business.TextLabel, 173, 209, 221, 255);
             }            
         }

@@ -13,6 +13,7 @@ namespace ProjetoRP.Business
         public List<Entities.Property.Door> ServerDoors;
         public List<Entities.Faction.Faction> ServerFactions;
         public List<Entities.Career.Career> ServerCareers;
+        public List<Entities.Industry.Industry> ServerIndustries;
 
         private GlobalVariables() { }
 
