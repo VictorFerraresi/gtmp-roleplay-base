@@ -39,20 +39,62 @@ namespace ProjetoRP.Types
             { "Mule3", TruckerRank.Trucker },
             { "Benson", TruckerRank.Expert },
             { "Pounder", TruckerRank.Expert },
+            { "Flatbed", TruckerRank.Expert },
+            { "Rubble", TruckerRank.Expert },
+            { "TipTruck", TruckerRank.Expert },
+            { "TipTruck2", TruckerRank.Expert },
             { "Packer", TruckerRank.Paragon },
             { "Phantom", TruckerRank.Paragon },
             { "Hauler", TruckerRank.Paragon }
         };
-    }
 
-    public static class TruckSlotsDictionary
-    {
+        public static Dictionary<string, ProductClass> TruckCarryType = new Dictionary<string, ProductClass>
+        {
+            { "Boxville", ProductClass.Crate },
+            { "Boxville2", ProductClass.Crate },
+            { "Boxville3", ProductClass.Crate },
+            { "Boxville4", ProductClass.Crate },
+            { "Boxville5", ProductClass.Crate },
+            { "Burrito", ProductClass.Crate },
+            { "Burrito2", ProductClass.Crate },
+            { "Burrito3", ProductClass.Crate },
+            { "Burrito4", ProductClass.Crate },
+            { "Burrito5", ProductClass.Crate },
+            { "GBurrito", ProductClass.Crate },
+            { "GBurrito2", ProductClass.Crate },
+            { "Paradise", ProductClass.Crate },
+            { "Pony", ProductClass.Crate },
+            { "Pony2", ProductClass.Crate },
+            { "Rumpo", ProductClass.Crate },
+            { "Rumpo2", ProductClass.Crate },
+            { "Rumpo3", ProductClass.Crate },
+            { "Speedo", ProductClass.Crate },
+            { "Speedo2", ProductClass.Crate },
+            { "Youga", ProductClass.Crate },
+            { "Youga2", ProductClass.Crate },
+            { "Stockade", ProductClass.SafeBox },
+            { "Stockade3", ProductClass.SafeBox },
+            { "Mule", ProductClass.Crate },
+            { "Mule2", ProductClass.Crate },
+            { "Mule3", ProductClass.Crate },
+            { "Benson", ProductClass.Crate },
+            { "Pounder", ProductClass.Crate },
+            { "Flatbed", ProductClass.Vehicle },
+            { "Rubble", ProductClass.Loose },
+            { "TipTruck", ProductClass.Loose },
+            { "TipTruck2", ProductClass.Loose },
+            { "TrailerLogs", ProductClass.Log },
+            { "TRFlat", ProductClass.Log },
+            { "Tanker", ProductClass.Liquid },
+            { "Tanker2", ProductClass.Liquid }           
+        };
+
         public static Dictionary<string, int> TruckSlotList = new Dictionary<string, int>
         {
             { "Boxville", 0 }, //Todo truck slots
             { "Boxville2", 0 },
             { "Boxville3", 0 },
-            { "Boxville4", 0 },
+            { "Boxville4", 16 },
             { "Boxville5", 0 },
             { "Burrito", 0 },
             { "Burrito2", 0 },
@@ -70,8 +112,7 @@ namespace ProjetoRP.Types
             { "Speedo", 0 },
             { "Speedo2", 0 },
             { "Youga", 0 },
-            { "Youga2", 0 },
-            { "Youga2", 0 },
+            { "Youga2", 0 },            
             { "Stockade", 0 },
             { "Stockade3", 0 },
             { "Mule", 0 },
@@ -79,9 +120,14 @@ namespace ProjetoRP.Types
             { "Mule3", 0 },
             { "Benson", 0 },
             { "Pounder", 0 },
-            { "Packer", 0 },
-            { "Phantom", 0 },
-            { "Hauler", 0 }
-        };
+            { "Flatbed", 0 },
+            { "Rubble", 0 },
+            { "TipTruck", 0 },
+            { "TipTruck2", 0 },
+            { "TrailerLogs", 0 },
+            { "TRFlat", 0 },
+            { "Tanker", 0 },
+            { "Tanker2", 0 }
+        };        
     }
 }

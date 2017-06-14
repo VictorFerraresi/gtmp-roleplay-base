@@ -169,6 +169,13 @@ namespace ProjetoRP.Business.Vehicle
             return plate;
         }
 
+        public bool Vehicle_IsNearPlayer(Entities.Vehicle.Vehicle veh, Client player, double range = 5.0)
+        {
+            GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = ActiveVehicle.GetSpawned(veh).VehicleHandle;
+
+            return API.shared.getEntityPosition(serverVeh).DistanceTo(API.shared.getEntityPosition(player)) <= range;
+        }
+
         // SQL Functions
         public Entities.Vehicle.Vehicle SQL_FetchVehicleData(int vehicle_id)
         {

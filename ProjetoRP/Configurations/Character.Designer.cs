@@ -108,6 +108,15 @@ namespace ProjetoRP.Configurations {
         /// <summary>
         ///   Looks up a localized string similar to 0.
         /// </summary>
+        internal static string Default_Payment {
+            get {
+                return ResourceManager.GetString("Default_Payment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0.
+        /// </summary>
         internal static string Default_Savings {
             get {
                 return ResourceManager.GetString("Default_Savings", resourceCulture);

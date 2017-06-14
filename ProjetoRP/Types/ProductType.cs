@@ -65,5 +65,15 @@ namespace ProjetoRP.Types
             { ProductType.Money, "Cédulas"},
             { ProductType.Weapon, "Armas"}
         };
+
+        public static Dictionary<ProductClass, string> ProductClassNames = new Dictionary<ProductClass, string>
+        {
+            { ProductClass.Crate, "Caixa"},
+            { ProductClass.Liquid, "Líquido"},
+            { ProductClass.Log, "Tronco"},
+            { ProductClass.Loose, "Carga Solta"},
+            { ProductClass.SafeBox, "Caixa Segura"},
+            { ProductClass.Vehicle, "Veículo"}
+        };
     }
 }

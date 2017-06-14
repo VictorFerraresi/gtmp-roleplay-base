@@ -72,7 +72,12 @@ namespace ProjetoRP.Modules.Vehicle
             Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(vehicle).Vehicle;
             Entities.Character c = Business.Player.ActivePlayer.Get(player).Character;
 
-            if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION) //Entered a faction vehicle
+            if (player.hasData("CRATE_HOLDING"))
+            {
+                API.warpPlayerOutOfVehicle(player);
+                API.sendChatMessageToPlayer(player, "Você não pode entrar em um veículo carregando uma carga. Utilize /guardarcarga ou /destruircarga.");
+            }
+            else if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION) //Entered a faction vehicle
             {
                 if (API.getPlayerVehicleSeat(player) == -1) //Driver
                 {

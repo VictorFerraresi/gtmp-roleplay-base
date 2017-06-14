@@ -5,6 +5,7 @@ using System.Data.Entity;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Shared.Math;
 using ProjetoRP.Types;
+using GrandTheftMultiplayer.Server.Elements;
 
 namespace ProjetoRP.Business.Industry
 {
@@ -40,7 +41,7 @@ namespace ProjetoRP.Business.Industry
         {
             foreach (Entities.Industry.Industry industry in Business.GlobalVariables.Instance.ServerIndustries)
             {
-                string label = string.Format("~w~Indústria\n~b~{0}", industry.Name);
+                string label = string.Format("~w~Indústria\n[~b~{0}~w~]", industry.Name);
 
                 industry.Pickup = API.shared.createMarker(0, new Vector3(industry.X, industry.Y, industry.Z - 0.25), new Vector3(), new Vector3(), new Vector3(0.5, 0.5, 0.5), 125, 255, 255, 255, industry.Dimension);
                 industry.TextLabel = API.shared.createTextLabel(label, new Vector3(industry.X, industry.Y, industry.Z + 0.5), 20.0f, 0.5f, false, industry.Dimension);
@@ -146,7 +147,66 @@ namespace ProjetoRP.Business.Industry
             }
 
             return found;
-        }                
+        }
+
+        public Entities.Industry.LoadPoint FindLoadPointById(int id) //Should we be using C#'s predicate List find?
+        {
+            Entities.Industry.LoadPoint found = null;
+
+            foreach (var industry in Business.GlobalVariables.Instance.ServerIndustries)
+            {
+                foreach (var loadpoint in industry.LoadPoints)
+                {
+                    if(loadpoint.Id == id)
+                    {
+                        found = loadpoint;
+                        break;
+                    }
+                }
+            }
+
+            return found;
+        }
+
+        public Entities.Industry.LoadPoint LoadPoint_GetNearestInRange(Client player, double range)
+        {
+            Vector3 playerPos = API.shared.getEntityPosition(player);
+
+            Entities.Industry.LoadPoint nearestLp = null;
+
+            double nearestDistance = range;
+
+            foreach (Entities.Industry.Industry industry in Business.GlobalVariables.Instance.ServerIndustries)
+            {         
+                foreach (Entities.Industry.LoadPoint lp in industry.LoadPoints)
+                {
+                    Vector3 lpPos = new Vector3(lp.X, lp.Y, lp.Z);
+                    float distance = playerPos.DistanceTo(lpPos);
+
+                    if (distance <= range && distance <= nearestDistance)
+                    {
+                        nearestDistance = distance;
+                        nearestLp = lp;
+                    }
+                }                
+            }
+            return nearestLp;
+        }
+
+        public ProductClass GetProductClassFromType(ProductType prodType)
+        {
+            ProductClass prodClass;
+            ProductTypeDictionary.ProductTypeClasses.TryGetValue(prodType, out prodClass);
+
+            return prodClass;
+        }
+
+        public string GetProductClassName(ProductClass prodClass)
+        {
+            string prodName;
+            ProductTypeDictionary.ProductClassNames.TryGetValue(prodClass, out prodName);
+            return prodName;
+        }
 
         // SQL Functions
         public Entities.Industry.Industry SQL_FetchIndustryData(int industry_id)

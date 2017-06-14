@@ -177,12 +177,25 @@
     <Compile Include="Migrations\201706110059352_AddIndustryAndLoadPoint.Designer.cs">
       <DependentUpon>201706110059352_AddIndustryAndLoadPoint.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706110435299_AddBusinessName.cs" />
+    <Compile Include="Migrations\201706110435299_AddBusinessName.Designer.cs">
+      <DependentUpon>201706110435299_AddBusinessName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706110510295_AddBusinessType.cs" />
+    <Compile Include="Migrations\201706110510295_AddBusinessType.Designer.cs">
+      <DependentUpon>201706110510295_AddBusinessType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706142051012_AddCharacterSalary.cs" />
+    <Compile Include="Migrations\201706142051012_AddCharacterSalary.Designer.cs">
+      <DependentUpon>201706142051012_AddCharacterSalary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Career\Career.cs" />
     <Compile Include="Modules\Career\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\DoorManager\DoorManager.cs" />
     <Compile Include="Modules\Industry\Industry.cs" />
     <Compile Include="Modules\Industry\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -459,6 +472,15 @@
     <EmbeddedResource Include="Migrations\201706110059352_AddIndustryAndLoadPoint.resx">
       <DependentUpon>201706110059352_AddIndustryAndLoadPoint.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706110435299_AddBusinessName.resx">
+      <DependentUpon>201706110435299_AddBusinessName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706110510295_AddBusinessType.resx">
+      <DependentUpon>201706110510295_AddBusinessType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706142051012_AddCharacterSalary.resx">
+      <DependentUpon>201706142051012_AddCharacterSalary.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Colors.Designer.cs</LastGenOutput>
@@ -516,6 +538,7 @@
   <ItemGroup>
     <Content Include="Modules\Admin\Client\Admin.client.js" />
     <Content Include="Modules\Career\Client\Career.client.js" />
+    <Content Include="Modules\DoorManager\Client\DoorManager.client.js" />
     <Content Include="Modules\Industry\Client\Industry.client.js" />
     <Content Include="Modules\TruckerCareer\Client\TruckerCareer.client.js" />
     <Content Include="Modules\ContextMenu\Client\ContextMenu.client.js" />

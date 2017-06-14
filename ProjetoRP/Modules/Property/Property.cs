@@ -133,15 +133,5 @@ namespace ProjetoRP.Modules.Property
         {
             API.consoleOutput("{0},{1},{2}", player.position.X, player.position.Y, player.position.Z);           
         }
-
-        [Command("carpos")]
-        public void getCarPos(Client player)
-        {            
-            Vector3 vehPos = API.shared.getEntityPosition(player.vehicle);
-            API.consoleOutput("{0},{1},{2}", vehPos.X, vehPos.Y, vehPos.Z);
-            Vector3 vehRot = API.shared.getEntityRotation(player.vehicle);
-            API.consoleOutput("{0},{1},{2}", vehRot.X, vehRot.Y, vehRot.Z);
-            API.consoleOutput("----------------------------", vehRot.X, vehRot.Y, vehRot.Z);
-        }
     }
 }
