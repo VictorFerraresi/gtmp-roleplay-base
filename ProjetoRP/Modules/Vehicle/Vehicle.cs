@@ -8,6 +8,7 @@ using ProjetoRP.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using ProjetoRP.Business.Vehicle;
+using ProjetoRP.Business.Player;
 using ProjetoRP.Business.Career;
 using ProjetoRP.Types;
 
@@ -17,12 +18,14 @@ namespace ProjetoRP.Modules.Vehicle
     {
         private VehicleBLL VehBLL = new VehicleBLL();
         private TruckerCareerBLL TruckerBLL = new TruckerCareerBLL();
+        private TaxiCareerBLL TaxiBLL = new TaxiCareerBLL();
 
         public Vehicle()
         {
             API.onResourceStart += OnResourceStart;
             API.onClientEventTrigger += OnClientEventTrigger;
             API.onPlayerEnterVehicle += OnPlayerEnterVehicle;
+            API.onPlayerExitVehicle += OnPlayerExitVehicle;
         }
 
         public void OnResourceStart()
@@ -70,13 +73,14 @@ namespace ProjetoRP.Modules.Vehicle
         private void OnPlayerEnterVehicle(Client player, NetHandle vehicle)
         {
             Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(vehicle).Vehicle;
-            Entities.Character c = Business.Player.ActivePlayer.Get(player).Character;
+            Entities.Character c = ActivePlayer.Get(player).Character;
 
             if (player.hasData("CRATE_HOLDING"))
             {
                 API.warpPlayerOutOfVehicle(player);
                 API.sendChatMessageToPlayer(player, "Você não pode entrar em um veículo carregando uma carga. Utilize /guardarcarga ou /destruircarga.");
             }
+
             else if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION) //Entered a faction vehicle
             {
                 if (API.getPlayerVehicleSeat(player) == -1) //Driver
@@ -88,8 +92,8 @@ namespace ProjetoRP.Modules.Vehicle
                     }
                 }
             }
-            else if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER)
-            {
+            else if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER) //Entered a career vehicle
+            {                
                 if (API.getPlayerVehicleSeat(player) == -1) //Driver
                 {
                     if (c.Career_Id != veh.Owner_Id)
@@ -126,8 +130,61 @@ namespace ProjetoRP.Modules.Vehicle
                         }
                     }
                 }
+                else //Entered a career vehicle as passenger
+                {
+                    Entities.Career.CareerType type = Business.GlobalVariables.Instance.ServerCareers.FirstOrDefault(x => x.Id == veh.Owner_Id).Type;
+                    switch (type)
+                    {
+                        case Entities.Career.CareerType.Taxi:
+                            if (player.hasData("TAXI_DRIVER"))
+                            {
+                                GrandTheftMultiplayer.Server.Elements.Vehicle elementVeh = ActiveVehicle.GetSpawned(vehicle).VehicleHandle;
+
+                                Character taxiDriver = player.getData("TAXI_DRIVER");                                
+                                Client vehicleDriver = VehBLL.Vehicle_GetDriver(elementVeh);
+
+                                Character driverC = ActivePlayer.GetSpawned(vehicleDriver).Character;
+
+                                if(driverC == taxiDriver)//The vehicle's driver is really the taxi that accepted the player's call
+                                {
+                                    TaxiBLL.StartFare(taxiDriver, c);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
+
+        private void OnPlayerExitVehicle(Client player, NetHandle vehicle)
+        {
+            Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(vehicle).Vehicle;
+            Entities.Character c = ActivePlayer.Get(player).Character;
+
+            if (veh.Owner_Type == Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER) //Entered a career vehicle
+            {                
+                Entities.Career.CareerType type = Business.GlobalVariables.Instance.ServerCareers.FirstOrDefault(x => x.Id == veh.Owner_Id).Type;
+                switch (type)
+                {
+                    case Entities.Career.CareerType.Taxi: //Player left a taxi
+                        if(player.hasData("TAXI_TIMER")) //Client left taxi
+                        {
+                            Character driver = player.getData("TAXI_DRIVER");
+                            TaxiBLL.FinishFare(driver, c);
+                        }
+                        else if (player.hasData("TAXI_POSITION")) //Driver left taxi
+                        {
+                            Character customer = player.getData("TAXI_CUSTOMER");
+                            TaxiBLL.FinishFare(c, customer);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }               
 
         private void Vehicle_KickForInvalidTrigger(Client player)
         {

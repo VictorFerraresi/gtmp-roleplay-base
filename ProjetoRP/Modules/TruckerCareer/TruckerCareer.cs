@@ -27,7 +27,7 @@ namespace ProjetoRP.Modules.TruckerCareer
         {
             API.onResourceStart += OnResourceStart;
             API.onResourceStop += OnResourceStop;
-            API.onClientEventTrigger += OnClientEventTrigger;
+            API.onClientEventTrigger += OnClientEventTrigger;            
         }
 
         public void OnResourceStart()

@@ -12,6 +12,7 @@
   <script src="\Item\Item.client.js" type="client" lang="javascript" />
   <script src="\Player\Player.client.js" type="client" lang="javascript" />
   <script src="\Property\Property.client.js" type="client" lang="javascript" />
+  <script src="\TaxiCareer\TaxiCareer.client.js" type="client" lang="javascript" />
   <script src="\TruckerCareer\TruckerCareer.client.js" type="client" lang="javascript" />
   <file src="\Ui\css\bootstrap-slider.min.css" />
   <file src="\Ui\css\bootstrap-theme.css" />

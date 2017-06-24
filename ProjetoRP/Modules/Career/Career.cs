@@ -2,13 +2,14 @@
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
-using GrandTheftMultiplayer.Shared.Math;
+using GrandTheftMultiplayer.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ProjetoRP.Business.Career;
 using ProjetoRP.Business.Player;
+using ProjetoRP.Business.Vehicle;
 using ProjetoRP.Entities;
 using ProjetoRP.Types;
 
@@ -17,12 +18,13 @@ namespace ProjetoRP.Modules.Career
     class Career : Script
     {
         private CareerBLL CareerBLL = new CareerBLL();
+        private TruckerCareerBLL TruckerBLL = new TruckerCareerBLL();
 
         public Career()
         {
             API.onResourceStart += OnResourceStart;
             API.onResourceStop += OnResourceStop;
-            API.onClientEventTrigger += OnClientEventTrigger;
+            API.onClientEventTrigger += OnClientEventTrigger;            
         }
 
         public void OnResourceStart()
@@ -75,7 +77,7 @@ namespace ProjetoRP.Modules.Career
                     API.triggerClientEvent(player, "SC_CLOSE_LEAVE_CAREER_CONFIRM_MENU");
                     break;
             }
-        }
+        }        
 
         private void Career_KickForInvalidTrigger(Client player)
         {
@@ -114,6 +116,9 @@ namespace ProjetoRP.Modules.Career
                 {
                     case Entities.Career.CareerType.Trucker:
                         API.sendPictureNotificationToPlayer(player, "Entre em uma van para começar a trabalhar", "CHAR_MP_ARMY_CONTACT", 1, 0, "John Doe", "Você agora é um caminhoneiro");
+                        break;
+                    case Entities.Career.CareerType.Taxi:
+                        API.sendPictureNotificationToPlayer(player, "Entre em um taxi para começar a trabalhar", "CHAR_TAXI", 1, 0, "Downtown Cab Co.", "Você agora é um taxista");
                         break;
                     default:
                         break;
@@ -157,6 +162,12 @@ namespace ProjetoRP.Modules.Career
                         }
                         API.sendChatMessageToPlayer(player, "Para abandonar o emprego atual, digite ~r~/sairemprego");
                         break;
+
+                    case Entities.Career.CareerType.Taxi:                        
+                        API.sendChatMessageToPlayer(player, "~y~______________[" + c.Career.Name + "]______________");
+                        API.sendChatMessageToPlayer(player, "Experiência Atual: ~c~" + c.CareerExperience);
+                        API.sendChatMessageToPlayer(player, "Para abandonar o emprego atual, digite ~r~/sairemprego");
+                        break;
                 }
             }
         }
@@ -175,7 +186,7 @@ namespace ProjetoRP.Modules.Career
             }
             else
             {
-                API.shared.triggerClientEvent(player, "SC_SHOW_LEAVE_CAREER_CONFIRM_MENU");                
+                API.triggerClientEvent(player, "SC_SHOW_LEAVE_CAREER_CONFIRM_MENU");                
             }
         }
     }
