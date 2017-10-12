@@ -31,6 +31,18 @@ namespace ProjetoRP.Business.Item
                 return true;
         } }
 
+        public override string ItemName { get {
+                switch (Item.Variation)
+                {
+                    case "aspirin":
+                        return "Aspirina";
+                    case "adrenaline-shot":
+                        return "Injeção de Adrenalina";
+                    default:
+                        return Messages.unnamed_item;
+                }
+        } }
+
         public MedkitService(DatabaseContext context, Medkit item) : base(context, item)
         {
         }

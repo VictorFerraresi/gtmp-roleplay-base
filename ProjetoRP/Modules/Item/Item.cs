@@ -1,11 +1,8 @@
 ﻿using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Server.Managers;
 using ProjetoRP.Business.Item;
-using ProjetoRP.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ProjetoRP.Business.Player;
 
 namespace ProjetoRP.Modules.Item
 {
@@ -47,6 +44,49 @@ namespace ProjetoRP.Modules.Item
         public void OnResourceStop()
         {
 
+        }
+
+        [Command("inventario")]
+        public void Command_Inventory(Client sender)
+        {
+            var player = ActivePlayer.GetSpawned(sender);    
+
+            if(player != null)
+            {
+                using (var context = new DatabaseContext())
+                {
+                    var service = new ItemService(context);
+                    var items = service.GetItemsFromPlayer(player.Character);
+
+                    // int pageCount = (records + recordsPerPage - 1) / recordsPerPage;
+                    const int items_per_line = 3;
+                    var lines = (items.Count + items_per_line - 1) / items_per_line;
+
+                    for(var i = 0; i < lines; i++)
+                    {
+                        var line = "";
+                        for (var j = i * items_per_line; j < ((i + 1) * items_per_line); j++)
+                        {
+                            var item = items[j];
+                            var item_service = service.GetItemModelServiceForItem(item.Item2);
+
+                            line += item_service.ItemName;
+
+                            var count = item_service.GetChildren().Count;
+                            if (count > 0)
+                            {
+                                line += " ~b~(" + count + ")~w~";
+                            }
+
+                            if((j % items_per_line) != (items_per_line - 1))
+                            {
+                                line += " - ";
+                            }
+                        }
+                        sender.sendChatMessage(line);
+                    }
+                }
+            }
         }
     }
 }

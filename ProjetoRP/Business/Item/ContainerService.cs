@@ -51,6 +51,22 @@ namespace ProjetoRP.Business.Item
                 }
         } }
 
+        public override string ItemName { get {
+                switch (Item.Variation)
+                {
+                    case "school-backpack":
+                        return "Mochila Escolar";
+                    case "traveler-backpack":
+                        return "Mochila do Viajante";
+                    case "assault-backpack":
+                        return "Mochila Tática";
+                    case "snackpack-toreality":
+                        return "Mochila do Eminem";
+                    default:
+                        return Messages.unnamed_item;
+                }
+         } }
+
         public ContainerService(DatabaseContext context, Container item) : base(context, item)
         {
         }
