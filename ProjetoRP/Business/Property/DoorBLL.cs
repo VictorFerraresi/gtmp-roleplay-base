@@ -6,6 +6,7 @@ using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Shared.Math;
 using ProjetoRP.Business.Player;
+using GrandTheftMultiplayer.Server.Extensions;
 
 namespace ProjetoRP.Business.Property
 {

@@ -67,7 +67,7 @@ namespace ProjetoRP.Modules.Vehicle
             }
         }
 
-        private void OnPlayerEnterVehicle(Client player, NetHandle vehicle)
+        private void OnPlayerEnterVehicle(Client player, NetHandle vehicle, int seat)
         {
             Entities.Vehicle.Vehicle veh = ActiveVehicle.GetSpawned(vehicle).Vehicle;
             Entities.Character c = Business.Player.ActivePlayer.Get(player).Character;
