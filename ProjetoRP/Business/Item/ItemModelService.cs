@@ -49,6 +49,10 @@ namespace ProjetoRP.Business.Item
                 return 1;
         } }
 
+        public virtual string ItemName { get {
+                return Messages.unnamed_item;
+        } }
+
         public ItemModelService(DatabaseContext context, Entities.Item item)
         {
             DatabaseContext = context;
@@ -161,7 +165,12 @@ namespace ProjetoRP.Business.Item
                 throw new Exceptions.Item.InvalidItemModelServiceException(Messages.invalid_variation);
             }
         }
-                
+
+        public List<Entities.Item> GetChildren()
+        {
+            return DatabaseContext.ItemsPlacement.OfType<ContainerItem>().Where(ip => ip.ParentItem_Id == Item.Id).Select(ips => ips.Item).ToList();
+        }
+
         public abstract void Character_PostEquipped(Character character, Types.EquipSlot slot);
         public abstract void Character_Activate(Character character);
 

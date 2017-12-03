@@ -129,4 +129,7 @@
   <data name="null_item" xml:space="preserve">
     <value>O item não existe ou foi deletado.</value>
   </data>
+  <data name="unnamed_item" xml:space="preserve">
+    <value>Item Sem Nome</value>
+  </data>
 </root>
