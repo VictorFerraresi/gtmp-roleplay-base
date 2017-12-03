@@ -411,10 +411,8 @@ namespace ProjetoRP.Modules.Player
 
                 PedHash pedHash;
                 Enum.TryParse(cd.Skin, out pedHash);
-                player.setSkin(pedHash);
-
-                API.consoleOutput(cd.Rank.ToString());
-
+                player.setSkin(pedHash);               
+                
                 player.position = new Vector3(cd.X, cd.Y, cd.Z);
                 player.dimension = cd.Dimension;
                 player.freeze(false);

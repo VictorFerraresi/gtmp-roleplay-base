@@ -16,6 +16,7 @@ namespace ProjetoRP.Modules.Admin
         private PropertyBLL PropBLL = new PropertyBLL();
         private DoorBLL DoorBLL = new DoorBLL();
         private FactionBLL FacBLL = new FactionBLL();
+        private PlayerBLL PlayerBLL = new PlayerBLL();
 
         public Admin()
         {
@@ -741,6 +742,78 @@ namespace ProjetoRP.Modules.Admin
                     API.sendChatMessageToPlayer(target, "Você foi setado como líder da facção " + faction.Name + " pelo administrador " + ac.Character.Name);
                 }
             }
+        }
+
+        [Command("dardinheiro")]
+        public void GiveMoneyCommand(Client sender, int targetid, int amount)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (null == ac) return;
+
+            //if (sender.IsAdmin()){
+            var targetAc = ActivePlayer.GetSpawned(targetid);
+
+            if(null == targetAc)
+            {
+                API.sendChatMessageToPlayer(sender, "Escolha um playerid válido!");
+            }
+            else
+            {
+                PlayerBLL.Player_GiveMoney(targetAc.Character, amount);
+                string msg;
+
+                msg = String.Format("Você setou ${0} para o jogador {1}.", amount, targetAc.Character.Name);
+                API.sendChatMessageToPlayer(sender, "~#FFDC18~", msg);
+                msg = String.Format("O administrador {0} setou ${1} para o seu personagem.", ac.Character.Name, amount);
+                API.sendChatMessageToPlayer(targetAc.Client, "~#D8B713~", msg);
+            }
+            //}
+        }
+
+        [Command("ir")]
+        public void GoToPlayerCommand(Client sender, int targetid)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (null == ac) return;
+
+            //if (sender.IsAdmin()){
+            var targetAc = ActivePlayer.GetSpawned(targetid);
+
+            if (null == targetAc)
+            {
+                API.sendChatMessageToPlayer(sender, "Escolha um playerid válido!");
+            }
+            else
+            {
+                Vector3 pos = targetAc.Client.position;
+                pos.Y += 2;
+
+                sender.position = pos;
+            }
+            //}
+        }
+
+        [Command("trazer")]
+        public void GetHerePlayerCommand(Client sender, int targetid)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (null == ac) return;
+
+            //if (sender.IsAdmin()){
+            var targetAc = ActivePlayer.GetSpawned(targetid);
+
+            if (null == targetAc)
+            {
+                API.sendChatMessageToPlayer(sender, "Escolha um playerid válido!");
+            }
+            else
+            {
+                Vector3 pos = sender.position;
+                pos.Y += 2;
+
+                targetAc.Client.position = pos;
+            }
+            //}
         }
     }
 }

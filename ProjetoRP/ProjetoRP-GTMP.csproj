@@ -121,6 +121,7 @@
     <Compile Include="Business\Career\CareerBLL.cs" />
     <Compile Include="Business\Career\TruckerCareerBLL.cs" />
     <Compile Include="Business\Item\CarKeyService.cs" />
+    <Compile Include="Business\Item\CellphoneService.cs" />
     <Compile Include="Business\Item\ContainerService.cs" />
     <Compile Include="Business\Player\PlayerService.cs" />
     <Compile Include="Business\Property\BusinessBLL.cs" />
@@ -150,10 +151,15 @@
     <Compile Include="DatabaseContext.cs" />
     <Compile Include="Entities\Career\Career.cs" />
     <Compile Include="Entities\Career\TruckRestrictions.cs" />
+    <Compile Include="Entities\ItemModel\Cellphone.cs" />
     <Compile Include="Entities\PlayerAttribute.cs" />
     <Compile Include="Migrations\201710101728412_Flatten.cs" />
     <Compile Include="Migrations\201710101728412_Flatten.Designer.cs">
       <DependentUpon>201710101728412_Flatten.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712022356183_addedCellphoneItem.cs" />
+    <Compile Include="Migrations\201712022356183_addedCellphoneItem.Designer.cs">
+      <DependentUpon>201712022356183_addedCellphoneItem.cs</DependentUpon>
     </Compile>
     <Compile Include="Modules\Career\Career.cs" />
     <Compile Include="Modules\Career\Messages.Designer.cs">
@@ -250,6 +256,9 @@
     <EmbeddedResource Include="Migrations\201710101728412_Flatten.resx">
       <DependentUpon>201710101728412_Flatten.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712022356183_addedCellphoneItem.resx">
+      <DependentUpon>201712022356183_addedCellphoneItem.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Colors.Designer.cs</LastGenOutput>
@@ -282,7 +291,6 @@
     <Content Include="Modules\Player\Client\Player.client.js" />
     <Content Include="Modules\Property\Client\Property.client.js" />
     <Content Include="Modules\Property\Client\Property.js" />
-    <Content Include="Modules\Vehicle\Client\Vehicle.js" />
     <Content Include="Modules\Vehicle\Client\Vehicle.client.js" />
     <Content Include="types-gt-mp\Declarations.d.ts" />
     <Content Include="types-gt-mp\Definitions\Declarations.d.ts" />

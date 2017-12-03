@@ -19,7 +19,7 @@ namespace ProjetoRP.Modules.Admin
             _client.MessageReceived += (s, e) =>
             {
                 if (!e.Message.IsAuthor)
-                    if (e.Channel.Id == 280034280908783616)
+                    if (e.Channel.Id == 367357005322780672)
                         SendAdminChatMessage(e.Message.User.Name, e.Message.Text);
             };
 
@@ -28,7 +28,7 @@ namespace ProjetoRP.Modules.Admin
 
         public async void SendAdminChatMessageToDiscord(string name, string text)
         {            
-            await _client.GetChannel(280034280908783616).SendMessage("**" + name + "**: `" + text + "`");
+            await _client.GetChannel(367357005322780672).SendMessage("**" + name + "**: `" + text + "`");
         }
 
         public void SendAdminChatMessage(string name, string text)

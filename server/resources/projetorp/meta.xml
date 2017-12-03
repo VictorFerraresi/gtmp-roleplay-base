@@ -30,10 +30,6 @@
   <file src="\Ui\fonts\glyphicons-halflings-regular.woff" />
   <file src="\Ui\fonts\glyphicons-halflings-regular.woff2" />
   <file src="\Ui\fonts\housescript.ttf" />
-  <file src="\Ui\img\items\blank.png" />
-  <file src="\Ui\img\items\weapon-combatpistol.png" />
-  <file src="\Ui\img\items\weapon-combatpistol2.png" />
-  <file src="\Ui\img\items\weapon-pistol.png" />
   <file src="\Ui\img\AndreasCutscene.png" />
   <file src="\Ui\img\avatar.png" />
   <file src="\Ui\img\bg.jpg" />
@@ -41,6 +37,10 @@
   <file src="\Ui\img\bg3.jpg" />
   <file src="\Ui\img\license.png" />
   <file src="\Ui\img\seigaiha.png" />
+  <file src="\Ui\img\items\blank.png" />
+  <file src="\Ui\img\items\weapon-combatpistol.png" />
+  <file src="\Ui\img\items\weapon-combatpistol2.png" />
+  <file src="\Ui\img\items\weapon-pistol.png" />
   <file src="\Ui\js\bootstrap-slider.min.js" />
   <file src="\Ui\js\bootstrap.js" />
   <file src="\Ui\js\bootstrap.min.js" />
