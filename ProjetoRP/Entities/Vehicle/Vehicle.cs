@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ProjetoRP.Types;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,6 +18,7 @@ namespace ProjetoRP.Entities.Vehicle
     {
         public Vehicle()
         {
+            Cargo = new List<ProductType>();
         }
 
         [Key]
@@ -65,5 +64,8 @@ namespace ProjetoRP.Entities.Vehicle
 
         [Required]
         public string LicensePlate { get; set; }
+
+        [NotMapped]
+        public List<ProductType> Cargo { get; set; }
     }
 }

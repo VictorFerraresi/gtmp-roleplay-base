@@ -415,6 +415,131 @@
     </transition>
   </div>
 
+  <div id="truckerpda-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-medium">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="row masthead"></div>
+              <div class="row"  style="margin-left: 5px; margin-right: 5px">
+                <div class="panel-body">
+                  <h1 style="font-family: HouseScript">Indústrias</h1>
+                  <div class="alert alert-danger" role="alert" v-if="error.length > 0">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Erro:</span>
+                    {{ error }}
+                  </div>   
+                  <table class="table table-striped">
+                    <thead>                        
+                      <tr>
+                        <th>Indústria</th>
+                        <th>Produto</th>
+                        <th>Ação</th>
+                      </tr>                     
+                    </thead>
+                    <tbody>
+                      <tr v-for="loadpoint in this.in.loadpoints">
+                          <td>{{ loadpoint.industryname }}</td>
+                          <td>{{ loadpoint.product }}</td>
+                          <td><button type="button" v-on:click="trackgps(loadpoint.id)" class="btn btn-success btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Marcar GPS</button></td>
+                      </tr>
+                    </tbody>
+                  </table>                                                              
+                  <button type="button" v-on:click="close" class="btn btn-danger btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Fechar</button>                                      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </transition>
+  </div>
+
+  <div id="truckcargo-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-medium">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="row masthead"></div>
+              <div class="row"  style="margin-left: 5px; margin-right: 5px">
+                <div class="panel-body">
+                  <h1 style="font-family: HouseScript">Carga</h1>
+                  <div class="alert alert-danger" role="alert" v-if="error.length > 0">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Erro:</span>
+                    {{ error }}
+                  </div>   
+                  <table class="table table-striped">
+                    <thead>                        
+                      <tr>
+                        <th>Carga</th>
+                        <th>Tipo</th>
+                        <th>Ação</th>
+                      </tr>                     
+                    </thead>
+                    <tbody>
+                      <tr v-for="cargo in this.in.cargoes">
+                          <td>{{ cargo.name }}</td>
+                          <td>{{ cargo.className }}</td>
+                          <td><button type="button" v-on:click="takeCargo(cargo.id, cargo.truckid)" class="btn btn-success btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Pegar Carga</button></td>
+                      </tr>
+                    </tbody>
+                  </table>                                                              
+                  <button type="button" v-on:click="close" class="btn btn-danger btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Fechar</button>                                      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </transition>
+  </div>
+
+  <div id="truckunloadcargo-app">
+    <transition name="fade">
+      <template v-if="display === true">
+        <div class="container container-table container-medium">
+          <div class="row vertical-center-row">
+            <div class="panel panel-default game-box">
+              <div class="row masthead"></div>
+              <div class="row"  style="margin-left: 5px; margin-right: 5px">
+                <div class="panel-body">
+                  <h1 style="font-family: HouseScript">Selecione uma carga para descarregar</h1>
+                  <div class="alert alert-danger" role="alert" v-if="error.length > 0">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Erro:</span>
+                    {{ error }}
+                  </div>   
+                  <table class="table table-striped">
+                    <thead>                        
+                      <tr>
+                        <th>Carga</th>
+                        <th>Tipo</th>
+                        <th>Quantidade</th>
+                        <th>Ação</th>
+                      </tr>                     
+                    </thead>
+                    <tbody>
+                      <tr v-for="cargo in this.in.cargoes">
+                          <td>{{ cargo.name }}</td>
+                          <td>{{ cargo.className }}</td>
+                          <td>{{ cargo.count }}</td>
+                          <td><button type="button" v-on:click="unloadCargo(cargo.id)" class="btn btn-success btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Entregar Carga</button></td>
+                      </tr>
+                    </tbody>
+                  </table>                                                              
+                  <button type="button" v-on:click="close" class="btn btn-danger btn-striped" v-bind:disabled="blocked" v-bind:class="{ 'btn-processing': blocked }">Fechar</button>                                      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </transition>
+  </div>
+
   <script src="js/vue.js"></script>
   <!-- <script src="js/inventory.js"></script> -->
   <script type="text/javascript">
@@ -693,6 +818,74 @@
             }
         }
     });
+
+    truckerpda_app = new Vue({
+        el: '#truckerpda-app',
+        data: {
+            display: false,
+            blocked: false,
+            error: '',
+            in: {
+                loadpoints: []
+            }
+        },
+        methods: {
+            close: function () {
+                this.blocked = false;
+                resourceCall('triggerEvent', 'CS_TRUCKER_PDA_CLOSE');
+            },
+            trackgps: function (loadpointid) {                
+                resourceCall('triggerEvent', 'CS_TRUCKER_PDA_TRACKGPS', loadpointid);
+                this.close();
+            }
+        }
+    });
+
+    truckcargo_app = new Vue({
+        el: '#truckcargo-app',
+        data: {
+            display: false,
+            blocked: false,
+            error: '',            
+            in: {
+                cargoes: []                
+            }
+        },
+        methods: {
+            close: function () {
+                this.blocked = false;
+                resourceCall('triggerEvent', 'CS_TRUCK_CARGO_CLOSE');
+            },
+            takeCargo: function (cargoid, truckid) {
+                var outArray = [cargoid, truckid];
+                resourceCall('triggerEvent', 'CS_TAKE_CARGO_FROM_TRUCK', JSON.stringify(outArray));
+                this.close();
+            }
+        }
+    });
+
+    truckunloadcargo_app = new Vue({
+        el: '#truckunloadcargo-app',
+        data: {
+            display: false,
+            blocked: false,
+            error: '',
+            in: {
+                cargoes: []
+            }
+        },
+        methods: {
+            close: function () {
+                this.blocked = false;
+                resourceCall('triggerEvent', 'CS_TRUCK_UNLOAD_CARGO_CLOSE');
+            },
+            unloadCargo: function (cargoid) {
+                resourceCall('triggerEvent', 'CS_TRUCK_UNLOAD_CARGO_START', cargoid);
+                this.close();
+            }
+        }
+    });
+
 
 //     inv_app = new Vue({
 //       el: '#inv-app',

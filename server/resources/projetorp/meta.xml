@@ -6,10 +6,13 @@
   <script src="\Career\Career.client.js" type="client" lang="javascript" />
   <script src="\ContextMenu\ContextMenu.client.js" type="client" lang="javascript" />
   <file src="\ContextMenu\page.html" />
+  <script src="\DoorManager\DoorManager.client.js" type="client" lang="javascript" />
   <script src="\Faction\Faction.client.js" type="client" lang="javascript" />
+  <script src="\Industry\Industry.client.js" type="client" lang="javascript" />
   <script src="\Item\Item.client.js" type="client" lang="javascript" />
   <script src="\Player\Player.client.js" type="client" lang="javascript" />
   <script src="\Property\Property.client.js" type="client" lang="javascript" />
+  <script src="\TaxiCareer\TaxiCareer.client.js" type="client" lang="javascript" />
   <script src="\TruckerCareer\TruckerCareer.client.js" type="client" lang="javascript" />
   <file src="\Ui\css\bootstrap-slider.min.css" />
   <file src="\Ui\css\bootstrap-theme.css" />

@@ -4,6 +4,7 @@ using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
 using ProjetoRP.Business.Player;
+using ProjetoRP.Business.Vehicle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace ProjetoRP.Modules.Faction
         public Faction()
         {
             API.onResourceStart += OnResourceStart;
-            API.onClientEventTrigger += OnClientEventTrigger;
+            API.onClientEventTrigger += OnClientEventTrigger;            
         }
 
         public void OnResourceStart()

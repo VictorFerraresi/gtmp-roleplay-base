@@ -15,6 +15,7 @@ namespace ProjetoRP.Entities
             Cash = Int32.Parse(Configurations.Character.Default_Cash);
             Bank = Int32.Parse(Configurations.Character.Default_Bank);
             Savings = Int32.Parse(Configurations.Character.Default_Savings);
+            Payment = Int32.Parse(Configurations.Character.Default_Payment);
 
             X = Double.Parse(Configurations.Character.Default_X);
             Y = Double.Parse(Configurations.Character.Default_Y);
@@ -46,6 +47,8 @@ namespace ProjetoRP.Entities
         public int Bank { get; set; }
         [Required]
         public int Savings { get; set; }
+        [Required]
+        public int Payment { get; set; }
 
         [Required]
         [MaxLength(32)]

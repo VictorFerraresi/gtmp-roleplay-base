@@ -49,5 +49,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
         var player = API.getLocalPlayer();
         var pos = API.getEntityPosition(player);
         API.triggerServerEvent("CS_RETURN_LOGOUT_AREA", API.getStreetName(pos), API.getZoneName(pos));
+    } else if (eventName == "SC_SET_WAYPOINT") {
+        API.setWaypoint(args[0], args[1]);
     }
 });

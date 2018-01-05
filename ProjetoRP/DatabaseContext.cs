@@ -34,5 +34,8 @@ namespace ProjetoRP
         public DbSet<Entities.Career.Career> Careers { get; set; }
 
         public DbSet<Entities.Faction.Locker> Lockers { get; set; }
+
+        public DbSet<Entities.Industry.Industry> Industries { get; set; }
+        public DbSet<Entities.Industry.LoadPoint> LoadPoints { get; set; }
     }
 }

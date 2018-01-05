@@ -69,26 +69,26 @@ namespace ProjetoRP.Modules.Admin
 
                 case "CS_CREATE_FACTION_CANCEL":
                     API.call("Ui", "evalUi", player, "factioncreate_app.display=false;factioncreate_app.blocked=false");
-                    API.call("Ui", "fixCursor", player, false);                   
-                   API.sendChatMessageToPlayer(player, "Você cancelou a criação da facção!");
+                    API.call("Ui", "fixCursor", player, false);
+                    API.sendChatMessageToPlayer(player, "Você cancelou a criação da facção!");
                     break;
 
-                case "CS_CREATE_PROPERTY_SUBMIT":                    
+                case "CS_CREATE_PROPERTY_SUBMIT":
                     var datapc = API.fromJson((string)args[0]);
 
-                    string address = (string)datapc.propertyaddress;                    
+                    string address = (string)datapc.propertyaddress;
                     int typepc = (int)datapc.propertytype;
-                    string price = (string)datapc.propertyprice;                    
+                    string price = (string)datapc.propertyprice;
 
                     string msgpc;
 
                     if (PropBLL.Property_Validate(address, typepc, price, out msgpc))
-                    {                        
+                    {
                         int priceVal = 0;
-                        int.TryParse(price, out priceVal);                        
+                        int.TryParse(price, out priceVal);
 
                         API.call("Ui", "evalUi", player, "propertycreate_app.display=false;propertycreate_app.blocked=false");
-                        API.call("Ui", "fixCursor", player, false);                        
+                        API.call("Ui", "fixCursor", player, false);
 
                         Entities.Property.Property prop = null;
 
@@ -114,6 +114,8 @@ namespace ProjetoRP.Modules.Admin
                                 prop.Z = player.position.Z;
                                 prop.Price = priceVal;
                                 prop.Dimension = player.dimension;
+                                ((Entities.Property.Business)prop).Name = "Nova Empresa";
+                                ((Entities.Property.Business)prop).BusinessType = Entities.Property.BusinessType.BUSINESS_TYPE_NULL;
                                 break;
 
                             case (int)Entities.Property.PropertyType.PROPERTY_TYPE_ENTRANCE:
@@ -123,13 +125,13 @@ namespace ProjetoRP.Modules.Admin
                             case (int)Entities.Property.PropertyType.PROPERTY_TYPE_OFFICE:
                                 //TODO
                                 break;
-                        }                                                
+                        }
 
                         PropBLL.Property_Create(prop, player.dimension);
                         API.sendChatMessageToPlayer(player, msgpc);
                     }
                     else
-                    {                        
+                    {
                         API.call("Ui", "evalUi", player, "propertycreate_app.blocked=false;propertycreate_app.error='" + msgpc + "';");
                     }
                     break;
@@ -318,7 +320,7 @@ namespace ProjetoRP.Modules.Admin
                                             Entities.Property.Business biz = prop as Entities.Property.Business;
                                             Entities.Property.BusinessType bizTypeEnum;
                                             Enum.TryParse(biztype.ToString(), out bizTypeEnum);
-                                            biz.BizType = bizTypeEnum;
+                                            biz.BusinessType = bizTypeEnum;
 
                                             PropBLL.Property_Save(biz);
                                             PropBLL.RedrawPickup(biz);
@@ -336,6 +338,29 @@ namespace ProjetoRP.Modules.Admin
                             else
                             {
                                 API.sendChatMessageToPlayer(sender, "Esta propriedade não é do tipo empresa!");
+                            }
+                            break;
+                        case "nome":
+                            if (value.Equals("default"))
+                            {
+                                API.sendChatMessageToPlayer(sender, "Escolha um nome para a propriedade!");
+                                API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarpropriedade " + id + " nome Posto de Gasolina X!");
+                            }
+                            else
+                            {
+                                if (prop is Entities.Property.Business)
+                                {
+                                    ((Entities.Property.Business)prop).Name = value;
+
+                                    PropBLL.Property_Save(prop);
+                                    PropBLL.RedrawPickup(prop);
+
+                                    API.sendChatMessageToPlayer(sender, "Você alterou o nome da propriedade ID " + id + " para " + value);
+                                }
+                                else
+                                {
+                                    API.sendChatMessageToPlayer(sender, "Você só pode alterar o nome de propriedades do tipo Empresa!");
+                                }
                             }
                             break;
 
@@ -661,7 +686,7 @@ namespace ProjetoRP.Modules.Admin
                                 FacBLL.Faction_Save(faction);
 
                                 API.sendChatMessageToPlayer(sender, "Você alterou o nome da facção ID " + id + " para " + value);
-                            }                                                      
+                            }
                             break;
 
                         case "acro":
@@ -729,7 +754,7 @@ namespace ProjetoRP.Modules.Admin
                                 API.sendChatMessageToPlayer(sender, "Digite apenas números no cofre da facção!");
                                 API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarfaccao " + id + " cofre 150000");
                             }
-                            break;                       
+                            break;
 
                         default:
                             API.sendChatMessageToPlayer(sender, "Escolha uma ação válida!");
@@ -756,23 +781,23 @@ namespace ProjetoRP.Modules.Admin
             {
                 API.sendChatMessageToPlayer(sender, "Não existem facções com o ID menor que 0!");
             }
-            else if(factionid == 0)
+            else if (factionid == 0)
             {
                 Client target = targetAc.Client;
 
                 Entities.Character c = targetAc.Character;
                 c.Faction = null;
-                c.Faction_Id = null;                
+                c.Faction_Id = null;
                 c.Rank = null;
                 c.Rank_Id = null;
 
                 API.sendChatMessageToPlayer(sender, "Você retirou o líder de facção do jogador " + c.Name);
             }
             else
-            {                
+            {
                 Client target = targetAc.Client;
                 Entities.Faction.Faction faction = FacBLL.FindFactionById(factionid);
-                if(faction == null)
+                if (faction == null)
                 {
                     API.sendChatMessageToPlayer(sender, "Esta facção não existe!");
                 }
@@ -783,7 +808,7 @@ namespace ProjetoRP.Modules.Admin
                     c.Faction_Id = faction.Id;
                     Entities.Faction.Rank rank = FacBLL.Faction_GetLeaderRank(faction);
                     c.Rank = rank;
-                    c.Rank_Id = rank.Id;                    
+                    c.Rank_Id = rank.Id;
 
                     API.sendChatMessageToPlayer(sender, "Você setou o jogador " + c.Name + " como líder da facção " + faction.Name);
                     API.sendChatMessageToPlayer(target, "Você foi setado como líder da facção " + faction.Name + " pelo administrador " + ac.Character.Name);
@@ -862,5 +887,5 @@ namespace ProjetoRP.Modules.Admin
             }
             //}
         }
-    }
+    }   
 }

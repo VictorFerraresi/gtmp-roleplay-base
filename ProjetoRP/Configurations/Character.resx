@@ -132,6 +132,9 @@
   <data name="Default_Level" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="Default_Payment" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="Default_Savings" xml:space="preserve">
     <value>0</value>
   </data>
