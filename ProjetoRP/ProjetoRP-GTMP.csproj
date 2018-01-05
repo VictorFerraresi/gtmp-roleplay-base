@@ -263,6 +263,10 @@
     <Compile Include="Migrations\201801040647468_AddedFactionLockers.Designer.cs">
       <DependentUpon>201801040647468_AddedFactionLockers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801050412463_AddedBusinessType.cs" />
+    <Compile Include="Migrations\201801050412463_AddedBusinessType.Designer.cs">
+      <DependentUpon>201801050412463_AddedBusinessType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Career\Career.cs" />
     <Compile Include="Modules\Career\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -362,6 +366,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801040647468_AddedFactionLockers.resx">
       <DependentUpon>201801040647468_AddedFactionLockers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801050412463_AddedBusinessType.resx">
+      <DependentUpon>201801050412463_AddedBusinessType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>

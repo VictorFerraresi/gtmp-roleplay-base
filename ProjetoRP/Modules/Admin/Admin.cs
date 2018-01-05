@@ -292,9 +292,56 @@ namespace ProjetoRP.Modules.Admin
                             }
                             break;
 
+                        case "tipoempresa":
+                            if (prop is Entities.Property.Business)
+                            {
+                                if (value.Equals("default"))
+                                {
+                                    API.sendChatMessageToPlayer(sender, "Escolha um tipo de empresa para a propriedade!");
+                                    API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarpropriedade " + id + " tipoempresa 1");
+                                    API.sendChatMessageToPlayer(sender, "~y~[TIPOS] ~w~ 0 = Generica ~g~ 1 = General Store (24/7)");
+                                }
+                                else
+                                {
+                                    int biztype = 0;
+
+                                    if (Int32.TryParse(value, out biztype))
+                                    {
+                                        if (biztype < 0 || biztype > 1)
+                                        {
+                                            API.sendChatMessageToPlayer(sender, "Escolha um tipo de empresa válido!");
+                                            API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarpropriedade " + id + " tipoempresa 1");
+                                            API.sendChatMessageToPlayer(sender, "~y~[TIPOS] ~w~ 0 = Generica ~g~ 1 = General Store (24/7)");
+                                        }
+                                        else
+                                        {                                            
+                                            Entities.Property.Business biz = prop as Entities.Property.Business;
+                                            Entities.Property.BusinessType bizTypeEnum;
+                                            Enum.TryParse(biztype.ToString(), out bizTypeEnum);
+                                            biz.BizType = bizTypeEnum;
+
+                                            PropBLL.Property_Save(biz);
+                                            PropBLL.RedrawPickup(biz);
+
+                                            API.sendChatMessageToPlayer(sender, "Você alterou o tipo da propriedade ID " + id + " para " + biztype);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        API.sendChatMessageToPlayer(sender, "Digite apenas números no valor!");
+                                        API.sendChatMessageToPlayer(sender, "~y~[EXEMPLO] ~w~/editarpropriedade " + id + " preco 25000");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                API.sendChatMessageToPlayer(sender, "Esta propriedade não é do tipo empresa!");
+                            }
+                            break;
+
                         default:
                             API.sendChatMessageToPlayer(sender, "Escolha uma ação válida!");
-                            API.sendChatMessageToPlayer(sender, "~y~[AÇÕES] ~w~pos, endereco, preco.");
+                            API.sendChatMessageToPlayer(sender, "~y~[AÇÕES] ~w~pos, endereco, preco, tipoempresa.");
                             break;
                     }
                 }
