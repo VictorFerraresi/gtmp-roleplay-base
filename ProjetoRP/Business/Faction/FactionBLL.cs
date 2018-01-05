@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
 using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Shared.Math;
+using GrandTheftMultiplayer.Server.Elements;
 
 namespace ProjetoRP.Business.Faction
 {
@@ -198,7 +200,7 @@ namespace ProjetoRP.Business.Faction
 
             using (var context = new DatabaseContext())
             {
-                faction = (from f in context.Factions where f.Id == faction_id select f).Include(f => f.Ranks).AsNoTracking().Single();
+                faction = (from f in context.Factions where f.Id == faction_id select f).Include(f => f.Ranks).Include(f => f.Lockers).AsNoTracking().Single();               
             }
 
             return faction;
@@ -210,7 +212,7 @@ namespace ProjetoRP.Business.Faction
 
             using (var context = new DatabaseContext())
             {
-                factions = (from f in context.Factions select f).Include(f => f.Ranks).AsNoTracking().ToList();              
+                factions = (from f in context.Factions select f).Include(f => f.Ranks).Include(f => f.Lockers).AsNoTracking().ToList();              
             }
             return factions;
         }        
@@ -302,6 +304,51 @@ namespace ProjetoRP.Business.Faction
                     Faction_SendMessage(fac, "~#FF8282~", msg);
                 }
             }
+        }
+
+        public Entities.Faction.Locker Faction_GetNearestLockerInRange(Client player, double range)
+        {
+            Vector3 playerPos = API.shared.getEntityPosition(player);
+
+            Entities.Faction.Locker nearestLocker = null;
+
+            double nearestDistance = range;
+
+            foreach (var fac in Business.GlobalVariables.Instance.ServerFactions)
+            {
+                foreach(var locker in fac.Lockers)
+                {
+                    Vector3 lockerPos;
+                    lockerPos = new Vector3(locker.X, locker.Y, locker.Z);
+
+                    float distance = playerPos.DistanceTo(lockerPos);
+
+                    if (locker.Dimension == player.dimension && distance <= range && distance <= nearestDistance)
+                    {
+                        nearestDistance = distance;
+                        nearestLocker = locker;
+                    }
+                }                
+            }
+            return nearestLocker;
+        }
+
+        public void DrawLockersPickups()
+        {
+            foreach(var fac in Business.GlobalVariables.Instance.ServerFactions)
+            {
+                foreach(var locker in fac.Lockers)
+                {
+                    DrawLockerPickup(locker);                    
+                }
+            }
+        }
+
+        public void DrawLockerPickup(Entities.Faction.Locker locker)
+        {
+            string lockerText = string.Format("~y~{0}~w~\n\nDigite ~b~/armario ~w~para acessar.", locker.Name);
+            locker.Pickup = API.shared.createMarker(0, new Vector3(locker.X, locker.Y, locker.Z - 0.25), new Vector3(), new Vector3(), new Vector3(0.5, 0.5, 0.5), 125, 255, 255, 0, 1);
+            locker.TextLabel = API.shared.createTextLabel(lockerText, new Vector3(locker.X, locker.Y, locker.Z + 1.0), 10.0f, 1.0f, false);
         }
     }
 }

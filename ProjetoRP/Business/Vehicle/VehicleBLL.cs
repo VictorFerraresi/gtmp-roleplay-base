@@ -68,14 +68,14 @@ namespace ProjetoRP.Business.Vehicle
 
             ActiveVehicle av = Business.Vehicle.ActiveVehicle.GetBySQLID(veh.Id);
 
-            if(veh.Name == "Sheriff")
+            if(veh.Name == "Police" || veh.Name == "Sheriff")
             {
                 API.shared.setVehicleExtra(serverVeh, 1, true); //Lightbar
                 API.shared.setVehicleExtra(serverVeh, 2, false); //Rotating Lightbar
             }
             
             av.VehicleHandle = serverVeh;
-            av.Status = Types.VehicleStatus.Spawned;            
+            av.Status = Types.VehicleStatus.Spawned;
         }
 
         public bool Vehicle_IsOwner(Entities.Character character, Entities.Vehicle.Vehicle veh)

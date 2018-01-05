@@ -27,6 +27,7 @@ namespace ProjetoRP.Modules.Faction
         {
             API.consoleOutput(Messages.console_startup);
             FacBLL.LoadFactions();
+            FacBLL.DrawLockersPickups();
         }
 
         public void OnClientEventTrigger(Client player, string eventName, object[] args)
@@ -107,6 +108,25 @@ namespace ProjetoRP.Modules.Faction
                 case "CS_SHOW_FACTIONS_CLOSE":
                     API.call("Ui", "evalUi", player, "showfactions_app.display=false;showfactions_app.blocked=false");
                     API.call("Ui", "fixCursor", player, false);
+                    break;
+
+                case "CS_SET_LOCKER_SKIN":
+                    API.triggerClientEvent(player, "SC_CLOSE_LOCKER_UNIFORM_MENU");
+
+                    PedHash pedHash;
+                    Enum.TryParse(args[0].ToString(), out pedHash);                
+                    API.setPlayerSkin(player, pedHash);
+                    break;
+
+                case "CS_SET_LOCKER_ARMOR":
+                    API.setPlayerArmor(player, 100);
+                    break;
+
+                case "CS_SET_LOCKER_EQUIPMENT":
+                    WeaponHash weaponHash;
+                    Enum.TryParse(args[0].ToString(), out weaponHash);
+
+                    API.givePlayerWeapon(player, weaponHash, (int)args[1], false, true);
                     break;
             }
         }
@@ -411,6 +431,37 @@ namespace ProjetoRP.Modules.Faction
             API.call("Ui", "evalUi", sender, "showfactions_app.in = " + _in + ";showfactions_app.display=true;");
         }
 
+        [Command("armario")]
+        public void LockerCommand(Client sender)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
+
+            Entities.Faction.Locker locker = FacBLL.Faction_GetNearestLockerInRange(sender, 5.0);
+
+            if (locker == null)
+            {
+                API.sendChatMessageToPlayer(sender, "Você não está próximo a nenhum armário!");
+            }            
+            else if(locker.Faction_Id != c.Faction_Id)
+            {
+                API.sendChatMessageToPlayer(sender, "Este armário não pertence à sua facção!");
+            }
+            else
+            {
+                if(c.Faction.Type == Entities.Faction.FactionType.FACTION_TYPE_POLICE)
+                {
+                    API.shared.triggerClientEvent(sender, "SC_SHOW_LOCKER_MENU_POLICE", locker);
+                }
+                else if(c.Faction.Type == Entities.Faction.FactionType.FACTION_TYPE_EMS)
+                {
+                    API.shared.triggerClientEvent(sender, "SC_SHOW_LOCKER_MENU_EMS", locker);
+                }
+            }
+        }
+
         //Police Faction Commands
         [Command("m", GreedyArg = true)]
         public void MegaphoneCommand(Client sender, string msg)
@@ -455,11 +506,36 @@ namespace ProjetoRP.Modules.Faction
             }
         }
 
-        [Command("arma")]
-        public void GunCommand(Client sender)
+        [Command("duty")]
+        public void DutyCommand(Client sender)
         {
-            API.givePlayerWeapon(sender, WeaponHash.AssaultRifle, 10000, true, true);
-            API.givePlayerWeapon(sender, WeaponHash.CombatPistol, 10000, true, true);
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+
+            Entities.Character c = ac.Character;
+
+            if (c.Faction == null || (c.Faction.Type != Entities.Faction.FactionType.FACTION_TYPE_POLICE && c.Faction.Type != Entities.Faction.FactionType.FACTION_TYPE_EMS))
+            {
+                API.sendChatMessageToPlayer(sender, "Você não tem permissão para utilizar este comando!");
+            }
+            else
+            {
+                if (sender.hasData("PLAYER_DUTY"))
+                {
+                    sender.resetData("PLAYER_DUTY");
+                    string dutyMsg = String.Format("{0} {1} saiu do trabalho.", c.Rank.Name, c.Name);
+                    FacBLL.Faction_SendMessage(c.Faction, "~#FF5050~", dutyMsg);
+                    sender.removeAllWeapons();
+                    sender.resetNametagColor();                    
+                }
+                else
+                {
+                    string dutyMsg = String.Format("{0} {1} entrou em trabalho.", c.Rank.Name, c.Name);
+                    FacBLL.Faction_SendMessage(c.Faction, "~#FF5050~", dutyMsg);
+                    sender.setData("PLAYER_DUTY", true);
+                    sender.nametagColor = new Color(0, 0, 255);
+                }
+            }
         }
     }
 }

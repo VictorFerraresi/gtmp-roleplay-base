@@ -46,5 +46,7 @@ namespace ProjetoRP.Entities.Faction
 
 
         virtual public ICollection<Rank> Ranks { get; set; }
+
+        virtual public ICollection<Locker> Lockers { get; set; }
     }
 }

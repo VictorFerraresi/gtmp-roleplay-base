@@ -12,7 +12,7 @@ namespace ProjetoRP.Modules.Admin
 {
     class Admin : Script
     {
-        private DiscordBot _discordBot = new DiscordBot();
+        //private DiscordBot _discordBot = new DiscordBot();
         private PropertyBLL PropBLL = new PropertyBLL();
         private DoorBLL DoorBLL = new DoorBLL();
         private FactionBLL FacBLL = new FactionBLL();
@@ -161,7 +161,7 @@ namespace ProjetoRP.Modules.Admin
             var player = ac.Player;
             //if sender.IsAdmin(){
             SendAdminChatMessage(player.Name, text);
-            _discordBot.SendAdminChatMessageToDiscord(player.Name, text);
+            //_discordBot.SendAdminChatMessageToDiscord(player.Name, text);
             //}
         }
 

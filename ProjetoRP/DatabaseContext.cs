@@ -32,5 +32,7 @@ namespace ProjetoRP
         public DbSet<Entities.Faction.Rank> Ranks { get; set; }
 
         public DbSet<Entities.Career.Career> Careers { get; set; }
+
+        public DbSet<Entities.Faction.Locker> Lockers { get; set; }
     }
 }
