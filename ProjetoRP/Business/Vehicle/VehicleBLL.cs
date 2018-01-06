@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Shared.Math;
+using GrandTheftMultiplayer.Shared;
 using System.Data.Entity;
 using ProjetoRP.Business.Player;
 
@@ -68,14 +69,14 @@ namespace ProjetoRP.Business.Vehicle
 
             ActiveVehicle av = Business.Vehicle.ActiveVehicle.GetBySQLID(veh.Id);
 
-            if(veh.Name == "Sheriff")
+            if(veh.Name == "Police" || veh.Name == "Sheriff")
             {
                 API.shared.setVehicleExtra(serverVeh, 1, true); //Lightbar
                 API.shared.setVehicleExtra(serverVeh, 2, false); //Rotating Lightbar
             }
             
             av.VehicleHandle = serverVeh;
-            av.Status = Types.VehicleStatus.Spawned;            
+            av.Status = Types.VehicleStatus.Spawned;
         }
 
         public bool Vehicle_IsOwner(Entities.Character character, Entities.Vehicle.Vehicle veh)
@@ -167,6 +168,25 @@ namespace ProjetoRP.Business.Vehicle
             string plate = "";
 
             return plate;
+        }
+
+        public bool Vehicle_IsNearPlayer(Entities.Vehicle.Vehicle veh, Client player, double range = 5.0)
+        {
+            GrandTheftMultiplayer.Server.Elements.Vehicle serverVeh = ActiveVehicle.GetSpawned(veh).VehicleHandle;
+
+            return API.shared.getEntityPosition(serverVeh).DistanceTo(API.shared.getEntityPosition(player)) <= range;
+        }
+
+        public Client Vehicle_GetDriver(GrandTheftMultiplayer.Server.Elements.Vehicle veh)
+        {            
+            Client found = null;
+            foreach(var person in veh.occupants)
+            {
+                if (person.vehicleSeat == -1)
+                    found = person;
+            }
+
+            return found;
         }
 
         // SQL Functions

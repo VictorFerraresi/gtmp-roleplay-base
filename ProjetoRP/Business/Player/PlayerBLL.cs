@@ -1,5 +1,6 @@
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Shared.Math;
 
 namespace ProjetoRP.Business.Player
 {
@@ -18,6 +19,11 @@ namespace ProjetoRP.Business.Player
         public bool Player_IsInRangeOfPlayer(Client p1, Client p2, float range = 5.0f)
         {
             return API.shared.getEntityPosition(p1).DistanceTo(API.shared.getEntityPosition(p2)) <= range;
+        }
+
+        public bool Player_IsInRangeOfPoint(Client p1, Vector3 point, float range = 5.0f)
+        {
+            return API.shared.getEntityPosition(p1).DistanceTo(point) <= range;
         }
 
         public void Player_DeleteAme(Client player)

@@ -6,10 +6,13 @@
   <script src="\Career\Career.client.js" type="client" lang="javascript" />
   <script src="\ContextMenu\ContextMenu.client.js" type="client" lang="javascript" />
   <file src="\ContextMenu\page.html" />
+  <script src="\DoorManager\DoorManager.client.js" type="client" lang="javascript" />
   <script src="\Faction\Faction.client.js" type="client" lang="javascript" />
+  <script src="\Industry\Industry.client.js" type="client" lang="javascript" />
   <script src="\Item\Item.client.js" type="client" lang="javascript" />
   <script src="\Player\Player.client.js" type="client" lang="javascript" />
   <script src="\Property\Property.client.js" type="client" lang="javascript" />
+  <script src="\TaxiCareer\TaxiCareer.client.js" type="client" lang="javascript" />
   <script src="\TruckerCareer\TruckerCareer.client.js" type="client" lang="javascript" />
   <file src="\Ui\css\bootstrap-slider.min.css" />
   <file src="\Ui\css\bootstrap-theme.css" />
@@ -30,10 +33,6 @@
   <file src="\Ui\fonts\glyphicons-halflings-regular.woff" />
   <file src="\Ui\fonts\glyphicons-halflings-regular.woff2" />
   <file src="\Ui\fonts\housescript.ttf" />
-  <file src="\Ui\img\items\blank.png" />
-  <file src="\Ui\img\items\weapon-combatpistol.png" />
-  <file src="\Ui\img\items\weapon-combatpistol2.png" />
-  <file src="\Ui\img\items\weapon-pistol.png" />
   <file src="\Ui\img\AndreasCutscene.png" />
   <file src="\Ui\img\avatar.png" />
   <file src="\Ui\img\bg.jpg" />
@@ -41,6 +40,10 @@
   <file src="\Ui\img\bg3.jpg" />
   <file src="\Ui\img\license.png" />
   <file src="\Ui\img\seigaiha.png" />
+  <file src="\Ui\img\items\blank.png" />
+  <file src="\Ui\img\items\weapon-combatpistol.png" />
+  <file src="\Ui\img\items\weapon-combatpistol2.png" />
+  <file src="\Ui\img\items\weapon-pistol.png" />
   <file src="\Ui\js\bootstrap-slider.min.js" />
   <file src="\Ui\js\bootstrap.js" />
   <file src="\Ui\js\bootstrap.min.js" />
