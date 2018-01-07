@@ -7,13 +7,13 @@ namespace ProjetoRP.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class UpdateDatabaseFromMerge : IMigrationMetadata
+    public sealed partial class Flatten : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(UpdateDatabaseFromMerge));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Flatten));
         
         string IMigrationMetadata.Id
         {
-            get { return "201706100125124_UpdateDatabaseFromMerge"; }
+            get { return "201801052008031_Flatten"; }
         }
         
         string IMigrationMetadata.Source

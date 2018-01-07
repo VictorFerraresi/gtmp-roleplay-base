@@ -44,6 +44,7 @@ namespace ProjetoRP.Migrations
                         Cash = c.Int(nullable: false),
                         Bank = c.Int(nullable: false),
                         Savings = c.Int(nullable: false),
+                        Payment = c.Int(nullable: false),
                         Skin = c.String(nullable: false, maxLength: 32, storeType: "nvarchar"),
                         X = c.Double(nullable: false),
                         Y = c.Double(nullable: false),
@@ -99,6 +100,22 @@ namespace ProjetoRP.Migrations
                 .Index(t => t.Acro, unique: true);
             
             CreateTable(
+                "dbo.Lockers",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(maxLength: 32, storeType: "nvarchar"),
+                        Faction_Id = c.Int(nullable: false),
+                        X = c.Double(nullable: false),
+                        Y = c.Double(nullable: false),
+                        Z = c.Double(nullable: false),
+                        Dimension = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Factions", t => t.Faction_Id, cascadeDelete: true)
+                .Index(t => t.Faction_Id);
+            
+            CreateTable(
                 "dbo.Ranks",
                 c => new
                     {
@@ -147,6 +164,36 @@ namespace ProjetoRP.Migrations
                         Price = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.Industries",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(nullable: false, maxLength: 32, storeType: "nvarchar"),
+                        X = c.Double(nullable: false),
+                        Y = c.Double(nullable: false),
+                        Z = c.Double(nullable: false),
+                        Dimension = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .Index(t => t.Name, unique: true);
+            
+            CreateTable(
+                "dbo.LoadPoints",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        ProductType = c.Int(nullable: false),
+                        Industry_Id = c.Int(),
+                        X = c.Double(nullable: false),
+                        Y = c.Double(nullable: false),
+                        Z = c.Double(nullable: false),
+                        Dimension = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Industries", t => t.Industry_Id)
+                .Index(t => t.Industry_Id);
             
             CreateTable(
                 "dbo.Items",
@@ -217,6 +264,8 @@ namespace ProjetoRP.Migrations
                     {
                         Id = c.Int(nullable: false),
                         Owner_Id = c.Int(),
+                        Name = c.String(nullable: false, maxLength: 40, storeType: "nvarchar"),
+                        BusinessType = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Properties", t => t.Id)
@@ -306,6 +355,19 @@ namespace ProjetoRP.Migrations
                 .Index(t => t.Vehicle_Id);
             
             CreateTable(
+                "dbo.Cellphone",
+                c => new
+                    {
+                        Id = c.Int(nullable: false),
+                        Model = c.String(maxLength: 64, storeType: "nvarchar"),
+                        Number = c.Int(nullable: false),
+                        TurnedOn = c.Boolean(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Items", t => t.Id)
+                .Index(t => t.Id);
+            
+            CreateTable(
                 "dbo.Items_Containers",
                 c => new
                     {
@@ -393,6 +455,7 @@ namespace ProjetoRP.Migrations
             DropForeignKey("dbo.Items_DoorKeys", "Door_Id", "dbo.Doors");
             DropForeignKey("dbo.Items_DoorKeys", "Id", "dbo.Items");
             DropForeignKey("dbo.Items_Containers", "Id", "dbo.Items");
+            DropForeignKey("dbo.Cellphone", "Id", "dbo.Items");
             DropForeignKey("dbo.Items_CarKeys", "Vehicle_Id", "dbo.Vehicles");
             DropForeignKey("dbo.Items_CarKeys", "Id", "dbo.Items");
             DropForeignKey("dbo.Placements_TrunkItems", "ParentVehicle_Id", "dbo.Vehicles");
@@ -410,12 +473,14 @@ namespace ProjetoRP.Migrations
             DropForeignKey("dbo.Sessions", "ParentSession_Id", "dbo.Sessions");
             DropForeignKey("dbo.Sessions", "Character_Id", "dbo.Characters");
             DropForeignKey("dbo.Placements", "Item_Id", "dbo.Items");
+            DropForeignKey("dbo.LoadPoints", "Industry_Id", "dbo.Industries");
             DropForeignKey("dbo.Doors", "Property_Id", "dbo.Properties");
             DropForeignKey("dbo.PlayerAttributes", "Player_Id", "dbo.Players");
             DropForeignKey("dbo.Characters", "Rank_Id", "dbo.Ranks");
             DropForeignKey("dbo.Characters", "PlayerId", "dbo.Players");
             DropForeignKey("dbo.Characters", "Faction_Id", "dbo.Factions");
             DropForeignKey("dbo.Ranks", "Faction_Id", "dbo.Factions");
+            DropForeignKey("dbo.Lockers", "Faction_Id", "dbo.Factions");
             DropForeignKey("dbo.Characters", "Career_Id", "dbo.Careers");
             DropIndex("dbo.Items_PistolMagazines", new[] { "Id" });
             DropIndex("dbo.Items_Pistols", new[] { "Id" });
@@ -424,6 +489,7 @@ namespace ProjetoRP.Migrations
             DropIndex("dbo.Items_DoorKeys", new[] { "Door_Id" });
             DropIndex("dbo.Items_DoorKeys", new[] { "Id" });
             DropIndex("dbo.Items_Containers", new[] { "Id" });
+            DropIndex("dbo.Cellphone", new[] { "Id" });
             DropIndex("dbo.Items_CarKeys", new[] { "Vehicle_Id" });
             DropIndex("dbo.Items_CarKeys", new[] { "Id" });
             DropIndex("dbo.Placements_TrunkItems", new[] { "ParentVehicle_Id" });
@@ -441,8 +507,11 @@ namespace ProjetoRP.Migrations
             DropIndex("dbo.Sessions", new[] { "ParentSession_Id" });
             DropIndex("dbo.Sessions", new[] { "Character_Id" });
             DropIndex("dbo.Placements", new[] { "Item_Id" });
+            DropIndex("dbo.LoadPoints", new[] { "Industry_Id" });
+            DropIndex("dbo.Industries", new[] { "Name" });
             DropIndex("dbo.Doors", new[] { "Property_Id" });
             DropIndex("dbo.Ranks", new[] { "Faction_Id" });
+            DropIndex("dbo.Lockers", new[] { "Faction_Id" });
             DropIndex("dbo.Factions", new[] { "Acro" });
             DropIndex("dbo.Factions", new[] { "Name" });
             DropIndex("dbo.Characters", new[] { "Career_Id" });
@@ -459,6 +528,7 @@ namespace ProjetoRP.Migrations
             DropTable("dbo.Items_Identifications");
             DropTable("dbo.Items_DoorKeys");
             DropTable("dbo.Items_Containers");
+            DropTable("dbo.Cellphone");
             DropTable("dbo.Items_CarKeys");
             DropTable("dbo.Placements_TrunkItems");
             DropTable("dbo.Placements_DropItems");
@@ -470,9 +540,12 @@ namespace ProjetoRP.Migrations
             DropTable("dbo.Vehicles");
             DropTable("dbo.Placements");
             DropTable("dbo.Items");
+            DropTable("dbo.LoadPoints");
+            DropTable("dbo.Industries");
             DropTable("dbo.Properties");
             DropTable("dbo.Doors");
             DropTable("dbo.Ranks");
+            DropTable("dbo.Lockers");
             DropTable("dbo.Factions");
             DropTable("dbo.Careers");
             DropTable("dbo.Characters");

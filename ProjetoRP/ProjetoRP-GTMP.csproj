@@ -255,41 +255,9 @@
     <Compile Include="Entities\Industry\Industry.cs" />
     <Compile Include="Entities\Industry\LoadPoint.cs" />
     <Compile Include="Entities\PlayerAttribute.cs" />
-    <Compile Include="Migrations\201710101728412_Flatten.cs" />
-    <Compile Include="Migrations\201710101728412_Flatten.Designer.cs">
-      <DependentUpon>201710101728412_Flatten.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712022356183_addedCellphoneItem.cs" />
-    <Compile Include="Migrations\201712022356183_addedCellphoneItem.Designer.cs">
-      <DependentUpon>201712022356183_addedCellphoneItem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801040647468_AddedFactionLockers.cs" />
-    <Compile Include="Migrations\201801040647468_AddedFactionLockers.Designer.cs">
-      <DependentUpon>201801040647468_AddedFactionLockers.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801050412463_AddedBusinessType.cs" />
-    <Compile Include="Migrations\201801050412463_AddedBusinessType.Designer.cs">
-      <DependentUpon>201801050412463_AddedBusinessType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706100125124_UpdateDatabaseFromMerge.cs" />
-    <Compile Include="Migrations\201706100125124_UpdateDatabaseFromMerge.Designer.cs">
-      <DependentUpon>201706100125124_UpdateDatabaseFromMerge.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706110059352_AddIndustryAndLoadPoint.cs" />
-    <Compile Include="Migrations\201706110059352_AddIndustryAndLoadPoint.Designer.cs">
-      <DependentUpon>201706110059352_AddIndustryAndLoadPoint.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706110435299_AddBusinessName.cs" />
-    <Compile Include="Migrations\201706110435299_AddBusinessName.Designer.cs">
-      <DependentUpon>201706110435299_AddBusinessName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706110510295_AddBusinessType.cs" />
-    <Compile Include="Migrations\201706110510295_AddBusinessType.Designer.cs">
-      <DependentUpon>201706110510295_AddBusinessType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706142051012_AddCharacterSalary.cs" />
-    <Compile Include="Migrations\201706142051012_AddCharacterSalary.Designer.cs">
-      <DependentUpon>201706142051012_AddCharacterSalary.cs</DependentUpon>
+    <Compile Include="Migrations\201801052008031_Flatten.cs" />
+    <Compile Include="Migrations\201801052008031_Flatten.Designer.cs">
+      <DependentUpon>201801052008031_Flatten.cs</DependentUpon>
     </Compile>
     <Compile Include="Modules\Career\Career.cs" />
     <Compile Include="Modules\Career\Messages.Designer.cs">
@@ -392,32 +360,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Character.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710101728412_Flatten.resx">
-      <DependentUpon>201710101728412_Flatten.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712022356183_addedCellphoneItem.resx">
-      <DependentUpon>201712022356183_addedCellphoneItem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801040647468_AddedFactionLockers.resx">
-      <DependentUpon>201801040647468_AddedFactionLockers.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801050412463_AddedBusinessType.resx">
-      <DependentUpon>201801050412463_AddedBusinessType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706100125124_UpdateDatabaseFromMerge.resx">
-      <DependentUpon>201706100125124_UpdateDatabaseFromMerge.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706110059352_AddIndustryAndLoadPoint.resx">
-      <DependentUpon>201706110059352_AddIndustryAndLoadPoint.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706110435299_AddBusinessName.resx">
-      <DependentUpon>201706110435299_AddBusinessName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706110510295_AddBusinessType.resx">
-      <DependentUpon>201706110510295_AddBusinessType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706142051012_AddCharacterSalary.resx">
-      <DependentUpon>201706142051012_AddCharacterSalary.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201801052008031_Flatten.resx">
+      <DependentUpon>201801052008031_Flatten.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -638,5 +638,13 @@ namespace ProjetoRP.Modules.TruckerCareer
             API.consoleOutput(sender.position.ToString());
             API.consoleOutput(API.getEntityRotation(sender.vehicle).ToString());
         }
+
+        [Command("local")]
+        public void AreaNameCommand(Client sender)
+        {
+            var ac = ActivePlayer.GetSpawned(sender);
+            if (ac == null) return;
+              API.triggerClientEvent(sender, "SC_PRINT_AREA_NAME");
+        }
     }
 }

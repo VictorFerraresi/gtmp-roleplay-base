@@ -19,7 +19,9 @@ namespace ProjetoRP.Entities.Property
         BUSINESS_TYPE_PHARMACY,
         BUSINESS_TYPE_GUNSHOP,
         BUSINESS_TYPE_DEALERSHIP,
-        BUSINESS_TYPE_TATTOO
+        BUSINESS_TYPE_TATTOO,
+        BUSINESS_TYPE_TRANSPORT,
+        BUSINESS_TYPE_PETS
     }
 
 
