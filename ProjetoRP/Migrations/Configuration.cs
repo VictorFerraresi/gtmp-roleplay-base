@@ -45,6 +45,15 @@ namespace ProjetoRP.Migrations
             );
             context.SaveChanges();
 
+            context.Attributes.AddOrUpdate(
+                p => p.Attribute,
+                new Entities.PlayerAttribute { Attribute = 0, CreatedAt = DateTime.Now, Player = context.Players.Where(p => p.Name == "lgm").Single() },
+                new Entities.PlayerAttribute { Attribute = 0, CreatedAt = DateTime.Now, Player = context.Players.Where(p => p.Name == "victor").Single() },
+                new Entities.PlayerAttribute { Attribute = 0, CreatedAt = DateTime.Now, Player = context.Players.Where(p => p.Name == "rene").Single() },
+                new Entities.PlayerAttribute { Attribute = 0, CreatedAt = DateTime.Now, Player = context.Players.Where(p => p.Name == "jimmy").Single() }
+            );
+            context.SaveChanges();            
+
             context.Factions.AddOrUpdate(
                 p => p.Name,
                 new Entities.Faction.Faction { Name = "Paleto Bay Sheriffs Department", Acro = "PBSD", Type = (Entities.Faction.FactionType)2, Bank = 250000 },
@@ -76,214 +85,94 @@ namespace ProjetoRP.Migrations
 
             context.Vehicles.AddOrUpdate( //PBSD VEHICLES
                 v => v.Name,
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 1
                 {
                     Name = "Sheriff",
                     Owner_Id = context.Factions.Where(f => f.Acro == "PBSD").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION,
-                    X = -435.1524,
-                    Y = 6031.542,
-                    Z = 30.9454,
-                    rX = 0.5395,
-                    rY = -0.0059,
-                    rZ = 28.4567,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 111,
-                    LicensePlate = "PBSD"
+                    X = -435.1524, Y = 6031.542, Z = 30.9454, rX = 0.5395, rY = -0.0059, rZ = 28.4567, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 111, LicensePlate = "PBSD"
                 },
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 2
                 {
                     Name = "Sheriff",
                     Owner_Id = context.Factions.Where(f => f.Acro == "PBSD").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION,
-                    X = -438.6821,
-                    Y = 6029.076,
-                    Z = 30.9455,
-                    rX = 0.5423,
-                    rY = -0.0353,
-                    rZ = 32.3514,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 111,
-                    LicensePlate = "PBSD"
+                    X = -438.6821, Y = 6029.076, Z = 30.9455, rX = 0.5423, rY = -0.0353, rZ = 32.3514, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 111, LicensePlate = "PBSD"
                 },
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 3
                 {
                     Name = "Sheriff2",
                     Owner_Id = context.Factions.Where(f => f.Acro == "PBSD").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION,
-                    X = -452.3529,
-                    Y = 6049.364,
-                    Z = 30.9627,
-                    rX = 0.0418,
-                    rY = -0.0056,
-                    rZ = -141.7564,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 0,
-                    LicensePlate = "PBSD"
+                    X = -452.3529, Y = 6049.364, Z = 30.9627, rX = 0.0418, rY = -0.0056, rZ = -141.7564, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 0, LicensePlate = "PBSD"
                 },
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 4
                 {
                     Name = "Policeb",
                     Owner_Id = context.Factions.Where(f => f.Acro == "PBSD").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION,
-                    X = -449.3483,
-                    Y = 6053.436,
-                    Z = 30.8194,
-                    rX = 0.5522,
-                    rY = -3.6968,
-                    rZ = -149.8488,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 111,
-                    LicensePlate = "PBSD"
+                    X = -449.3483, Y = 6053.436, Z = 30.8194, rX = 0.5522, rY = -3.6968, rZ = -149.8488, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 111, LicensePlate = "PBSD"
                 },
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 5
                 {
                     Name = "Policeb",
                     Owner_Id = context.Factions.Where(f => f.Acro == "PBSD").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION,
-                    X = -445.3249,
-                    Y = 6055.415,
-                    Z = 30.8191,
-                    rX = 0.6801,
-                    rY = -5.3623,
-                    rZ = -152.5508,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 111,
-                    LicensePlate = "PBSD"
+                    X = -445.3249, Y = 6055.415, Z = 30.8191, rX = 0.6801, rY = -5.3623, rZ = -152.5508, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 111, LicensePlate = "PBSD"
                 },
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 6
                 {
                     Name = "Polmav",
                     Owner_Id = context.Factions.Where(f => f.Acro == "PBSD").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_FACTION,
-                    X = -475.4922,
-                    Y = 5988.176,
-                    Z = 31.7245,
-                    rX = 0.1113,
-                    rY = -0.0096,
-                    rZ = -41.9114,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 111,
-                    LicensePlate = "PBSD"
+                    X = -475.4922, Y = 5988.176, Z = 31.7245, rX = 0.1113, rY = -0.0096, rZ = -41.9114, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 111, LicensePlate = "PBSD"
                 }
             );
-            context.SaveChanges();
+            context.SaveChanges();            
 
             context.Vehicles.AddOrUpdate( //TRUCKER JOB VEHICLES
                 v => v.Name,
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 7
                 {
                     Name = "Boxville2",
                     Owner_Id = context.Careers.Where(c => c.Name == "Caminhoneiro").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER,
-                    X = -271.5052,
-                    Y = 6069.387,
-                    Z = 31.3660,
-                    rX = 0.0646,
-                    rY = 0.0065,
-                    rZ = 124.1328,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 111,
-                    LicensePlate = "A111BAC"
+                    X = -271.5052, Y = 6069.387, Z = 31.3660, rX = 0.0646, rY = 0.0065, rZ = 124.1328, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 111, LicensePlate = "A111BAC"
                 },
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 8
                 {
                     Name = "Boxville3",
                     Owner_Id = context.Careers.Where(c => c.Name == "Caminhoneiro").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER,
-                    X = -269.0002,
-                    Y = 6066.663,
-                    Z = 31.3658,
-                    rX = 0.0310,
-                    rY = 0.0540,
-                    rZ = 123.1728,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 111,
-                    LicensePlate = "A112BAC"
+                    X = -269.0002, Y = 6066.663, Z = 31.3658, rX = 0.0310, rY = 0.0540, rZ = 123.1728, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 111, LicensePlate = "A112BAC"
                 },
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 9
                 {
                     Name = "Boxville4",
                     Owner_Id = context.Careers.Where(c => c.Name == "Caminhoneiro").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER,
-                    X = -265.6275,
-                    Y = 6064.297,
-                    Z = 31.3657,
-                    rX = 0.1065,
-                    rY = 0.0487,
-                    rZ = 123.0673,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 0,
-                    LicensePlate = "A113BAC"
+                    X = -265.6275, Y = 6064.297, Z = 31.3657, rX = 0.1065, rY = 0.0487, rZ = 123.0673, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 0, LicensePlate = "A113BAC"
                 },
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 10
                 {
                     Name = "Boxville3",
                     Owner_Id = context.Careers.Where(c => c.Name == "Caminhoneiro").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER,
-                    X = -262.9933,
-                    Y = 6061.311,
-                    Z = 31.4579,
-                    rX = -0.3647,
-                    rY = 2.4708,
-                    rZ = 123.0673,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 111,
-                    LicensePlate = "A114BAC"
+                    X = -262.9933, Y = 6061.311, Z = 31.4579, rX = -0.3647, rY = 2.4708, rZ = 123.0673, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 111, LicensePlate = "A114BAC"
                 },
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 11
                 {
                     Name = "Boxville4",
                     Owner_Id = context.Careers.Where(c => c.Name == "Caminhoneiro").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER,
-                    X = -260.0002,
-                    Y = 6058.795,
-                    Z = 31.6143,
-                    rX = -0.0048,
-                    rY = 2.4708,
-                    rZ = 123.2669,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 111,
-                    LicensePlate = "A115BAC"
+                    X = -260.0002, Y = 6058.795, Z = 31.6143, rX = -0.0048, rY = 2.4708, rZ = 123.2669, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 111, LicensePlate = "A115BAC"
                 },
-                new Entities.Vehicle.Vehicle
+                new Entities.Vehicle.Vehicle //ID 12
                 {
                     Name = "Boxville1",
                     Owner_Id = context.Careers.Where(c => c.Name == "Caminhoneiro").Single().Id,
                     Owner_Type = Entities.Vehicle.OwnerType.OWNER_TYPE_CAREER,
-                    X = -257.22,
-                    Y = 6056.072,
-                    Z = 31.8606,
-                    rX = 0.2252,
-                    rY = 3.5552,
-                    rZ = 124.3577,
-                    Dimension = 1,
-                    Health = 1000,
-                    Color1 = 111,
-                    Color2 = 111,
-                    LicensePlate = "A116BAC"
+                    X = -257.22, Y = 6056.072, Z = 31.8606, rX = 0.2252, rY = 3.5552, rZ = 124.3577, Dimension = 1, Health = 1000, Color1 = 111, Color2 = 111, LicensePlate = "A116BAC"
                 }
             );
             context.SaveChanges();

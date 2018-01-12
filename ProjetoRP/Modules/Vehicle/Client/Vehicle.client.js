@@ -4,8 +4,8 @@ var menuVehicleList = null;
 API.onServerEventTrigger.connect(function (eventName, args) {
     switch (eventName) {
         case 'SC_SHOW_VEHICLEMENU':
-            menuPool = API.getMenuPool();
-            menuVehicleList = API.createMenu("Meus Veiculos", 0, 0, 6);
+            menuPool = API.getMenuPool();            
+            menuVehicleList = API.createMenu("Meus Veiculos", "Selecione um Veiculo", 0, 0, 6);
             var vehicles = JSON.parse(args[0]);
             vehicles.forEach(function (vehicle) {
                 var item = API.createMenuItem(vehicle.Name, "");

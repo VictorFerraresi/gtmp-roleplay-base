@@ -254,10 +254,11 @@
     <Compile Include="Entities\ItemModel\Cellphone.cs" />
     <Compile Include="Entities\Industry\Industry.cs" />
     <Compile Include="Entities\Industry\LoadPoint.cs" />
+    <Compile Include="Entities\ItemModel\Trunk.cs" />
     <Compile Include="Entities\PlayerAttribute.cs" />
-    <Compile Include="Migrations\201801052008031_Flatten.cs" />
-    <Compile Include="Migrations\201801052008031_Flatten.Designer.cs">
-      <DependentUpon>201801052008031_Flatten.cs</DependentUpon>
+    <Compile Include="Migrations\201801122249546_Flatten.cs" />
+    <Compile Include="Migrations\201801122249546_Flatten.Designer.cs">
+      <DependentUpon>201801122249546_Flatten.cs</DependentUpon>
     </Compile>
     <Compile Include="Modules\Career\Career.cs" />
     <Compile Include="Modules\Career\Messages.Designer.cs">
@@ -360,8 +361,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Character.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801052008031_Flatten.resx">
-      <DependentUpon>201801052008031_Flatten.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201801122249546_Flatten.resx">
+      <DependentUpon>201801122249546_Flatten.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Admin\Colors.resx">
       <Generator>ResXFileCodeGenerator</Generator>

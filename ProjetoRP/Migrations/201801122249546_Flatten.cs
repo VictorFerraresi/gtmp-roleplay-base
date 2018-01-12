@@ -444,10 +444,23 @@ namespace ProjetoRP.Migrations
                 .ForeignKey("dbo.Items", t => t.Id)
                 .Index(t => t.Id);
             
+            CreateTable(
+                "dbo.Items_TrunkContainers",
+                c => new
+                    {
+                        Id = c.Int(nullable: false),
+                        VehicleModel = c.String(maxLength: 64, storeType: "nvarchar"),
+                        Slots = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Items", t => t.Id)
+                .Index(t => t.Id);
+            
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.Items_TrunkContainers", "Id", "dbo.Items");
             DropForeignKey("dbo.Items_PistolMagazines", "Id", "dbo.Items");
             DropForeignKey("dbo.Items_Pistols", "Id", "dbo.Items");
             DropForeignKey("dbo.Items_Medkits", "Id", "dbo.Items");
@@ -482,6 +495,7 @@ namespace ProjetoRP.Migrations
             DropForeignKey("dbo.Ranks", "Faction_Id", "dbo.Factions");
             DropForeignKey("dbo.Lockers", "Faction_Id", "dbo.Factions");
             DropForeignKey("dbo.Characters", "Career_Id", "dbo.Careers");
+            DropIndex("dbo.Items_TrunkContainers", new[] { "Id" });
             DropIndex("dbo.Items_PistolMagazines", new[] { "Id" });
             DropIndex("dbo.Items_Pistols", new[] { "Id" });
             DropIndex("dbo.Items_Medkits", new[] { "Id" });
@@ -522,6 +536,7 @@ namespace ProjetoRP.Migrations
             DropIndex("dbo.Players", new[] { "Email" });
             DropIndex("dbo.Players", new[] { "Name" });
             DropIndex("dbo.PlayerAttributes", new[] { "Player_Id" });
+            DropTable("dbo.Items_TrunkContainers");
             DropTable("dbo.Items_PistolMagazines");
             DropTable("dbo.Items_Pistols");
             DropTable("dbo.Items_Medkits");
