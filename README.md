@@ -1,5 +1,4 @@
 # ProjetoRP
-Projeto RP para desbancar o Trevizani, o famoso.
 
 ## Attention
 
